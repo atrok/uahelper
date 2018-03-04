@@ -1,0 +1,595 @@
+<html>
+
+<head>
+	<title>Support Architect Tools</title>
+	<link rel="stylesheet" href="/assets/css/main.css">
+	<link href="https://fonts.googleapis.com/css?family=Lato:100,200" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="/assets/css/loading-bar.css" />
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+	<style type="text/css"></style>
+
+
+</head>
+
+<body>
+
+	<section class='screen'>
+
+
+		<div class="page_name">
+			<p class="huge">Upgrade Advisory tool</p>
+		</div>
+		 
+    <div class="header_menu">
+        <ul class="horiz_menu">
+            <li>
+                <a href="/prepareadvisory" >Upgrade Advisory</a>
+            </li>
+            <li>
+                <a href="/topologybuilder" >Topology builder</a>
+            </li>
+            <li>
+                <a href="/compareconfig" >Configuration Comparison tool</a>
+            </li>
+        </ul>
+    </div>
+
+
+		<div class="w3-bar w3-black">
+
+			<button class="w3-bar-item w3-button  tablink w3-red" onclick="openTab(event, 'db')">Database</button>
+			<button class="w3-bar-item w3-button  tablink" onclick="openTab(event, 'app')">Application</button>
+
+		</div>
+		<div id="forms" class="left">
+			<div id="db" class='tab height300'>
+				<form id="form_dbs" class="appnitro">
+
+
+
+					<h1>Enter DB connection details</h1>
+					<ul>
+
+						<li id="li_dbtype">
+							<label class="description" for="element_1">DBMS type</label>
+							<div>
+								<select>
+									<option value='oracle' selected>Oracle</option>
+									<option value='mssql'>MSSQL</option>
+								</select>
+							</div>
+						</li>
+
+						<li id="li_host">
+							<label class="description" for="element_2">Host</label>
+							<div>
+								<input id="host" name="host" class="element text medium" type="text" size="50" maxlength="255" value='' />
+							</div>
+						</li>
+						<li id="li_dbname">
+							<label class="description" for="element_3">Database name(Mssql)/Schema Name(Oracle)</label>
+							<div>
+								<input id="dbname" name="dbname" class="element text medium" type="text" size="50" maxlength="255" value="" />
+							</div>
+						</li>
+						<li id="li_user">
+							<label class="description" for="element_4">Username</label>
+							<div>
+								<input id="user" name="user" class="element text medium" type="text" size="50" maxlength="255" value="" />
+							</div>
+						</li>
+						<li id="li_pass">
+							<label class="description" for="element_5">Password</label>
+							<div>
+								<input id="pass" name="pass" class="element text medium" type="password" size="50" maxlength="255" value="" />
+							</div>
+						</li>
+						<li id="li_3">
+
+							<li class="buttons">
+								<input type="hidden" name="form_id" value="68250" />
+
+								<button>Connect</button>
+							</li>
+					</ul>
+
+				</form>
+			</div>
+
+			<div id="app" class="tab height300" style="display:none">
+				<form id="form_comp">
+					<h1>Select component</h1>
+					<ul>
+
+						<li>
+							<label class="description" for="element_1">Component</label>
+							<div class="dropdown">
+								<select id="apptype" class="dropdown_select">
+									<option value='.NET Web API Server and Samples'>.NET Web API Server and Samples</option>
+									<option value='Aastra MXONE CSTA I'>Aastra MXONE CSTA I</option>
+									<option value='Administration Console'>Administration Console</option>
+									<option value='Alcatel A4400/OXE'>Alcatel A4400/OXE</option>
+									<option value='API'>API</option>
+									<option value='Aspect ACD'>Aspect ACD</option>
+									<option value='Authoring Tool'>Authoring Tool</option>
+									<option value='Avaya Communication Manager'>Avaya Communication Manager</option>
+									<option value='Avaya TSAPI'>Avaya TSAPI</option>
+									<option value='Backend'>Backend</option>
+									<option value='Builder'>Builder</option>
+									<option value='Business Process for use with Facebook'>Business Process for use with Facebook</option>
+									<option value='Business Process for use with RSS'>Business Process for use with RSS</option>
+									<option value='Business Process for use with Twitter'>Business Process for use with Twitter</option>
+									<option value='Call Control Platform'>Call Control Platform</option>
+									<option value='Call Progress Detection Server'>Call Progress Detection Server</option>
+									<option value='CCPulse+'>CCPulse+</option>
+									<option value='Chat Server'>Chat Server</option>
+									<option value='Cisco Adapter'>Cisco Adapter</option>
+									<option value='Classification Server'>Classification Server</option>
+									<option value='Configuration Manager'>Configuration Manager</option>
+									<option value='Configuration Server'>Configuration Server</option>
+									<option value='Configuration Utility'>Configuration Utility</option>
+									<option value='Contact Center Advisor - Mobile Edition'>Contact Center Advisor - Mobile Edition</option>
+									<option value='Contact Center Advisor - Mobile Edition Android Client'>Contact Center Advisor - Mobile Edition Android Client</option>
+									<option value='Contact Center Advisor - Mobile Edition Blackberry Client'>Contact Center Advisor - Mobile Edition Blackberry Client</option>
+									<option value='Contact Center Advisor - Mobile Edition iOS Client'>Contact Center Advisor - Mobile Edition iOS Client</option>
+									<option value='Contact Center Advisor &amp; Workforce Advisor'>Contact Center Advisor &amp; Workforce Advisor</option>
+									<option value='CSTA Connector'>CSTA Connector</option>
+									<option value='CSTA Connector for BroadSoft BroadWorks'>CSTA Connector for BroadSoft BroadWorks</option>
+									<option value='CTI Connector'>CTI Connector</option>
+									<option value='Custom Server'>Custom Server</option>
+									<option value='Daemon'>Daemon</option>
+									<option value='Data Aggregator'>Data Aggregator</option>
+									<option value='Data Mart'>Data Mart</option>
+									<option value='Data Modeling Assistant'>Data Modeling Assistant</option>
+									<option value='Data Sourcer'>Data Sourcer</option>
+									<option value='Database Utility'>Database Utility</option>
+									<option value='DB Server'>DB Server</option>
+									<option value='Development Tool'>Development Tool</option>
+									<option value='Device Management Plug-in for Genesys Administrator Extension'>Device Management Plug-in for Genesys Administrator Extension</option>
+									<option value='E-mail Server'>E-mail Server</option>
+									<option value='EADS Intecom M6880'>EADS Intecom M6880</option>
+									<option value='Engine'>Engine</option>
+									<option value='Fetching Module'>Fetching Module</option>
+									<option value='Frontend'>Frontend</option>
+									<option value='Frontline Advisor and Agent Advisor'>Frontline Advisor and Agent Advisor</option>
+									<option value='Genesys Adapter'>Genesys Adapter</option>
+									<option value='Genesys Administrator'>Genesys Administrator</option>
+									<option value='Genesys Administrator Extension'>Genesys Administrator Extension</option>
+									<option value='Genesys Administrator Extension HPE SPD'>Genesys Administrator Extension HPE SPD</option>
+									<option value='Genesys Agent Scripting'>Genesys Agent Scripting</option>
+									<option value='Genesys Co-browse Server'>Genesys Co-browse Server</option>
+									<option value='Genesys Driver for Use with Facebook'>Genesys Driver for Use with Facebook</option>
+									<option value='Genesys Driver for Use with RSS'>Genesys Driver for Use with RSS</option>
+									<option value='Genesys Driver for Use with Twitter'>Genesys Driver for Use with Twitter</option>
+									<option value='Genesys Info Mart'>Genesys Info Mart</option>
+									<option value='Genesys Interactive Insights'>Genesys Interactive Insights</option>
+									<option value='Genesys One Base Pack'>Genesys One Base Pack</option>
+									<option value='Genesys One Email Pack'>Genesys One Email Pack</option>
+									<option value='Genesys One HA Pack'>Genesys One HA Pack</option>
+									<option value='Genesys Pulse'>Genesys Pulse</option>
+									<option value='Genesys Pulse Collector'>Genesys Pulse Collector</option>
+									<option value='Genesys Quality Management'>Genesys Quality Management</option>
+									<option value='Genesys SIP Voicemail'>Genesys SIP Voicemail</option>
+									<option value='Genesys SIP Voicemail Complete Install'>Genesys SIP Voicemail Complete Install</option>
+									<option value='Hosted Provider Edition'>Hosted Provider Edition</option>
+									<option value='Hosted Provider Edition Agent Desktop Proxy'>Hosted Provider Edition Agent Desktop Proxy</option>
+									<option value='Interaction Routing Designer'>Interaction Routing Designer</option>
+									<option value='Interaction Server'>Interaction Server</option>
+									<option value='Interaction Server Proxy'>Interaction Server Proxy</option>
+									<option value='Interaction Workflow Samples'>Interaction Workflow Samples</option>
+									<option value='Interaction Workspace'>Interaction Workspace</option>
+									<option value='Interaction Workspace Plug-in for Facebook'>Interaction Workspace Plug-in for Facebook</option>
+									<option value='Interaction Workspace Plug-in for Genesys Agent Scripting'>Interaction Workspace Plug-in for Genesys Agent Scripting</option>
+									<option value='Interaction Workspace Plug-in for RSS'>Interaction Workspace Plug-in for RSS</option>
+									<option value='Interaction Workspace Plug-in for Twitter'>Interaction Workspace Plug-in for Twitter</option>
+									<option value='IVR Driver for MPS'>IVR Driver for MPS</option>
+									<option value='IVR Driver for WVR for AIX'>IVR Driver for WVR for AIX</option>
+									<option value='IVR Library'>IVR Library</option>
+									<option value='IVR SDK'>IVR SDK</option>
+									<option value='IVR Server'>IVR Server</option>
+									<option value='iWD Data Mart'>iWD Data Mart</option>
+									<option value='iWD Manager'>iWD Manager</option>
+									<option value='iWD Runtime Node'>iWD Runtime Node</option>
+									<option value='iWD Setup Utility'>iWD Setup Utility</option>
+									<option value='Java Environment and Libraries for eServices and UCS'>Java Environment and Libraries for eServices and UCS</option>
+									<option value='Knowledge Manager'>Knowledge Manager</option>
+									<option value='License Reporting Manager'>License Reporting Manager</option>
+									<option value='Load Distribution Server'>Load Distribution Server</option>
+									<option value='Local Control Agent'>Local Control Agent</option>
+									<option value='Manager'>Manager</option>
+									<option value='Media Control Platform'>Media Control Platform</option>
+									<option value='Message Server'>Message Server</option>
+									<option value='MIB'>MIB</option>
+									<option value='Mitel MiTAI'>Mitel MiTAI</option>
+									<option value='Mitel MiVoice'>Mitel MiVoice</option>
+									<option value='MRCP Proxy'>MRCP Proxy</option>
+									<option value='Multi-Channel Routing Extensions'>Multi-Channel Routing Extensions</option>
+									<option value='NEC NEAX/APEX'>NEC NEAX/APEX</option>
+									<option value='Nortel Communication Server 1000 with SCCS/MLS'>Nortel Communication Server 1000 with SCCS/MLS</option>
+									<option value='Nortel Communication Server 2000/2100'>Nortel Communication Server 2000/2100</option>
+									<option value='Orchestration Server'>Orchestration Server</option>
+									<option value='Outbound Contact Center Extension'>Outbound Contact Center Extension</option>
+									<option value='Outbound Contact Server'>Outbound Contact Server</option>
+									<option value='Platform'>Platform</option>
+									<option value='Platform SDK &amp; Application Blocks for .NET'>Platform SDK &amp; Application Blocks for .NET</option>
+									<option value='Platform SDK &amp; Application Blocks for Java'>Platform SDK &amp; Application Blocks for Java</option>
+									<option value='Plug-in for GAX'>Plug-in for GAX</option>
+									<option value='Plug-in for Genesys Administrator Extension'>Plug-in for Genesys Administrator Extension</option>
+									<option value='Plug-in for Interaction Workspace'>Plug-in for Interaction Workspace</option>
+									<option value='Plug-in for Workspace Desktop Edition'>Plug-in for Workspace Desktop Edition</option>
+									<option value='Policy Server'>Policy Server</option>
+									<option value='PSTN Connector'>PSTN Connector</option>
+									<option value='Reporting and Analytics Aggregates'>Reporting and Analytics Aggregates</option>
+									<option value='Reporting Plug-in for GAX'>Reporting Plug-in for GAX</option>
+									<option value='Reporting Server'>Reporting Server</option>
+									<option value='Resource Manager'>Resource Manager</option>
+									<option value='Sample Reporting Templates'>Sample Reporting Templates</option>
+									<option value='SAP BusinessObjects Business Intelligence Platform Client 3.1.x'>SAP BusinessObjects Business Intelligence Platform Client 3.1.x</option>
+									<option value='SAP BusinessObjects Business Intelligence Platform Client 4.1.x'>SAP BusinessObjects Business Intelligence Platform Client 4.1.x</option>
+									<option value='SAP BusinessObjects Business Intelligence Platform Client ServicePack 3.1.x'>SAP BusinessObjects Business Intelligence Platform Client ServicePack 3.1.x</option>
+									<option value='SAP BusinessObjects Business Intelligence Platform Client ServicePack 4.1.x'>SAP BusinessObjects Business Intelligence Platform Client ServicePack 4.1.x</option>
+									<option value='SAP BusinessObjects Business Intelligence Platform Server 3.1.x'>SAP BusinessObjects Business Intelligence Platform Server 3.1.x</option>
+									<option value='SAP BusinessObjects Business Intelligence Platform Server 4.1.x'>SAP BusinessObjects Business Intelligence Platform Server 4.1.x</option>
+									<option value='SAP BusinessObjects Business Intelligence Platform Server Service Pack 3.1.x'>SAP BusinessObjects Business Intelligence Platform Server Service Pack 3.1.x</option>
+									<option value='SAP BusinessObjects Business Intelligence Platform Server ServicePack 4.1.x'>SAP BusinessObjects Business Intelligence Platform Server ServicePack 4.1.x</option>
+									<option value='Security Pack on UNIX'>Security Pack on UNIX</option>
+									<option value='Server'>Server</option>
+									<option value='Siemens HiPath 4000 CSTA III'>Siemens HiPath 4000 CSTA III</option>
+									<option value='SIP Endpoint SDK for .NET'>SIP Endpoint SDK for .NET</option>
+									<option value='SIP Endpoint SDK for Apple OS'>SIP Endpoint SDK for Apple OS</option>
+									<option value='SIP Feature Server'>SIP Feature Server</option>
+									<option value='SIP Proxy'>SIP Proxy</option>
+									<option value='SIP Server'>SIP Server</option>
+									<option value='sipspan2'>sipspan2</option>
+									<option value='SMS Server'>SMS Server</option>
+									<option value='SNMP Master Agent'>SNMP Master Agent</option>
+									<option value='Social Messaging Plugin for Genesys Agent Desktop'>Social Messaging Plugin for Genesys Agent Desktop</option>
+									<option value='Social Messaging Server'>Social Messaging Server</option>
+									<option value='Solution Control Server'>Solution Control Server</option>
+									<option value='Spectrum'>Spectrum</option>
+									<option value='Stat Server'>Stat Server</option>
+									<option value='Supplementary Services Gateway'>Supplementary Services Gateway</option>
+									<option value='T-Server Common Part'>T-Server Common Part</option>
+									<option value='T-Server-CUCM to Media Server Connector'>T-Server-CUCM to Media Server Connector</option>
+									<option value='Third-Party Squid'>Third-Party Squid</option>
+									<option value='Training Server'>Training Server</option>
+									<option value='UCS Manager'>UCS Manager</option>
+									<option value='Universal Contact Server'>Universal Contact Server</option>
+									<option value='Universal Contact Server Proxy'>Universal Contact Server Proxy</option>
+									<option value='Universal Routing Server'>Universal Routing Server</option>
+									<option value='Web'>Web</option>
+									<option value='Web API Server'>Web API Server</option>
+									<option value='Web API Server for WebLogic'>Web API Server for WebLogic</option>
+									<option value='Web API Server for WebSphere'>Web API Server for WebSphere</option>
+								</select>
+							</div>
+						</li>
+
+						<li>
+							<label class="description" for="element_1">Version</label>
+							<div >
+								<input id="release" name="release" class="element text medium" type="text" size="50" maxlength="255" value="" />
+							</div>
+						</li>
+						<li>
+							<label class="description" for="element_1">OS type</label>
+							<div class="dropdown">
+								<select id="ostype" class="dropdown_select">
+									<option value='solaris'>Solaris</option>
+									<option value='solaris'>Solaris x86</option>
+									<option value='trux'>Tru64 Unix</option>
+									<option value='hpux'>HP-UX</option>
+									<option value='aix'>IBM AIX</option>
+									<option value='sunos'>SunOS</option>
+									<option value='windows'>Windows NT</option>
+									<option value='windows'>Windows</option>
+									<option value='ibmos2'>IBM OS2</option>
+									<option value='macintosh'>Macintosh</option>
+									<option value='tandemux'>Tandem UNIX</option>
+									<option value='uxware'>UNIX Ware</option>
+									<option value='windows'>Windows 2000</option>
+									<option value='windows'>Windows XP</option>
+									<option value='windows'>Windows Server 2003</option>
+									<option value='linux'>RedHat Enterprise Linux AS/Intel</option>
+									<option value='windows'>Windows Server 2008</option>
+									<option value='windows'>Windows Vista</option>
+									<option value='windows'>Windows Server 2012</option>
+								</select>
+							</div>
+						</li>
+						<li>
+
+							<div>
+								<button>Search</button>
+							</div>
+						</li>
+				</form>
+			</div>
+
+
+		</div>
+
+		<div class='content left'>
+
+			<div id='div_result'>
+				
+<!--div class="ldBar" data-value=""></div -->
+<div id="myItem1"></div>
+<div id="result">
+    <h3>Executed tasks</h3>
+    <form id="form_tasks">
+        <table id="tasks">
+            <tr>
+                <th>Delete</th>
+                <th>Time</th>
+                <th>Arguments</th>
+                <th>ID</th>
+            </tr>
+        </table>
+        <div>
+            <button>Delete</button>
+        </div>
+    </form>
+</div>
+<div id="console"></div>
+
+ <script src="/assets/js/socket.io.js "></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="/assets/js/loading-bar.min.js"></script>
+<script>
+
+
+
+    // function to hide and show progress bar and other elements
+    (function ($) {
+        $.fn.invisible = function () {
+            return this.css("visibility", "hidden");
+        };
+        $.fn.visible = function () {
+            return this.css("visibility", "visible");
+        };
+    })(jQuery);
+
+
+
+
+    var socket = io.connect('http://localhost:5000/prepareadvisory');
+
+    var bar1 = new ldBar("#myItem1");
+    //var bar2 = document.getElementById('myItem1').ldBar;
+
+    var id;
+    socket.on('connected', function (data) {
+        console.log(data);
+        id = data.id;
+        socket.emit('tasks', {});
+    });
+
+    socket.on('progress', function (data) {
+        console.log(data.percents);
+        bar1.set(data.percents);
+    })
+
+    socket.on('result', function (data) {
+        console.log(data);
+        $("#div_result #resultsTable").empty();
+
+        Object.keys(data).forEach((key) => { $("#div_result #result").append(data[key]); })
+
+        $('.tableresultheader').click(function () {
+            $header = $(this);
+            $content = $header.next();
+            $content.slideToggle(500, function () {
+                $header.text(function () {
+                    return $content.is(':visible') ? 'Collapse' : 'Expand';
+                });
+            });
+        });
+
+
+    })
+
+    socket.on('console', function (data) {
+        console.log(data);
+        //$("#div_result").empty();
+        Object.keys(data).forEach((key) => { $("#div_result #console").append(data[key]); })
+
+
+    })
+
+    socket.on('errors', function (data) {
+        console.log(data);
+        //$("#div_result").empty();
+        lotsoferrors(data);
+
+
+    })
+
+    socket.on('done', function (data) {
+        done();
+    })
+
+    socket.on('validation', function (data) {
+        console.log(data);
+        $(':submit').attr('disabled', 'disabled');
+        if (data.submitted) {
+            $("#div_result #console").append(data.reason);
+        } else {
+            lotsoferrors(data.reason)
+            done();
+        }
+    })
+
+    socket.on('tasks', function (data) {
+        console.log('Got list of tasks');
+        if (data instanceof Array) {
+            data.forEach((item) => {
+                $('#tasks').append(
+                    '<tr id="' + item.id + '">'
+                    + '<td><input type="checkbox" id="' + item.id + '" /></td>'
+                    + '<td>' + item.time.toString() + '</td>'
+                    + '<td>' + item.input.toString() + '</td>'
+                    + '<td>' + item.link.toString() + '</td>'
+                    + '</tr>'
+                )
+            })
+            $(document).ready(function () {
+                $(".getresult").click(function () {
+                    var id = this.id;
+                    submitData('getresults', { 'id': id })
+                });
+            });
+        }
+    })
+
+    socket.on('deleted', function (data) {
+        console.log('Record deleted: ', data.id);
+        $('tr#' + data.id).remove();
+    })
+
+    $("#form_dbs").submit(function () {
+        try {
+            var args = {};
+            var errors = []
+            args.dbtype = $("select option:selected").attr("value");
+
+            args.host = (checkField($("#host").val(), 100)) ? $("#host").val() : errors.push('Host can\'t be longer than 100');
+            args.dbname = (checkField($("#dbname").val(), 100)) ? $("#dbname").val() : errors.push('DB name can\t be longer than 100');
+            args.user = (checkField($("#user").val(), 100)) ? $("#user").val() : errors.push('User can\'t be longer than 100');
+            args.pass = (checkField($("#pass").val(), 25)) ? $("#pass").val() : errors.push('Password can\'t be longer than 25');
+
+            var res = {};
+            res.form = 'form_dbs';
+            res.args = args;
+            if (!lotsoferrors(errors))
+                submitData('my other event', res);
+
+
+            //alert(args);;
+
+        } catch (e) {
+            console.log(e.stack);
+        } finally {
+            return false; // to avoid page reload
+        } // to avoid page reload
+
+    })
+    $("#form_comp").submit(function () {
+        try {
+            var args = {};
+            var errors = []
+            args.apptype = $("#apptype option:selected").attr("value");
+            args.ostype = $("#ostype option:selected").attr("value");
+
+            args.release = (checkField($("#release").val(), 10)) ? $("#release").val() : errors.push('Release can\'t be longer than 10');
+            var res = {}
+            res.form = 'form_comp';
+            res.args = args;
+            if (!lotsoferrors(errors)) {
+                submitData('search', res);
+
+            }
+
+        } catch (e) {
+            console.log(e.stack);
+        } finally {
+            return false; // to avoid page reload
+        } // to avoid page reload
+
+    })
+
+    $("#form_tasks").submit(function () {
+        try {
+            var args = {};
+            var errors = []
+            args = checkedValues("#form_tasks input:checkbox:checked");
+
+
+
+            submitData('deleteresults', args);
+            //alert(args);;
+
+        } catch (e) {
+            console.log(e.stack);
+        } finally {
+            return false; // to avoid page reload
+        } // to avoid page reload
+
+    })
+
+    function done() {
+        $(':submit').removeAttr('disabled');
+        $('div #myItem1').invisible();
+    }
+    function submitData(channel, data) {
+        socket.emit(channel, data);
+        $('div #myItem1').visible();
+    }
+    var checkField = function (text, condition) {
+        return (text.length > condition) ? false : true;
+    }
+
+    var lotsoferrors = function (errors) {
+        var err;
+        if (errors instanceof Array) {
+            err = errors;
+        } else {// object kv pairs
+            err = [];
+            Object.keys(errors).forEach((k) => {
+
+                err.push('<span class="error">' + k + ':</span> ' + errors[k]);
+            })
+
+        }
+        if (err.length > 0) {
+            $("#form_errors").empty();
+
+            $("#form_errors").append('<div id="errors"><h3>Error!</h3><span onclick="this.parentElement.style.display=\'none\'"  class="w3-button w3-display-topright">X</span></div>');
+            var s;
+            err.forEach((val) => { $("#errors").append(val + '<br/>') });
+            return true;
+
+        } else {
+            $("#errors").remove();
+            return false;
+        }
+    }
+
+    var checkedValues = function (name) {
+        return $(name).map(function () {
+            return this.id;
+        }).get();
+    }
+
+    function openTab(evt, tabName) {
+        var i;
+        var x = document.getElementsByClassName("tab");
+        for (i = 0; i < x.length; i++) {
+            x[i].style.display = "none";
+        }
+
+        tablinks = document.getElementsByClassName("tablink");
+        for (i = 0; i < x.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" w3-red", "");
+        }
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.className += " w3-red";
+    }
+
+</script>
+
+			</div>
+		</div>
+		<div id="form_errors"></div>
+
+
+
+
+
+	</section>
+
+
+
+</body>
+
+</html>

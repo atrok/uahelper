@@ -1,0 +1,244 @@
+<script src="/assets/js/socket.io.js "></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="/assets/js/loading-bar.min.js"></script>
+<script>
+
+
+
+    // function to hide and show progress bar and other elements
+    (function ($) {
+        $.fn.invisible = function () {
+            return this.css("visibility", "hidden");
+        };
+        $.fn.visible = function () {
+            return this.css("visibility", "visible");
+        };
+    })(jQuery);
+
+
+
+
+    var socket = io.connect('http://localhost:5000/prepareadvisory');
+
+    var bar1 = new ldBar("#myItem1");
+    //var bar2 = document.getElementById('myItem1').ldBar;
+
+    var id;
+    socket.on('connected', function (data) {
+        console.log(data);
+        id = data.id;
+        socket.emit('tasks', {});
+    });
+
+    socket.on('progress', function (data) {
+        console.log(data.percents);
+        bar1.set(data.percents);
+    })
+
+    socket.on('result', function (data) {
+        console.log(data);
+        $("#div_result #resultsTable").empty();
+
+        Object.keys(data).forEach((key) => { $("#div_result #result").append(data[key]); })
+
+        $('.tableresultheader').click(function () {
+            $header = $(this);
+            $content = $header.next();
+            $content.slideToggle(500, function () {
+                $header.text(function () {
+                    return $content.is(':visible') ? 'Collapse' : 'Expand';
+                });
+            });
+        });
+
+
+    })
+
+    socket.on('console', function (data) {
+        console.log(data);
+        //$("#div_result").empty();
+        Object.keys(data).forEach((key) => { $("#div_result #console").append(data[key]); })
+
+
+    })
+
+    socket.on('errors', function (data) {
+        console.log(data);
+        //$("#div_result").empty();
+        lotsoferrors(data);
+
+
+    })
+
+    socket.on('done', function (data) {
+        done();
+    })
+
+    socket.on('validation', function (data) {
+        console.log(data);
+        $(':submit').attr('disabled', 'disabled');
+        if (data.submitted) {
+            $("#div_result #console").append(data.reason);
+        } else {
+            lotsoferrors(data.reason)
+            done();
+        }
+    })
+
+    socket.on('tasks', function (data) {
+        console.log('Got list of tasks');
+        if (data instanceof Array) {
+            data.forEach((item) => {
+                $('#tasks').append(
+                    '<tr id="' + item.id + '">'
+                    + '<td><input type="checkbox" id="' + item.id + '" /></td>'
+                    + '<td>' + item.time.toString() + '</td>'
+                    + '<td>' + item.input.toString() + '</td>'
+                    + '<td>' + item.link.toString() + '</td>'
+                    + '</tr>'
+                )
+            })
+            $(document).ready(function () {
+                $(".getresult").click(function () {
+                    var id = this.id;
+                    submitData('getresults', { 'id': id })
+                });
+            });
+        }
+    })
+
+    socket.on('deleted', function (data) {
+        console.log('Record deleted: ', data.id);
+        $('tr#' + data.id).remove();
+    })
+
+    $("#form_dbs").submit(function () {
+        try {
+            var args = {};
+            var errors = []
+            args.dbtype = $("select option:selected").attr("value");
+
+            args.host = (checkField($("#host").val(), 100)) ? $("#host").val() : errors.push('Host can\'t be longer than 100');
+            args.dbname = (checkField($("#dbname").val(), 100)) ? $("#dbname").val() : errors.push('DB name can\t be longer than 100');
+            args.user = (checkField($("#user").val(), 100)) ? $("#user").val() : errors.push('User can\'t be longer than 100');
+            args.pass = (checkField($("#pass").val(), 25)) ? $("#pass").val() : errors.push('Password can\'t be longer than 25');
+
+            var res = {};
+            res.form = 'form_dbs';
+            res.args = args;
+            if (!lotsoferrors(errors))
+                submitData('my other event', res);
+
+
+            //alert(args);;
+
+        } catch (e) {
+            console.log(e.stack);
+        } finally {
+            return false; // to avoid page reload
+        } // to avoid page reload
+
+    })
+    $("#form_comp").submit(function () {
+        try {
+            var args = {};
+            var errors = []
+            args.apptype = $("#apptype option:selected").attr("value");
+            args.ostype = $("#ostype option:selected").attr("value");
+
+            args.release = (checkField($("#release").val(), 10)) ? $("#release").val() : errors.push('Release can\'t be longer than 10');
+            var res = {}
+            res.form = 'form_comp';
+            res.args = args;
+            if (!lotsoferrors(errors)) {
+                submitData('search', res);
+
+            }
+
+        } catch (e) {
+            console.log(e.stack);
+        } finally {
+            return false; // to avoid page reload
+        } // to avoid page reload
+
+    })
+
+    $("#form_tasks").submit(function () {
+        try {
+            var args = {};
+            var errors = []
+            args = checkedValues("#form_tasks input:checkbox:checked");
+
+
+
+            submitData('deleteresults', args);
+            //alert(args);;
+
+        } catch (e) {
+            console.log(e.stack);
+        } finally {
+            return false; // to avoid page reload
+        } // to avoid page reload
+
+    })
+
+    function done() {
+        $(':submit').removeAttr('disabled');
+        $('div #myItem1').invisible();
+    }
+    function submitData(channel, data) {
+        socket.emit(channel, data);
+        $('div #myItem1').visible();
+    }
+    var checkField = function (text, condition) {
+        return (text.length > condition) ? false : true;
+    }
+
+    var lotsoferrors = function (errors) {
+        var err;
+        if (errors instanceof Array) {
+            err = errors;
+        } else {// object kv pairs
+            err = [];
+            Object.keys(errors).forEach((k) => {
+
+                err.push('<span class="error">' + k + ':</span> ' + errors[k]);
+            })
+
+        }
+        if (err.length > 0) {
+            $("#form_errors").empty();
+
+            $("#form_errors").append('<div id="errors"><h3>Error!</h3><span onclick="this.parentElement.style.display=\'none\'"  class="w3-button w3-display-topright">X</span></div>');
+            var s;
+            err.forEach((val) => { $("#errors").append(val + '<br/>') });
+            return true;
+
+        } else {
+            $("#errors").remove();
+            return false;
+        }
+    }
+
+    var checkedValues = function (name) {
+        return $(name).map(function () {
+            return this.id;
+        }).get();
+    }
+
+    function openTab(evt, tabName) {
+        var i;
+        var x = document.getElementsByClassName("tab");
+        for (i = 0; i < x.length; i++) {
+            x[i].style.display = "none";
+        }
+
+        tablinks = document.getElementsByClassName("tablink");
+        for (i = 0; i < x.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" w3-red", "");
+        }
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.className += " w3-red";
+    }
+
+</script>

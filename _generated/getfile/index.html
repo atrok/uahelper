@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>enduro.js page</title>
+		<link rel="stylesheet" href="/assets/css/main.css">
+		<link href="https://fonts.googleapis.com/css?family=Lato:100,200" rel="stylesheet">
+		<style type="text/css"></style>
+	</head>
+	<body>
+
+<div id="result"></div>
+
+<script src="/assets/js/socket.io.js "></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="/assets/js/loading-bar.min.js"></script>
+<script>
+    var socket = io.connect('http://localhost:5000/prepareadvisory');
+
+     socket.on('connected', function (data) {
+        console.log(data);
+        //$("#div_result").empty();
+        Object.keys(data).forEach((key) => { $("#div_result #result").append(data[key]); })
+    });
+    
+</script>
+		<!--section class="screen half"-->
+			<!--div class="center_block"-->
+				<div id="footer>
+				<p>Questions? <a href="mailto:andrey.trok@genesys.com">mail</a></p>
+			</div>
+		<!--/section-->
+	</body>
+
+</html>

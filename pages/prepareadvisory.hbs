@@ -1,0 +1,151 @@
+<html>
+
+<head>
+	<title>Support Architect Tools</title>
+	<link rel="stylesheet" href="/assets/css/main.css">
+	<link href="https://fonts.googleapis.com/css?family=Lato:100,200" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="/assets/css/loading-bar.css" />
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+	<style type="text/css"></style>
+
+
+</head>
+
+<body>
+
+	{{!-- intro --}}
+	<section class='screen'>
+
+
+		{{#with header}}
+		<div class="page_name">
+			<p class="huge">{{name}}</p>
+		</div>
+		{{/with}} {{>header_menu}}
+
+
+		<div class="w3-bar w3-black">
+
+			<button class="w3-bar-item w3-button  tablink w3-red" onclick="openTab(event, 'db')">Database</button>
+			<button class="w3-bar-item w3-button  tablink" onclick="openTab(event, 'app')">Application</button>
+
+		</div>
+		<div id="forms" class="left">
+			<div id="db" class='tab height300'>
+				<form id="form_dbs" class="appnitro">
+
+
+
+					<h1>Enter DB connection details</h1>
+					<ul>
+
+						<li id="li_dbtype">
+							<label class="description" for="element_1">DBMS type</label>
+							<div>
+								<select>
+									<option value='oracle' selected>Oracle</option>
+									<option value='mssql'>MSSQL</option>
+								</select>
+							</div>
+						</li>
+
+						<li id="li_host">
+							<label class="description" for="element_2">Host</label>
+							<div>
+								<input id="host" name="host" class="element text medium" type="text" size="50" maxlength="255" value='' />
+							</div>
+						</li>
+						<li id="li_dbname">
+							<label class="description" for="element_3">Database name(Mssql)/Schema Name(Oracle)</label>
+							<div>
+								<input id="dbname" name="dbname" class="element text medium" type="text" size="50" maxlength="255" value="" />
+							</div>
+						</li>
+						<li id="li_user">
+							<label class="description" for="element_4">Username</label>
+							<div>
+								<input id="user" name="user" class="element text medium" type="text" size="50" maxlength="255" value="" />
+							</div>
+						</li>
+						<li id="li_pass">
+							<label class="description" for="element_5">Password</label>
+							<div>
+								<input id="pass" name="pass" class="element text medium" type="password" size="50" maxlength="255" value="" />
+							</div>
+						</li>
+						<li id="li_3">
+
+							<li class="buttons">
+								<input type="hidden" name="form_id" value="68250" />
+
+								<button>Connect</button>
+							</li>
+					</ul>
+
+				</form>
+			</div>
+
+			<div id="app" class="tab height300" style="display:none">
+				<form id="form_comp">
+					<h1>{{form_comp.header}}</h1>
+					<ul>
+
+						<li>
+							<label class="description" for="element_1">Component</label>
+							<div class="dropdown">
+								<select id="apptype" class="dropdown_select">
+									{{#each form_comp.apptype}}
+									<option value='{{name}}'>{{name}}</option>
+									{{/each}}
+								</select>
+							</div>
+						</li>
+
+						<li>
+							<label class="description" for="element_1">Version</label>
+							<div >
+								<input id="release" name="release" class="element text medium" type="text" size="50" maxlength="255" value="" />
+							</div>
+						</li>
+						<li>
+							<label class="description" for="element_1">OS type</label>
+							<div class="dropdown">
+								<select id="ostype" class="dropdown_select">
+									{{#each form_comp.ostype}}
+									<option value='{{name}}'>{{lc_value}}</option>
+									{{/each}}
+								</select>
+							</div>
+						</li>
+						<li>
+
+							<div>
+								<button>Search</button>
+							</div>
+						</li>
+				</form>
+			</div>
+
+
+		</div>
+
+		<div class='content left'>
+
+			<div id='div_result'>
+				{{>result}} {{>scripts}}
+
+			</div>
+		</div>
+		<div id="form_errors"></div>
+
+
+
+
+
+	</section>
+
+
+
+</body>
+
+</html>

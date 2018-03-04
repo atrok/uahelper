@@ -1,0 +1,3 @@
+define(["handlebars"], function(Handlebars) { return Handlebars.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    return "\r\n<!--div class=\"ldBar\" data-value=\"\"></div -->\r\n<div id=\"myItem1\"></div>\r\n<div id=\"result\">\r\n    <h3>Executed tasks</h3>\r\n    <form id=\"form_tasks\">\r\n        <table id=\"tasks\">\r\n            <tr>\r\n                <th>Delete</th>\r\n                <th>Time</th>\r\n                <th>Arguments</th>\r\n                <th>ID</th>\r\n            </tr>\r\n        </table>\r\n        <div>\r\n            <button>Delete</button>\r\n        </div>\r\n    </form>\r\n</div>\r\n<div id=\"console\"></div>\r\n\r\n";
+},"useData":true}); });

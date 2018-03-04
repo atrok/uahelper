@@ -1,0 +1,115 @@
+<html>
+
+<head>
+	<title>Support Architect Tools</title>
+	<link rel="stylesheet" href="/assets/css/main.css">
+	<link href="https://fonts.googleapis.com/css?family=Lato:100,200" rel="stylesheet">
+	<style type="text/css"></style>
+</head>
+
+<body>
+	<section class='screen'>
+
+
+		<div class="page_name">
+			<p class="huge">Upgrade Advisory tool</p>
+		</div>
+		
+		
+		    <div class="header_menu">
+		        <ul class="horiz_menu">
+		            <li>
+		                <a href="/prepareadvisory" >Upgrade Advisory</a>
+		            </li>
+		            <li>
+		                <a href="/topologybuilder" >Topology builder</a>
+		            </li>
+		            <li>
+		                <a href="/compareconfig" >Configuration Comparison tool</a>
+		            </li>
+		        </ul>
+		    </div>
+		<div class="side_menu">
+			<ul>
+				<li>
+					<a class="button" href="/prepareadvisory?start">Start</a>
+				</li>
+				<li>
+					<a class="button" href="/prepareadvisory?test">Test</a>
+				</li>
+				<li>
+					<a class="button" href="/prepareadvisory?recreate">Recreate views</a>
+				</li>
+			</ul>
+		</div>
+
+		<div class='content'>
+<div class='form'>
+      <h1>Enter DB connection details</h1>
+     <form id="form_68250" class="appnitro"  method="get" action="/queryCouchDB">
+
+      <ul >
+
+      <li id="li_1" >
+      <label class="description" for="element_1">DBMS type</label>
+      <div>
+		  <select>
+			  <option value='oracle' selected>Oracle</option>
+			  <option value='mssql' >MSSQL</option>
+		  </select>
+      </div>
+      </li>
+
+      <li id="li_1" >
+      <label class="description" for="element_1">Host</label>
+      <div>
+      <input id="element_1" name="host" class="element text medium" type="text" size="100" maxlength="255" value=''/>
+      </div>
+      </li>
+      <li id="li_1" >
+      <label class="description" for="element_1">Database name(Mssql)/Schema Name(Oracle)</label>
+      <div>
+      <input id="element_1" name="dbname" class="element text medium" type="text" size="100" maxlength="255" value=""/>
+      </div>
+      </li>
+      <li id="li_1" >
+      <label class="description" for="element_1">Username</label>
+      <div>
+      <input id="element_1" name="user" class="element text medium" type="text" size="100" maxlength="255" value=""/>
+      </div> 
+      </li>
+      <li id="li_1" >
+      <label class="description" for="element_1">Password</label>
+      <div>
+      <input id="element_1" name="pass" class="element text medium" type="password" size="100" maxlength="255" value=""/>
+      </div>
+      </li>
+      <li id="li_3" >
+      
+      <li class="buttons">
+      <input type="hidden" name="form_id" value="68250" />
+
+      <input id="saveForm" class="button_text" type="submit" name="submit" value="Submit" />
+      </li>
+      </ul>
+      </form>
+      </div>
+</div>
+
+<div class='result'>
+
+</div>
+
+			
+		</div>
+
+	</section>
+
+	<section class="screen half">
+		<div class="center_block">
+			<p>Question? <a href="mailto:andrey.trok@genesys.com">mail</a></p>
+		</div>
+	</section>
+</body>
+
+</html>
