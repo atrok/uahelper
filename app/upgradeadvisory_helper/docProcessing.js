@@ -36,8 +36,10 @@ var start = (response, components, recreateViews) => {
 
           var p = apptypes.findByLCValue(components[i].APPLICATION_TYPE);
           var application = (null === p) ? components[i].APPLICATION_TYPE : p.name;
+          var solution =(null===p) ? '' : p.solution;
           var o = ostypes.findByTypeID(components[i].OS_TYPE);
           var os = (null === o) ? components[i].OS_TYPE : o.name;
+          
           /*
           var dbtype = dbtypes.findByTypeID(components[i].RELEASE.slice(0, 3));
           if (null === dbtype) throw new Error('Database is not found for ' + application + ' release ' + components[i].RELEASE);
@@ -55,6 +57,10 @@ var start = (response, components, recreateViews) => {
 
           logger.log('Processing: ' + application + ' ' + os + ' ' + components[i].RELEASE);
           var component = parser.findComponent(obj, application);
+          
+          
+          component.solution=solution;
+          components[i].SOLUTION=solution;
 
 
           var new_releases = await couchdb.select('test/features-by-release', opts, response);

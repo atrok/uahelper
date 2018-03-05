@@ -29,7 +29,7 @@ constructor (){
             { typeid:71,lc_value:'Contact Server Manager',	name:"Universal Contact Server Manager", solution: "eServices"},
             { typeid:80,lc_value:'Web API Server',	name:"Web API Server", solution: "eServices"},
             { typeid:1005,lc_value:'Avaya Communication Manager T-Server',	name:"T-Server for Avaya Communication Manager", solution: "Framework"},
-            { typeid:1072,lc_value:'SIP Switch T-Server',	name:"SIP Server", solution: "Framework"},
+            { typeid:1072,lc_value:'SIP Switch T-Server',	name:"SIP Server", solution: "SIP Server"},
             ];
         }
 
