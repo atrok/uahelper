@@ -53,7 +53,7 @@
 						<li id="li_dbtype">
 							<label class="description" for="element_1">DBMS type</label>
 							<div>
-								<select>
+								<select class="dropdown_select">
 									<option value='oracle' selected>Oracle</option>
 									<option value='mssql'>MSSQL</option>
 								</select>
@@ -63,25 +63,25 @@
 						<li id="li_host">
 							<label class="description" for="element_2">Host</label>
 							<div>
-								<input id="host" name="host" class="element text medium" type="text" size="50" maxlength="255" value='' />
+								<input id="host" name="host" class="element text medium" type="text" size="25" maxlength="255" value='' />
 							</div>
 						</li>
 						<li id="li_dbname">
 							<label class="description" for="element_3">Database name(Mssql)/Schema Name(Oracle)</label>
 							<div>
-								<input id="dbname" name="dbname" class="element text medium" type="text" size="50" maxlength="255" value="" />
+								<input id="dbname" name="dbname" class="element text medium" type="text" size="25" maxlength="255" value="" />
 							</div>
 						</li>
 						<li id="li_user">
 							<label class="description" for="element_4">Username</label>
 							<div>
-								<input id="user" name="user" class="element text medium" type="text" size="50" maxlength="255" value="" />
+								<input id="user" name="user" class="element text medium" type="text" size="25" maxlength="255" value="" />
 							</div>
 						</li>
 						<li id="li_pass">
 							<label class="description" for="element_5">Password</label>
 							<div>
-								<input id="pass" name="pass" class="element text medium" type="password" size="50" maxlength="255" value="" />
+								<input id="pass" name="pass" class="element text medium" type="password" size="25" maxlength="255" value="" />
 							</div>
 						</li>
 						<li id="li_3">
@@ -105,162 +105,203 @@
 							<label class="description" for="element_1">Component</label>
 							<div class="dropdown">
 								<select id="apptype" class="dropdown_select">
-									<option value='.NET Web API Server and Samples'>.NET Web API Server and Samples</option>
-									<option value='Aastra MXONE CSTA I'>Aastra MXONE CSTA I</option>
-									<option value='Administration Console'>Administration Console</option>
-									<option value='Alcatel A4400/OXE'>Alcatel A4400/OXE</option>
-									<option value='API'>API</option>
-									<option value='Aspect ACD'>Aspect ACD</option>
-									<option value='Authoring Tool'>Authoring Tool</option>
-									<option value='Avaya Communication Manager'>Avaya Communication Manager</option>
-									<option value='Avaya TSAPI'>Avaya TSAPI</option>
-									<option value='Backend'>Backend</option>
-									<option value='Builder'>Builder</option>
-									<option value='Business Process for use with Facebook'>Business Process for use with Facebook</option>
-									<option value='Business Process for use with RSS'>Business Process for use with RSS</option>
-									<option value='Business Process for use with Twitter'>Business Process for use with Twitter</option>
-									<option value='Call Control Platform'>Call Control Platform</option>
-									<option value='Call Progress Detection Server'>Call Progress Detection Server</option>
-									<option value='CCPulse+'>CCPulse+</option>
-									<option value='Chat Server'>Chat Server</option>
-									<option value='Cisco Adapter'>Cisco Adapter</option>
-									<option value='Classification Server'>Classification Server</option>
-									<option value='Configuration Manager'>Configuration Manager</option>
-									<option value='Configuration Server'>Configuration Server</option>
-									<option value='Configuration Utility'>Configuration Utility</option>
-									<option value='Contact Center Advisor - Mobile Edition'>Contact Center Advisor - Mobile Edition</option>
-									<option value='Contact Center Advisor - Mobile Edition Android Client'>Contact Center Advisor - Mobile Edition Android Client</option>
-									<option value='Contact Center Advisor - Mobile Edition Blackberry Client'>Contact Center Advisor - Mobile Edition Blackberry Client</option>
-									<option value='Contact Center Advisor - Mobile Edition iOS Client'>Contact Center Advisor - Mobile Edition iOS Client</option>
-									<option value='Contact Center Advisor &amp; Workforce Advisor'>Contact Center Advisor &amp; Workforce Advisor</option>
-									<option value='CSTA Connector'>CSTA Connector</option>
-									<option value='CSTA Connector for BroadSoft BroadWorks'>CSTA Connector for BroadSoft BroadWorks</option>
-									<option value='CTI Connector'>CTI Connector</option>
-									<option value='Custom Server'>Custom Server</option>
-									<option value='Daemon'>Daemon</option>
-									<option value='Data Aggregator'>Data Aggregator</option>
-									<option value='Data Mart'>Data Mart</option>
-									<option value='Data Modeling Assistant'>Data Modeling Assistant</option>
-									<option value='Data Sourcer'>Data Sourcer</option>
-									<option value='Database Utility'>Database Utility</option>
-									<option value='DB Server'>DB Server</option>
-									<option value='Development Tool'>Development Tool</option>
-									<option value='Device Management Plug-in for Genesys Administrator Extension'>Device Management Plug-in for Genesys Administrator Extension</option>
-									<option value='E-mail Server'>E-mail Server</option>
-									<option value='EADS Intecom M6880'>EADS Intecom M6880</option>
-									<option value='Engine'>Engine</option>
-									<option value='Fetching Module'>Fetching Module</option>
-									<option value='Frontend'>Frontend</option>
-									<option value='Frontline Advisor and Agent Advisor'>Frontline Advisor and Agent Advisor</option>
-									<option value='Genesys Adapter'>Genesys Adapter</option>
-									<option value='Genesys Administrator'>Genesys Administrator</option>
-									<option value='Genesys Administrator Extension'>Genesys Administrator Extension</option>
-									<option value='Genesys Administrator Extension HPE SPD'>Genesys Administrator Extension HPE SPD</option>
-									<option value='Genesys Agent Scripting'>Genesys Agent Scripting</option>
-									<option value='Genesys Co-browse Server'>Genesys Co-browse Server</option>
-									<option value='Genesys Driver for Use with Facebook'>Genesys Driver for Use with Facebook</option>
-									<option value='Genesys Driver for Use with RSS'>Genesys Driver for Use with RSS</option>
-									<option value='Genesys Driver for Use with Twitter'>Genesys Driver for Use with Twitter</option>
-									<option value='Genesys Info Mart'>Genesys Info Mart</option>
-									<option value='Genesys Interactive Insights'>Genesys Interactive Insights</option>
-									<option value='Genesys One Base Pack'>Genesys One Base Pack</option>
-									<option value='Genesys One Email Pack'>Genesys One Email Pack</option>
-									<option value='Genesys One HA Pack'>Genesys One HA Pack</option>
-									<option value='Genesys Pulse'>Genesys Pulse</option>
-									<option value='Genesys Pulse Collector'>Genesys Pulse Collector</option>
-									<option value='Genesys Quality Management'>Genesys Quality Management</option>
-									<option value='Genesys SIP Voicemail'>Genesys SIP Voicemail</option>
-									<option value='Genesys SIP Voicemail Complete Install'>Genesys SIP Voicemail Complete Install</option>
-									<option value='Hosted Provider Edition'>Hosted Provider Edition</option>
-									<option value='Hosted Provider Edition Agent Desktop Proxy'>Hosted Provider Edition Agent Desktop Proxy</option>
-									<option value='Interaction Routing Designer'>Interaction Routing Designer</option>
-									<option value='Interaction Server'>Interaction Server</option>
-									<option value='Interaction Server Proxy'>Interaction Server Proxy</option>
-									<option value='Interaction Workflow Samples'>Interaction Workflow Samples</option>
-									<option value='Interaction Workspace'>Interaction Workspace</option>
-									<option value='Interaction Workspace Plug-in for Facebook'>Interaction Workspace Plug-in for Facebook</option>
-									<option value='Interaction Workspace Plug-in for Genesys Agent Scripting'>Interaction Workspace Plug-in for Genesys Agent Scripting</option>
-									<option value='Interaction Workspace Plug-in for RSS'>Interaction Workspace Plug-in for RSS</option>
-									<option value='Interaction Workspace Plug-in for Twitter'>Interaction Workspace Plug-in for Twitter</option>
-									<option value='IVR Driver for MPS'>IVR Driver for MPS</option>
-									<option value='IVR Driver for WVR for AIX'>IVR Driver for WVR for AIX</option>
-									<option value='IVR Library'>IVR Library</option>
-									<option value='IVR SDK'>IVR SDK</option>
-									<option value='IVR Server'>IVR Server</option>
-									<option value='iWD Data Mart'>iWD Data Mart</option>
-									<option value='iWD Manager'>iWD Manager</option>
-									<option value='iWD Runtime Node'>iWD Runtime Node</option>
-									<option value='iWD Setup Utility'>iWD Setup Utility</option>
-									<option value='Java Environment and Libraries for eServices and UCS'>Java Environment and Libraries for eServices and UCS</option>
-									<option value='Knowledge Manager'>Knowledge Manager</option>
-									<option value='License Reporting Manager'>License Reporting Manager</option>
-									<option value='Load Distribution Server'>Load Distribution Server</option>
-									<option value='Local Control Agent'>Local Control Agent</option>
-									<option value='Manager'>Manager</option>
-									<option value='Media Control Platform'>Media Control Platform</option>
-									<option value='Message Server'>Message Server</option>
-									<option value='MIB'>MIB</option>
-									<option value='Mitel MiTAI'>Mitel MiTAI</option>
-									<option value='Mitel MiVoice'>Mitel MiVoice</option>
-									<option value='MRCP Proxy'>MRCP Proxy</option>
-									<option value='Multi-Channel Routing Extensions'>Multi-Channel Routing Extensions</option>
-									<option value='NEC NEAX/APEX'>NEC NEAX/APEX</option>
-									<option value='Nortel Communication Server 1000 with SCCS/MLS'>Nortel Communication Server 1000 with SCCS/MLS</option>
-									<option value='Nortel Communication Server 2000/2100'>Nortel Communication Server 2000/2100</option>
-									<option value='Orchestration Server'>Orchestration Server</option>
-									<option value='Outbound Contact Center Extension'>Outbound Contact Center Extension</option>
-									<option value='Outbound Contact Server'>Outbound Contact Server</option>
-									<option value='Platform'>Platform</option>
-									<option value='Platform SDK &amp; Application Blocks for .NET'>Platform SDK &amp; Application Blocks for .NET</option>
-									<option value='Platform SDK &amp; Application Blocks for Java'>Platform SDK &amp; Application Blocks for Java</option>
-									<option value='Plug-in for GAX'>Plug-in for GAX</option>
-									<option value='Plug-in for Genesys Administrator Extension'>Plug-in for Genesys Administrator Extension</option>
-									<option value='Plug-in for Interaction Workspace'>Plug-in for Interaction Workspace</option>
-									<option value='Plug-in for Workspace Desktop Edition'>Plug-in for Workspace Desktop Edition</option>
-									<option value='Policy Server'>Policy Server</option>
-									<option value='PSTN Connector'>PSTN Connector</option>
-									<option value='Reporting and Analytics Aggregates'>Reporting and Analytics Aggregates</option>
-									<option value='Reporting Plug-in for GAX'>Reporting Plug-in for GAX</option>
-									<option value='Reporting Server'>Reporting Server</option>
-									<option value='Resource Manager'>Resource Manager</option>
-									<option value='Sample Reporting Templates'>Sample Reporting Templates</option>
-									<option value='SAP BusinessObjects Business Intelligence Platform Client 3.1.x'>SAP BusinessObjects Business Intelligence Platform Client 3.1.x</option>
-									<option value='SAP BusinessObjects Business Intelligence Platform Client 4.1.x'>SAP BusinessObjects Business Intelligence Platform Client 4.1.x</option>
-									<option value='SAP BusinessObjects Business Intelligence Platform Client ServicePack 3.1.x'>SAP BusinessObjects Business Intelligence Platform Client ServicePack 3.1.x</option>
-									<option value='SAP BusinessObjects Business Intelligence Platform Client ServicePack 4.1.x'>SAP BusinessObjects Business Intelligence Platform Client ServicePack 4.1.x</option>
-									<option value='SAP BusinessObjects Business Intelligence Platform Server 3.1.x'>SAP BusinessObjects Business Intelligence Platform Server 3.1.x</option>
-									<option value='SAP BusinessObjects Business Intelligence Platform Server 4.1.x'>SAP BusinessObjects Business Intelligence Platform Server 4.1.x</option>
-									<option value='SAP BusinessObjects Business Intelligence Platform Server Service Pack 3.1.x'>SAP BusinessObjects Business Intelligence Platform Server Service Pack 3.1.x</option>
-									<option value='SAP BusinessObjects Business Intelligence Platform Server ServicePack 4.1.x'>SAP BusinessObjects Business Intelligence Platform Server ServicePack 4.1.x</option>
-									<option value='Security Pack on UNIX'>Security Pack on UNIX</option>
-									<option value='Server'>Server</option>
-									<option value='Siemens HiPath 4000 CSTA III'>Siemens HiPath 4000 CSTA III</option>
-									<option value='SIP Endpoint SDK for .NET'>SIP Endpoint SDK for .NET</option>
-									<option value='SIP Endpoint SDK for Apple OS'>SIP Endpoint SDK for Apple OS</option>
-									<option value='SIP Feature Server'>SIP Feature Server</option>
-									<option value='SIP Proxy'>SIP Proxy</option>
-									<option value='SIP Server'>SIP Server</option>
-									<option value='sipspan2'>sipspan2</option>
-									<option value='SMS Server'>SMS Server</option>
-									<option value='SNMP Master Agent'>SNMP Master Agent</option>
-									<option value='Social Messaging Plugin for Genesys Agent Desktop'>Social Messaging Plugin for Genesys Agent Desktop</option>
-									<option value='Social Messaging Server'>Social Messaging Server</option>
-									<option value='Solution Control Server'>Solution Control Server</option>
-									<option value='Spectrum'>Spectrum</option>
-									<option value='Stat Server'>Stat Server</option>
-									<option value='Supplementary Services Gateway'>Supplementary Services Gateway</option>
-									<option value='T-Server Common Part'>T-Server Common Part</option>
-									<option value='T-Server-CUCM to Media Server Connector'>T-Server-CUCM to Media Server Connector</option>
-									<option value='Third-Party Squid'>Third-Party Squid</option>
-									<option value='Training Server'>Training Server</option>
-									<option value='UCS Manager'>UCS Manager</option>
-									<option value='Universal Contact Server'>Universal Contact Server</option>
-									<option value='Universal Contact Server Proxy'>Universal Contact Server Proxy</option>
-									<option value='Universal Routing Server'>Universal Routing Server</option>
-									<option value='Web'>Web</option>
-									<option value='Web API Server'>Web API Server</option>
-									<option value='Web API Server for WebLogic'>Web API Server for WebLogic</option>
-									<option value='Web API Server for WebSphere'>Web API Server for WebSphere</option>
+									<option size="25" value='.NET Web API Server and Samples'>.NET Web API Server and Samples</option>
+									<option size="25" value='Aastra MXONE CSTA I'>Aastra MXONE CSTA I</option>
+									<option size="25" value='Administration Console'>Administration Console</option>
+									<option size="25" value='Alcatel A4400/OXE'>Alcatel A4400/OXE</option>
+									<option size="25" value='API'>API</option>
+									<option size="25" value='Aspect ACD'>Aspect ACD</option>
+									<option size="25" value='Authoring Tool'>Authoring Tool</option>
+									<option size="25" value='Avaya Communication Manager'>Avaya Communication Manager</option>
+									<option size="25" value='Avaya TSAPI'>Avaya TSAPI</option>
+									<option size="25" value='Backend'>Backend</option>
+									<option size="25" value='Builder'>Builder</option>
+									<option size="25" value='Business Process for use with Facebook'>Business Process for use with Facebook</option>
+									<option size="25" value='Business Process for use with RSS'>Business Process for use with RSS</option>
+									<option size="25" value='Business Process for use with Twitter'>Business Process for use with Twitter</option>
+									<option size="25" value='Call Control Platform'>Call Control Platform</option>
+									<option size="25" value='Call Progress Detection Server'>Call Progress Detection Server</option>
+									<option size="25" value='CCPulse+'>CCPulse+</option>
+									<option size="25" value='Chat Server'>Chat Server</option>
+									<option size="25" value='Cisco Adapter'>Cisco Adapter</option>
+									<option size="25" value='Classification Server'>Classification Server</option>
+									<option size="25" value='CMS'>CMS</option>
+									<option size="25" value='Configuration Database Maintenance Scripts'>Configuration Database Maintenance Scripts</option>
+									<option size="25" value='Configuration Manager'>Configuration Manager</option>
+									<option size="25" value='Configuration Server'>Configuration Server</option>
+									<option size="25" value='Configuration Utility'>Configuration Utility</option>
+									<option size="25" value='Contact Center Advisor - Mobile Edition'>Contact Center Advisor - Mobile Edition</option>
+									<option size="25" value='Contact Center Advisor - Mobile Edition Android Client'>Contact Center Advisor - Mobile Edition Android Client</option>
+									<option size="25" value='Contact Center Advisor - Mobile Edition Blackberry Client'>Contact Center Advisor - Mobile Edition Blackberry Client</option>
+									<option size="25" value='Contact Center Advisor - Mobile Edition iOS Client'>Contact Center Advisor - Mobile Edition iOS Client</option>
+									<option size="25" value='Contact Center Advisor &amp; Workforce Advisor'>Contact Center Advisor &amp; Workforce Advisor</option>
+									<option size="25" value='Content Analyzer Plug-in for GAX'>Content Analyzer Plug-in for GAX</option>
+									<option size="25" value='CSTA Connector'>CSTA Connector</option>
+									<option size="25" value='CSTA Connector for BroadSoft BroadWorks'>CSTA Connector for BroadSoft BroadWorks</option>
+									<option size="25" value='CTI Connector'>CTI Connector</option>
+									<option size="25" value='Custom Server'>Custom Server</option>
+									<option size="25" value='Daemon'>Daemon</option>
+									<option size="25" value='Data Aggregator'>Data Aggregator</option>
+									<option size="25" value='Data Mart'>Data Mart</option>
+									<option size="25" value='Data Modeling Assistant'>Data Modeling Assistant</option>
+									<option size="25" value='Data Sourcer'>Data Sourcer</option>
+									<option size="25" value='Database Utility'>Database Utility</option>
+									<option size="25" value='DB Server'>DB Server</option>
+									<option size="25" value='Development Tool'>Development Tool</option>
+									<option size="25" value='Device Management Plug-in for Genesys Administrator Extension'>Device Management Plug-in for Genesys Administrator Extension</option>
+									<option size="25" value='E-mail Server'>E-mail Server</option>
+									<option size="25" value='EADS Intecom M6880'>EADS Intecom M6880</option>
+									<option size="25" value='Engine'>Engine</option>
+									<option size="25" value='eServices Manager Plug-in for GAX'>eServices Manager Plug-in for GAX</option>
+									<option size="25" value='Fetching Module'>Fetching Module</option>
+									<option size="25" value='Frontend'>Frontend</option>
+									<option size="25" value='Frontline Advisor and Agent Advisor'>Frontline Advisor and Agent Advisor</option>
+									<option size="25" value='Genesys Adapter'>Genesys Adapter</option>
+									<option size="25" value='Genesys Administrator'>Genesys Administrator</option>
+									<option size="25" value='Genesys Administrator Extension'>Genesys Administrator Extension</option>
+									<option size="25" value='Genesys Administrator Extension HPE SPD'>Genesys Administrator Extension HPE SPD</option>
+									<option size="25" value='Genesys Agent Scripting'>Genesys Agent Scripting</option>
+									<option size="25" value='Genesys Care Workbench Agent'>Genesys Care Workbench Agent</option>
+									<option size="25" value='Genesys Care Workbench Log Extractor'>Genesys Care Workbench Log Extractor</option>
+									<option size="25" value='Genesys Care Workbench Server'>Genesys Care Workbench Server</option>
+									<option size="25" value='Genesys Cloud API Driver for  Facebook'>Genesys Cloud API Driver for  Facebook</option>
+									<option size="25" value='Genesys Cloud API Driver for  Twitter'>Genesys Cloud API Driver for  Twitter</option>
+									<option size="25" value='Genesys Co-browse Server'>Genesys Co-browse Server</option>
+									<option size="25" value='Genesys Data Processing Server'>Genesys Data Processing Server</option>
+									<option size="25" value='Genesys Driver for Use with Facebook'>Genesys Driver for Use with Facebook</option>
+									<option size="25" value='Genesys Driver for Use with RSS'>Genesys Driver for Use with RSS</option>
+									<option size="25" value='Genesys Driver for Use with Twitter'>Genesys Driver for Use with Twitter</option>
+									<option size="25" value='Genesys Info Mart'>Genesys Info Mart</option>
+									<option size="25" value='Genesys Info Mart Manager'>Genesys Info Mart Manager</option>
+									<option size="25" value='Genesys Interactive Insights'>Genesys Interactive Insights</option>
+									<option size="25" value='Genesys Mobile Services'>Genesys Mobile Services</option>
+									<option size="25" value='Genesys One Base Pack'>Genesys One Base Pack</option>
+									<option size="25" value='Genesys One Email Pack'>Genesys One Email Pack</option>
+									<option size="25" value='Genesys One HA Pack'>Genesys One HA Pack</option>
+									<option size="25" value='Genesys Pulse'>Genesys Pulse</option>
+									<option size="25" value='Genesys Pulse Collector'>Genesys Pulse Collector</option>
+									<option size="25" value='Genesys Quality Management'>Genesys Quality Management</option>
+									<option size="25" value='Genesys SIP Voicemail'>Genesys SIP Voicemail</option>
+									<option size="25" value='Genesys SIP Voicemail Complete Install'>Genesys SIP Voicemail Complete Install</option>
+									<option size="25" value='Genesys Softphone'>Genesys Softphone</option>
+									<option size="25" value='Genesys SR Service'>Genesys SR Service</option>
+									<option size="25" value='Genesys T-Server and UCMA Connector for Skype for Business'>Genesys T-Server and UCMA Connector for Skype for Business</option>
+									<option size="25" value='Hosted Provider Edition'>Hosted Provider Edition</option>
+									<option size="25" value='Hosted Provider Edition Agent Desktop Proxy'>Hosted Provider Edition Agent Desktop Proxy</option>
+									<option size="25" value='Interaction Recording Web Services'>Interaction Recording Web Services</option>
+									<option size="25" value='Interaction Routing Designer'>Interaction Routing Designer</option>
+									<option size="25" value='Interaction Server'>Interaction Server</option>
+									<option size="25" value='Interaction Server Cluster Plug-in for GAX'>Interaction Server Cluster Plug-in for GAX</option>
+									<option size="25" value='Interaction Server Proxy'>Interaction Server Proxy</option>
+									<option size="25" value='Interaction Workflow Samples'>Interaction Workflow Samples</option>
+									<option size="25" value='Interaction Workspace'>Interaction Workspace</option>
+									<option size="25" value='Interaction Workspace Plug-in for Facebook'>Interaction Workspace Plug-in for Facebook</option>
+									<option size="25" value='Interaction Workspace Plug-in for Genesys Agent Scripting'>Interaction Workspace Plug-in for Genesys Agent Scripting</option>
+									<option size="25" value='Interaction Workspace Plug-in for RSS'>Interaction Workspace Plug-in for RSS</option>
+									<option size="25" value='Interaction Workspace Plug-in for Twitter'>Interaction Workspace Plug-in for Twitter</option>
+									<option size="25" value='IVR Driver for MPS'>IVR Driver for MPS</option>
+									<option size="25" value='IVR Driver for WVR for AIX'>IVR Driver for WVR for AIX</option>
+									<option size="25" value='IVR Library'>IVR Library</option>
+									<option size="25" value='IVR SDK'>IVR SDK</option>
+									<option size="25" value='IVR Server'>IVR Server</option>
+									<option size="25" value='iWD Data Mart'>iWD Data Mart</option>
+									<option size="25" value='iWD GAX Plug-In'>iWD GAX Plug-In</option>
+									<option size="25" value='iWD Manager'>iWD Manager</option>
+									<option size="25" value='iWD Runtime Node'>iWD Runtime Node</option>
+									<option size="25" value='iWD Setup Utility'>iWD Setup Utility</option>
+									<option size="25" value='iWD Stat Server Extensions'>iWD Stat Server Extensions</option>
+									<option size="25" value='iWD Web'>iWD Web</option>
+									<option size="25" value='Java Environment and Libraries for eServices and UCS'>Java Environment and Libraries for eServices and UCS</option>
+									<option size="25" value='Knowledge Manager'>Knowledge Manager</option>
+									<option size="25" value='License Reporting Manager'>License Reporting Manager</option>
+									<option size="25" value='Load Distribution Server'>Load Distribution Server</option>
+									<option size="25" value='Local Control Agent'>Local Control Agent</option>
+									<option size="25" value='Log File Management Tool Client'>Log File Management Tool Client</option>
+									<option size="25" value='Log File Management Tool Collector'>Log File Management Tool Collector</option>
+									<option size="25" value='Log File Management Tool Indexer'>Log File Management Tool Indexer</option>
+									<option size="25" value='Manager'>Manager</option>
+									<option size="25" value='Media Control Platform'>Media Control Platform</option>
+									<option size="25" value='Message Server'>Message Server</option>
+									<option size="25" value='MIB'>MIB</option>
+									<option size="25" value='Mitel MiTAI'>Mitel MiTAI</option>
+									<option size="25" value='Mitel MiVoice'>Mitel MiVoice</option>
+									<option size="25" value='MRCP Proxy'>MRCP Proxy</option>
+									<option size="25" value='Multi-Channel Routing Extensions'>Multi-Channel Routing Extensions</option>
+									<option size="25" value='NEC NEAX/APEX'>NEC NEAX/APEX</option>
+									<option size="25" value='Nortel Communication Server 1000 with SCCS/MLS'>Nortel Communication Server 1000 with SCCS/MLS</option>
+									<option size="25" value='Nortel Communication Server 2000/2100'>Nortel Communication Server 2000/2100</option>
+									<option size="25" value='Orchestration Server'>Orchestration Server</option>
+									<option size="25" value='Outbound Contact Center Extension'>Outbound Contact Center Extension</option>
+									<option size="25" value='Outbound Contact Server'>Outbound Contact Server</option>
+									<option size="25" value='Platform'>Platform</option>
+									<option size="25" value='Platform SDK &amp; Application Blocks for .NET'>Platform SDK &amp; Application Blocks for .NET</option>
+									<option size="25" value='Platform SDK &amp; Application Blocks for Java'>Platform SDK &amp; Application Blocks for Java</option>
+									<option size="25" value='Platform SDK for .NET'>Platform SDK for .NET</option>
+									<option size="25" value='Platform SDK for Java'>Platform SDK for Java</option>
+									<option size="25" value='Plug-in for GAX'>Plug-in for GAX</option>
+									<option size="25" value='Plug-in for Genesys Administrator Extension'>Plug-in for Genesys Administrator Extension</option>
+									<option size="25" value='Plug-in for Interaction Workspace'>Plug-in for Interaction Workspace</option>
+									<option size="25" value='Plug-in for Workspace Desktop Edition'>Plug-in for Workspace Desktop Edition</option>
+									<option size="25" value='Plugin for Administrator'>Plugin for Administrator</option>
+									<option size="25" value='Plugin for Genesys Administrator Extension'>Plugin for Genesys Administrator Extension</option>
+									<option size="25" value='Plugin for Workspace Desktop Edition'>Plugin for Workspace Desktop Edition</option>
+									<option size="25" value='Policy Server'>Policy Server</option>
+									<option size="25" value='Privacy Manager Plugin for GAX'>Privacy Manager Plugin for GAX</option>
+									<option size="25" value='PSTN Connector'>PSTN Connector</option>
+									<option size="25" value='Recording Crypto Server'>Recording Crypto Server</option>
+									<option size="25" value='Recording Muxer Script'>Recording Muxer Script</option>
+									<option size="25" value='Recording Plug-in for Genesys Administrator Extension'>Recording Plug-in for Genesys Administrator Extension</option>
+									<option size="25" value='Recording Processor Script'>Recording Processor Script</option>
+									<option size="25" value='Reporting and Analytics Aggregates'>Reporting and Analytics Aggregates</option>
+									<option size="25" value='Reporting Dashboard Proxy for Genesys Administrator Extension'>Reporting Dashboard Proxy for Genesys Administrator Extension</option>
+									<option size="25" value='Reporting Plug-in for GAX'>Reporting Plug-in for GAX</option>
+									<option size="25" value='Reporting Server'>Reporting Server</option>
+									<option size="25" value='Resource Manager'>Resource Manager</option>
+									<option size="25" value='Sample Reporting Templates'>Sample Reporting Templates</option>
+									<option size="25" value='SAP BusinessObjects Business Intelligence Platform Client 3.1.x'>SAP BusinessObjects Business Intelligence Platform Client 3.1.x</option>
+									<option size="25" value='SAP BusinessObjects Business Intelligence Platform Client 4.1.x'>SAP BusinessObjects Business Intelligence Platform Client 4.1.x</option>
+									<option size="25" value='SAP BusinessObjects Business Intelligence Platform Client ServicePack 3.1.x'>SAP BusinessObjects Business Intelligence Platform Client ServicePack 3.1.x</option>
+									<option size="25" value='SAP BusinessObjects Business Intelligence Platform Client ServicePack 4.1.x'>SAP BusinessObjects Business Intelligence Platform Client ServicePack 4.1.x</option>
+									<option size="25" value='SAP BusinessObjects Business Intelligence Platform Server 3.1.x'>SAP BusinessObjects Business Intelligence Platform Server 3.1.x</option>
+									<option size="25" value='SAP BusinessObjects Business Intelligence Platform Server 4.1.x'>SAP BusinessObjects Business Intelligence Platform Server 4.1.x</option>
+									<option size="25" value='SAP BusinessObjects Business Intelligence Platform Server Service Pack 3.1.x'>SAP BusinessObjects Business Intelligence Platform Server Service Pack 3.1.x</option>
+									<option size="25" value='SAP BusinessObjects Business Intelligence Platform Server ServicePack 4.1.x'>SAP BusinessObjects Business Intelligence Platform Server ServicePack 4.1.x</option>
+									<option size="25" value='Security Pack on UNIX'>Security Pack on UNIX</option>
+									<option size="25" value='Server'>Server</option>
+									<option size="25" value='Siemens HiPath 4000 CSTA III'>Siemens HiPath 4000 CSTA III</option>
+									<option size="25" value='SIP Endpoint SDK for .NET'>SIP Endpoint SDK for .NET</option>
+									<option size="25" value='SIP Endpoint SDK for Apple OS'>SIP Endpoint SDK for Apple OS</option>
+									<option size="25" value='SIP Feature Server'>SIP Feature Server</option>
+									<option size="25" value='SIP Proxy'>SIP Proxy</option>
+									<option size="25" value='SIP Server'>SIP Server</option>
+									<option size="25" value='sipspan2'>sipspan2</option>
+									<option size="25" value='SMS Server'>SMS Server</option>
+									<option size="25" value='SNMP Master Agent'>SNMP Master Agent</option>
+									<option size="25" value='Social Media Plug-in for Workspace Desktop Edition'>Social Media Plug-in for Workspace Desktop Edition</option>
+									<option size="25" value='Social Messaging Plugin for Genesys Agent Desktop'>Social Messaging Plugin for Genesys Agent Desktop</option>
+									<option size="25" value='Social Messaging Server'>Social Messaging Server</option>
+									<option size="25" value='Solution Control Server'>Solution Control Server</option>
+									<option size="25" value='Spectrum'>Spectrum</option>
+									<option size="25" value='Stat Server'>Stat Server</option>
+									<option size="25" value='Supplementary Services Gateway'>Supplementary Services Gateway</option>
+									<option size="25" value='T-Server Common Part'>T-Server Common Part</option>
+									<option size="25" value='T-Server-CUCM to Media Server Connector'>T-Server-CUCM to Media Server Connector</option>
+									<option size="25" value='Third-Party Squid'>Third-Party Squid</option>
+									<option size="25" value='Training Server'>Training Server</option>
+									<option size="25" value='UCS Manager'>UCS Manager</option>
+									<option size="25" value='Universal Contact Server'>Universal Contact Server</option>
+									<option size="25" value='Universal Contact Server Manager'>Universal Contact Server Manager</option>
+									<option size="25" value='Universal Contact Server Proxy'>Universal Contact Server Proxy</option>
+									<option size="25" value='Universal Routing Server'>Universal Routing Server</option>
+									<option size="25" value='VP Reporting Plugin for GAX'>VP Reporting Plugin for GAX</option>
+									<option size="25" value='Web'>Web</option>
+									<option size="25" value='Web API Server'>Web API Server</option>
+									<option size="25" value='Web API Server for WebLogic'>Web API Server for WebLogic</option>
+									<option size="25" value='Web API Server for WebSphere'>Web API Server for WebSphere</option>
+									<option size="25" value='Web Services and Applications'>Web Services and Applications</option>
+									<option size="25" value='Widgets'>Widgets</option>
+									<option size="25" value='Workspace Desktop Edition'>Workspace Desktop Edition</option>
+									<option size="25" value='Workspace Plugin for Skype for Business'>Workspace Plugin for Skype for Business</option>
 								</select>
 							</div>
 						</li>
@@ -268,7 +309,7 @@
 						<li>
 							<label class="description" for="element_1">Version</label>
 							<div >
-								<input id="release" name="release" class="element text medium" type="text" size="50" maxlength="255" value="" />
+								<input id="release" name="release" class="element text medium" type="text" size="25" maxlength="255" value="" />
 							</div>
 						</li>
 						<li>
@@ -353,7 +394,7 @@
 
 
 
-    var socket = io.connect('http://localhost:5000/prepareadvisory');
+    var socket = io.connect('http://192.168.14.91:5000/prepareadvisory');
 
     var bar1 = new ldBar("#myItem1");
     //var bar2 = document.getElementById('myItem1').ldBar;

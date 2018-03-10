@@ -28,8 +28,11 @@ constructor (){
             { typeid:63,lc_value:'Contact Server',	name:"Universal Contact Server", solution: "eServices"},
             { typeid:71,lc_value:'Contact Server Manager',	name:"Universal Contact Server Manager", solution: "eServices"},
             { typeid:80,lc_value:'Web API Server',	name:"Web API Server", solution: "eServices"},
-            { typeid:1005,lc_value:'Avaya Communication Manager T-Server',	name:"T-Server for Avaya Communication Manager", solution: "Framework"},
+            { typeid:1005,lc_value:'Avaya Communication Manager T-Server',	name:"Avaya Communication Manager", solution: "Framework"},
             { typeid:1072,lc_value:'SIP Switch T-Server',	name:"SIP Server", solution: "SIP Server"},
+            { typeid:0, lc_value:'Virtual Switch for IVR In-Front T-Server', name:'IVR Server', solution:'IVR Interface'},
+            { typeid:168, lc_value:'Business Rules Application Server', name:'Authoring Tool', solution:'Genesys Rules System'},
+            { typeid:169, lc_value:'Business Rules Execution Server', name:'Engine', solution:'Genesys Rules System'}
             ];
         }
 

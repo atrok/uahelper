@@ -213,6 +213,7 @@ div#myItem1 {
 }
 
 div#forms {
+	width:25%;
     height: 100%;
     padding: 10px;
     background: #f3f2f2;
@@ -220,13 +221,18 @@ div#forms {
 }
 
 .dropdown {
-    width: 475px;
+    width: 100%;
 }
 
-select.dropdown_select {
-    width: auto;
+select.dropdown_select, .element {
+    width: 100%;
     overflow: hidden;
+    height: 25px;
 }
+.element {
+    width: 100%;
+}
+
 .tableresultheader{
 	width:200px;
 	cursor: pointer;
