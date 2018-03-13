@@ -197,13 +197,14 @@ function getFile(response, args) {
     }
     var path = buildFilename(args.filename);
 
+    return new Promise((resolve,reject)=>{
     fs.exists(path, function (exists) {
-       try { 
+       try{
            if (!exists) {
             console.log('doesn\'t exist');
-            throw (new Error('File ' + filename + ' is not found'));
+            reject(new Error('File ' + args.filename + ' is not found'));
             return;
-        }
+           }
 
 
         
@@ -214,13 +215,15 @@ function getFile(response, args) {
 
             //fs.createReadStream(path.resolve(__dirname, filename)).pipe(response);
             fs.createReadStream(path).pipe(response);
+            resolve();
         } catch (err) {
             console.log(err.stack);
-            response.writeHead(500, { "Content-Type": "text/plain" });
-            throw err;
+            reject(err);
             // html.htmlFooter(response);
         }
     });
+
+})
 }
 
 exports.start = start;

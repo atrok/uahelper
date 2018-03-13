@@ -215,7 +215,7 @@ local_app.prototype.init = function (app) {
 	})
 
 
-	app.get('/getFile', function (request, response) {
+	app.get('/getFile', async function (request, response) {
 
 
 
@@ -235,7 +235,7 @@ local_app.prototype.init = function (app) {
 			logger.timestamp('custom parsing starts', 'nice_dev_init');
 
 
-			requesthandlers.getFile(response,args);
+			await requesthandlers.getFile(response,args);
 
 			//logger.log(args);
 
