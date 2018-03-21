@@ -175,6 +175,30 @@ local_app.prototype.init = function (app) {
 					socket.emit('done', {});
 				}
 			});
+
+			socket.on('recreate_view', async function (args) {
+				try {
+					
+
+					if (args.databases) {
+						await couchdb.init(args.databases, socket);
+
+						socket.emit('errors', { error: "Views succesfully recreated" })
+					}else{
+						socket.emit('errors', { error: "Arguments missing" })
+					}
+						
+
+
+					
+				} catch (e) {
+					console.log('recreate_view:', e.stack);
+					socket.emit('errors', { error: e.message })
+				} finally {
+					socket.emit('done', {});
+				}
+			});
+
 		})
 
 

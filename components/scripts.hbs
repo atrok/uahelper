@@ -182,6 +182,22 @@
 
     })
 
+        $("#form_admin").submit(function () {
+        try {
+            var args = {};
+            args.databases = $("#databases option:selected").attr("value");
+
+            submitData('recreate_view', args);
+            //alert(args);;
+
+        } catch (e) {
+            console.log(e.stack);
+        } finally {
+            return false; // to avoid page reload
+        } // to avoid page reload
+
+    })
+
     function done() {
         $(':submit').removeAttr('disabled');
         $('div #myItem1').invisible();
@@ -190,6 +206,7 @@
         socket.emit(channel, data);
         $('div #myItem1').visible();
     }
+
     var checkField = function (text, condition) {
         return (text.length > condition) ? false : true;
     }

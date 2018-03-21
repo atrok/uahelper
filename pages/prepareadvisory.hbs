@@ -28,6 +28,7 @@
 
 			<button class="w3-bar-item w3-button  tablink w3-red" onclick="openTab(event, 'db')">Database</button>
 			<button class="w3-bar-item w3-button  tablink" onclick="openTab(event, 'app')">Application</button>
+			<button class="w3-bar-item w3-button  tablink" onclick="openTab(event, 'admin')">Views management</button>
 
 		</div>
 		<div id="forms" class="left">
@@ -126,6 +127,30 @@
 				</form>
 			</div>
 
+			<div id="admin" class="tab height300" style="display:none">
+				<form id="form_admin">
+					<h1>{{form_admin.header}}</h1>
+					<ul>
+
+						<li>
+							<label class="description" for="element_1">Databases</label>
+							<div class="dropdown">
+								<select id="databases" class="dropdown_select">
+									{{#each form_admin.databases}}
+									<option size="25" value='{{name}}'>{{name}}</option>
+									{{/each}}
+								</select>
+							</div>
+						</li>
+
+						<li>
+
+							<div>
+								<button>Run</button>
+							</div>
+						</li>
+				</form>
+			</div>
 
 		</div>
 

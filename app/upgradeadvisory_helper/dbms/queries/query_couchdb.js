@@ -82,8 +82,20 @@ var query = (response, view, opts, dbname) => {
     });
 };
 
+var init=function(dbname,response){
+
+    var logger = new Logger(response);
+
+    if (typeof dbname === 'undefined')
+    logger.log('DB name is not provided, using default set name');
+
+    couchdb.getDBConnection(dbname);
+
+    return couchdb.initialize("true", response)
+}
 
 module.exports = {
     query,
-    remove
+    remove,
+    init
 };

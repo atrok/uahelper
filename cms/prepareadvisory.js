@@ -244,6 +244,13 @@
 			{"name": "Workspace Desktop Edition" ,"value":2044},
 			{"name": "Workspace Plugin for Skype for Business" ,"value":116}
 			]
+		},
+		form_admin: {
+			header: "Choose Database to recreate views",
+			databases:[
+				{name: "genesys_releases"}
+			]
 		}
+
 
 }
