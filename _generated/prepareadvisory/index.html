@@ -85,6 +85,10 @@
 								<input id="pass" name="pass" class="element text medium" type="password" size="25" maxlength="255" value="" />
 							</div>
 						</li>
+						<li id="li_genfile">
+							<label class="description" for="element_5" class="form_element_height">Generate report on server</label>
+								<input type="checkbox"  id="genfile" name="genfile" class="form_element_height width40" />
+						</li>
 						<li id="li_3">
 
 							<li class="buttons">
@@ -339,6 +343,12 @@
 								</select>
 							</div>
 						</li>
+
+						<li id="li_genfile">
+							<label class="description" for="element_5" class="form_element_height">Generate report on server</label>
+								<input type="checkbox"  id="genfile" name="genfile" class="form_element_height width40" />
+						</li>
+
 						<li>
 
 							<div>
@@ -379,7 +389,18 @@
 				
 <!--div class="ldBar" data-value=""></div -->
 <div id="myItem1"></div>
-<div id="result">
+<form id="form_generate">
+    <div id="result">
+
+    </div>
+    <div id="generate" style="visibility: hidden">
+<label>Generate report:</label>
+        <button id='docx'>Docx</button>
+        <button id='xlsx'>Xlsx</button>
+
+    </div>
+</form>
+<div id="tasksContainer">
     <h3>Executed tasks</h3>
     <form id="form_tasks">
         <table id="tasks">
@@ -395,11 +416,20 @@
         </div>
     </form>
 </div>
-<div id="console"></div>
 
- <script src="/assets/js/socket.io.js "></script>
+<div id="console"></div> <script src="/assets/js/socket.io.js "></script>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script type="text/javascript" src="/assets/js/loading-bar.min.js"></script>
+<script src="/assets/js/docxtemplater-latest.min.js"></script>
+<script src="/assets/js/jszip.min.js"></script>
+<script src="/assets/js/file-saver.min.js"></script>
+<script src="/assets/js/jszip-utils.js"></script>
+<!--
+    Mandatory in IE 6, 7, 8 and 9.
+    -->
+<!--[if IE]>
+        <script type="text/javascript" src="examples/vendor/jszip-utils-ie.js"></script>
+    <![endif]-->
 <script>
 
 
@@ -416,6 +446,8 @@
 
 
 
+
+    var obj = [];
 
     var socket = io.connect('/prepareadvisory');
 
@@ -436,9 +468,30 @@
 
     socket.on('result', function (data) {
         console.log(data);
+        $("#generate").visible();
         $("#div_result #resultsTable").empty();
 
-        Object.keys(data).forEach((key) => { $("#div_result #result").append(data[key]); })
+        // remove all hidden inputs
+        var fields = $("#form_generate :input").serializeArray();
+        $.each(fields, function (i, field) {
+            $("input[name='" + field.value + "']").remove();
+        });
+
+        // clearing the cache
+        obj=[];
+
+        // saving object for postprocesing in cache
+        if (data.parsed_obj) {
+            obj[data._id] = data.parsed_obj;
+            $("#generate").append("<input type='hidden' name='" + data._id + "' value='" + data._id + "' />");
+        }
+
+        Object.keys(data).forEach((key) => {
+            if (key === 'file' || key === 'error' || key == 'table') // 
+                $("#div_result #result").append(data[key]);
+        })
+
+
 
         $('.tableresultheader').click(function () {
             $header = $(this);
@@ -447,6 +500,26 @@
                 $header.text(function () {
                     return $content.is(':visible') ? 'Collapse' : 'Expand';
                 });
+            });
+        });
+
+        // attaching event listeners to process generate document requests;
+
+        $(document).ready(function () {
+            document.getElementById("docx").addEventListener("click", function () {
+
+                var values = {};
+                var fields = $("#form_generate :input").serializeArray();
+                $.each(fields, function (i, field) {
+                    values = obj[field.value];
+                });
+
+                var generator = new Generator();
+
+                generator.generateDocx("/assets/js/input.docx", values);
+
+                return false;
+
             });
         });
 
@@ -521,6 +594,7 @@
             args.dbname = (checkField($("#dbname").val(), 100)) ? $("#dbname").val() : errors.push('DB name can\t be longer than 100');
             args.user = (checkField($("#user").val(), 100)) ? $("#user").val() : errors.push('User can\'t be longer than 100');
             args.pass = (checkField($("#pass").val(), 25)) ? $("#pass").val() : errors.push('Password can\'t be longer than 25');
+            args.genfile=$("input:checked")? true: false; 
 
             var res = {};
             res.form = 'form_dbs';
@@ -544,6 +618,7 @@
             var errors = []
             args.apptype = $("#apptype option:selected").attr("value");
             args.ostype = $("#ostype option:selected").attr("value");
+            args.genfile=$("input:checked")? true: false; 
 
             args.release = (checkField($("#release").val(), 10)) ? $("#release").val() : errors.push('Release can\'t be longer than 10');
             var res = {}
@@ -581,7 +656,7 @@
 
     })
 
-        $("#form_admin").submit(function () {
+    $("#form_admin").submit(function () {
         try {
             var args = {};
             args.databases = $("#databases option:selected").attr("value");
@@ -597,10 +672,21 @@
 
     })
 
+    $("#form_generate").submit(function () {
+        try {
+
+        } catch (e) {
+            console.log(e.stack);
+        } finally {
+            return false; // to avoid page reload
+        } // to avoid page reload
+    })
+
     function done() {
         $(':submit').removeAttr('disabled');
         $('div #myItem1').invisible();
     }
+
     function submitData(channel, data) {
         socket.emit(channel, data);
         $('div #myItem1').visible();
@@ -655,6 +741,82 @@
         }
         document.getElementById(tabName).style.display = "block";
         evt.currentTarget.className += " w3-red";
+    }
+
+    /* Generate DOCX from template */
+
+    var Generator = function () { };
+
+    Generator.prototype.generateDocx = function (url, obj) {
+        this.loadFile(url, obj, this.createDocx)
+    }
+
+    Generator.prototype.loadFile = function (url, obj, callback) {
+
+        var self = this;
+
+
+        self._obj = obj;
+        self.url = url;
+
+        JSZipUtils.getBinaryContent(url, function (error, content) {
+            if (error) { throw error };
+            var zip = new JSZip(content);
+            var doc = new Docxtemplater().loadZip(zip)
+            doc.setData(self._obj);
+
+            try {
+                // render the document (replace all occurences of {first_name} by John, {last_name} by Doe, ...)
+                doc.render()
+            }
+            catch (error) {
+                var e = {
+                    message: error.message,
+                    name: error.name,
+                    stack: error.stack,
+                    properties: error.properties,
+                }
+                console.log(JSON.stringify({ error: e }));
+                // The error thrown here contains additional information when logged with JSON.stringify (it contains a property object).
+                throw error;
+            }
+
+            var out = doc.getZip().generate({
+                type: "blob",
+                mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            }) //Output the document using Data-URI
+            saveAs(out, "output.docx")
+        });
+    }
+
+
+    Generator.prototype.createDocx = function (error, content) {
+        if (error) { throw error };
+        var zip = new JSZip(content);
+        var doc = new Docxtemplater().loadZip(zip)
+        doc.setData(this._obj);
+
+        try {
+            // render the document (replace all occurences of {first_name} by John, {last_name} by Doe, ...)
+            doc.render()
+        }
+        catch (error) {
+            var e = {
+                message: error.message,
+                name: error.name,
+                stack: error.stack,
+                properties: error.properties,
+            }
+            console.log(JSON.stringify({ error: e }));
+            // The error thrown here contains additional information when logged with JSON.stringify (it contains a property object).
+            throw error;
+        }
+
+        var out = doc.getZip().generate({
+            type: "blob",
+            mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        }) //Output the document using Data-URI
+        saveAs(out, "output.docx")
     }
 
 </script>

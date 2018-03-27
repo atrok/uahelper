@@ -66,6 +66,11 @@ local_app.prototype.init = function (app) {
 				mylogger.log(args);
 
 				if (isValidated(args, socket)) {
+
+					// do we need to generate report?
+					if(args.genfile)
+					var genfile=args.genfile;
+
 					try {
 						logger.timestamp('custom parsing starts', 'nice_dev_init');
 						//var db=new dbwrapper();
@@ -85,7 +90,7 @@ local_app.prototype.init = function (app) {
 
 							try {
 								socket.emit('console', 'Retrieved data succesfully');
-								var content = await docProcessing.start(socket, result, 'false');
+								var content = await docProcessing.start(socket, result, genfile, 'false');
 
 								postProcessing(content, args.args, socket);
 
@@ -116,13 +121,15 @@ local_app.prototype.init = function (app) {
 				// todo validation check for component form
 				if (isValidated(args, socket)) {
 					var a = args.args;
+					var genfile= a.genfile;
+
 					var component = [{
 						APPLICATION_TYPE: (null !== a.apptype) ? a.apptype : "SIP Server",
 						OS_TYPE: (null !== a.ostype) ? a.ostype : 'linux',
 						RELEASE: (null !== a.release) ? a.release : "8.1.102.95"
 					}]
 					try {
-						var content = await docProcessing.start(socket, component);
+						var content = await docProcessing.start(socket, component, genfile);
 						//content.input=;
 
 						postProcessing(content, args.args, socket);

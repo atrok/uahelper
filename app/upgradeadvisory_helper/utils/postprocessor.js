@@ -35,7 +35,12 @@ postprocessor.prototype.log = function () {
 postprocessor.prototype.format = function (id) {
     var output = {}
     output.table = html.displayTableResults(new ArrayResult(this.result.components), 'Results');
-    output.file = html.displayTableResults(new SimpleObjectResult(this.result.file), 'Resulting file');
+    if (this.result.file)
+        output.file = html.displayTableResults(new SimpleObjectResult(this.result.file), 'Resulting file');
+
+    output.parsed_obj=this.result.obj;
+    output._id=this.result._id;
+    output._rev=this.result._rev;
 
     if (this.result.errors.length > 0) {
         output.errors = html.displayTableResults(new ArrayResult(this.result.errors), 'Errors');

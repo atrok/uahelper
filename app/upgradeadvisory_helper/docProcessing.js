@@ -14,7 +14,7 @@ var LinkHTML = require('./html/linkhtml');
 var CombinedHTML = require('./html/combinedhtml');
 
 
-var start = (response, components, recreateViews) => {
+var start = (response, components, isGenerateReport,recreateViews) => {
   var logger = new Logger(response);
 
   return new Promise(async (resolve, reject) => {
@@ -36,10 +36,10 @@ var start = (response, components, recreateViews) => {
 
           var p = apptypes.findByLCValue(components[i].APPLICATION_TYPE);
           var application = (null === p) ? components[i].APPLICATION_TYPE : p.name;
-          var solution =(null===p) ? '' : p.solution;
+          var solution = (null === p) ? '' : p.solution;
           var o = ostypes.findByTypeID(components[i].OS_TYPE);
           var os = (null === o) ? components[i].OS_TYPE : o.name;
-          
+
           /*
           var dbtype = dbtypes.findByTypeID(components[i].RELEASE.slice(0, 3));
           if (null === dbtype) throw new Error('Database is not found for ' + application + ' release ' + components[i].RELEASE);
@@ -57,10 +57,10 @@ var start = (response, components, recreateViews) => {
 
           logger.log('Processing: ' + application + ' ' + os + ' ' + components[i].RELEASE);
           var component = parser.findComponent(obj, application);
-          
-          
-          component.solution=solution;
-          components[i].SOLUTION=solution;
+
+
+          component.solution = solution;
+          components[i].SOLUTION = solution;
 
 
           var new_releases = await couchdb.select('test/features-by-release', opts, response);
@@ -156,12 +156,13 @@ var start = (response, components, recreateViews) => {
 
 
       //console.log(JSON.stringify(obj));
-      var file = await docx.createDocx(obj);//.catch(function(e){setTimeout(function(e){throw e;})}); /// take care of unhandled exceptions from file promise
+      if (isGenerateReport) {
+        var file = await docx.createDocx(obj);//.catch(function(e){setTimeout(function(e){throw e;})}); /// take care of unhandled exceptions from file promise
 
-      file.link = new LinkHTML(file.filename, '/getfile?filename=' + file.filename).toString();
-      file.deletelink = new LinkHTML('delete', '/deletefile?filename=' + file.filename).toString();
-      result.file = file;
-
+        file.link = new LinkHTML(file.filename, '/getfile?filename=' + file.filename).toString();
+        file.deletelink = new LinkHTML('delete', '/deletefile?filename=' + file.filename).toString();
+        result.file = file;
+      }
       resolve(result);
 
     } catch (e) {

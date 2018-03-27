@@ -2,7 +2,18 @@
 
 <!--div class="ldBar" data-value=""></div -->
 <div id="myItem1"></div>
-<div id="result">
+<form id="form_generate">
+    <div id="result">
+
+    </div>
+    <div id="generate" style="visibility: hidden">
+<label>Generate report:</label>
+        <button id='docx'>Docx</button>
+        <button id='xlsx'>Xlsx</button>
+
+    </div>
+</form>
+<div id="tasksContainer">
     <h3>Executed tasks</h3>
     <form id="form_tasks">
         <table id="tasks">
@@ -18,5 +29,5 @@
         </div>
     </form>
 </div>
-<div id="console"></div>
 
+<div id="console"></div>
