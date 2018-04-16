@@ -220,7 +220,7 @@
             args.dbname = (checkField($("#dbname").val(), 100)) ? $("#dbname").val() : errors.push('DB name can\t be longer than 100');
             args.user = (checkField($("#user").val(), 100)) ? $("#user").val() : errors.push('User can\'t be longer than 100');
             args.pass = (checkField($("#pass").val(), 25)) ? $("#pass").val() : errors.push('Password can\'t be longer than 25');
-            args.genfile = $("input:checked") ? true : false;
+            args.genfile = $('#genfile_d').is(':checked') ? true : false;
 
             var res = {};
             res.form = 'form_dbs';
@@ -244,7 +244,7 @@
             var errors = []
             args.apptype = $("#apptype option:selected").attr("value");
             args.ostype = $("#ostype option:selected").attr("value");
-            args.genfile = $("input:checked") ? true : false;
+            args.genfile = $('#genfile_a').is(':checked') ? true : false;
 
             args.release = (checkField($("#release").val(), 10)) ? $("#release").val() : errors.push('Release can\'t be longer than 10');
             var res = {}

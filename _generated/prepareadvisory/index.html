@@ -87,7 +87,7 @@
 						</li>
 						<li id="li_genfile">
 							<label class="description" for="element_5" class="form_element_height">Generate report on server</label>
-								<input type="checkbox"  id="genfile" name="genfile" class="form_element_height width40" />
+								<input type="checkbox"  id="genfile_d" name="genfile" class="form_element_height width40" />
 						</li>
 						<li id="li_3">
 
@@ -353,7 +353,7 @@
 
 						<li id="li_genfile">
 							<label class="description" for="element_5" class="form_element_height">Generate report on server</label>
-								<input type="checkbox"  id="genfile" name="genfile" class="form_element_height width40" />
+								<input type="checkbox"  id="genfile_a" name="genfile" class="form_element_height width40" />
 						</li>
 
 						<li>
@@ -646,7 +646,7 @@
             args.dbname = (checkField($("#dbname").val(), 100)) ? $("#dbname").val() : errors.push('DB name can\t be longer than 100');
             args.user = (checkField($("#user").val(), 100)) ? $("#user").val() : errors.push('User can\'t be longer than 100');
             args.pass = (checkField($("#pass").val(), 25)) ? $("#pass").val() : errors.push('Password can\'t be longer than 25');
-            args.genfile = $("input:checked") ? true : false;
+            args.genfile = $('#genfile_d').is(':checked') ? true : false;
 
             var res = {};
             res.form = 'form_dbs';
@@ -670,7 +670,7 @@
             var errors = []
             args.apptype = $("#apptype option:selected").attr("value");
             args.ostype = $("#ostype option:selected").attr("value");
-            args.genfile = $("input:checked") ? true : false;
+            args.genfile = $('#genfile_a').is(':checked') ? true : false;
 
             args.release = (checkField($("#release").val(), 10)) ? $("#release").val() : errors.push('Release can\'t be longer than 10');
             var res = {}
