@@ -6,7 +6,7 @@ const view_names = [
             emit(doc["component"], doc);
           }
         }
-      }
+      }, view: '_design/test'
     },
     {
       name: "group-releases-by-component", flag: 0x2, function: {
@@ -20,7 +20,7 @@ const view_names = [
             return sum(values);
           }
         }
-      }
+      }, view: '_design/test'
     },
     {
       name: "features-by-release", flag: 0x4, function: {
@@ -98,7 +98,7 @@ const view_names = [
             }
           }
         }
-      }
+      }, view: '_design/test'
     },
     {
       name: "short-release-info", flag: 0x8, function: {
@@ -113,7 +113,7 @@ const view_names = [
             return sum(values);
           }
         }
-      }
+      }, view: '_design/test'
     },
     {
       name: "group-releases-by-family", flag: 0x10, function: {
@@ -172,7 +172,31 @@ const view_names = [
             return sum(values);
           }
         }
-      }
+      },view: '_design/test'
+    },
+    {
+        name: 'components', flag: 0x20, function: {
+            'components': {
+                map: function (doc) {
+                    emit([doc.solution_name, doc.component], 1);
+                  },
+                  reduce: function (keys, values) {
+                    return count(values);
+                  } 
+            }
+        }, view: '_design/test2'
+    },
+    {
+        name: 'solutions_by_components', flag: 0x40, function: {
+            'solutions_by_components':{
+                map: function (doc) {
+                    emit(doc.solution_name, 1);
+                  },
+                reduce: function (keys, values) {
+                    return count(values);
+                  }
+            }
+        }
     }
   ];
 

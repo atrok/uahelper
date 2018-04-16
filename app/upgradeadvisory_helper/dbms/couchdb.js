@@ -45,7 +45,7 @@ class CouchDB {
 
     this.isCreated = false;
 
-    this.FULL_MASK = 0x1F;// 11111
+    this.FULL_MASK = 0x7F;// 1111111
 
   }
 
@@ -89,7 +89,7 @@ class CouchDB {
         try {
           res.rows.forEach(function (row, key) {
             logger.log('Design doc id: ' + row.id + ', rev: ' + row.value.rev);
-            if (row.id === '_design/test') {
+            if (row.id === '_design/test'||row.id === '_design/test2') {
               var views = Object.getOwnPropertyNames(row.doc.views);
               view_names.forEach(function (value) {
                 if (views.find(x => x == value.name)) {
@@ -131,6 +131,7 @@ class CouchDB {
     return new Promise(resolve => {
 
       var func = {};
+      var view=[];
 
       view_names.forEach(function (value) {
 
@@ -141,12 +142,14 @@ class CouchDB {
           logger.log("Missing view " + value.name);
         }
         Object.assign(func, value.function);
+        
       });
 
       logger.log("Creating new view");
       var rev = (revision) ? revision : null;
 
-      db.save('_design/test', rev, func, function (err, res) {
+      //TODO add views into custom defined view names (use save_async for that)
+      db.save("_design/test", rev, func, function (err, res) {
         //db.save('_design/test', func , function (err, res) {
         if (err) {
           logger.log(err);
@@ -154,11 +157,34 @@ class CouchDB {
           return;
         }
         //console.log("Created succesfully");
-        resolve("Created succesfully, id:" + res.id + ", rev: " + res.rev); // returning Promise after views are created;
+        resolve("Created succesfully, id:" + res.id + ", rev: " + res.rev+", view:"+view); // returning Promise after views are created;
       });
+
+
+
+
+
     });//Promise ending
 };
 
+save_async(db,view,rev,func){
+
+  return new Promise((resolve,reject)=>{
+
+    db.save(view, rev, func, function (err, res) {
+      //db.save('_design/test', func , function (err, res) {
+      if (err) {
+        logger.log(err);
+        resolve(err);
+        return;
+      }
+      //console.log("Created succesfully");
+      resolve("Created succesfully, id:" + res.id + ", rev: " + res.rev+", view:"+view); // returning Promise after views are created;
+    });
+
+  })
+
+}
 
 // query to get data from CouchDB
 // where opts is an object like {key: ['Interaction Server','8.5.107.22']}
