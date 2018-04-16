@@ -61,6 +61,36 @@ local_app.prototype.init = function (app) {
 
 			});
 
+			//populate drop down list of solutions
+			socket.on('get_solutions', async function (args) {
+
+				try {
+					var res = await couchdb.query(socket, 'test2/solutions_by_components', { group: true, reduce: true, inclusive_end: true }, 'genesys_releases');
+
+					socket.emit('solutions', res);
+
+				} catch (e) {
+					console.log(e.stack);
+					socket.emit('errors', { error: e.message });
+				}
+
+			});
+
+			//populate drop down list of solutions
+			socket.on('get_components', async function (args) {
+
+				try {
+					var res = await couchdb.query(socket, 'test2/components', { startkey:[args,""], endkey:[args,{}],group: true, reduce: true, inclusive_end: true }, 'genesys_releases');
+
+					socket.emit('components', res);
+
+				} catch (e) {
+					console.log(e.stack);
+					socket.emit('errors', { error: e.message });
+				}
+
+			});
+
 			// prepare UA document based on customer database
 			socket.on('my other event', function (args) {
 				mylogger.log(args);
@@ -68,8 +98,8 @@ local_app.prototype.init = function (app) {
 				if (isValidated(args, socket)) {
 
 					// do we need to generate report?
-					if(args.genfile)
-					var genfile=args.genfile;
+					if (args.genfile)
+						var genfile = args.genfile;
 
 					try {
 						logger.timestamp('custom parsing starts', 'nice_dev_init');
@@ -121,7 +151,7 @@ local_app.prototype.init = function (app) {
 				// todo validation check for component form
 				if (isValidated(args, socket)) {
 					var a = args.args;
-					var genfile= a.genfile;
+					var genfile = a.genfile;
 
 					var component = [{
 						APPLICATION_TYPE: (null !== a.apptype) ? a.apptype : "SIP Server",
@@ -167,14 +197,14 @@ local_app.prototype.init = function (app) {
 
 			socket.on('getresults', async function (args) {
 				try {
-					
-
-						var res = await couchdb.query(socket, 'documents/_all', {key:args.id, include_docs:true}, 'uahelper');
-						console.log('console', 'Retrieved data succesfully');
-						socket.emit('result', prepareResults(res[0].doc));
 
 
-					
+					var res = await couchdb.query(socket, 'documents/_all', { key: args.id, include_docs: true }, 'uahelper');
+					console.log('console', 'Retrieved data succesfully');
+					socket.emit('result', prepareResults(res[0].doc));
+
+
+
 				} catch (e) {
 					console.log('GetResults:', e.stack);
 					socket.emit('errors', { error: e.message })
@@ -185,19 +215,19 @@ local_app.prototype.init = function (app) {
 
 			socket.on('recreate_view', async function (args) {
 				try {
-					
+
 
 					if (args.databases) {
 						await couchdb.init(args.databases, socket);
 
 						socket.emit('errors', { error: "Views succesfully recreated" })
-					}else{
+					} else {
 						socket.emit('errors', { error: "Arguments missing" })
 					}
-						
 
 
-					
+
+
 				} catch (e) {
 					console.log('recreate_view:', e.stack);
 					socket.emit('errors', { error: e.message })
@@ -266,22 +296,22 @@ local_app.prototype.init = function (app) {
 			logger.timestamp('custom parsing starts', 'nice_dev_init');
 
 
-			await requesthandlers.getFile(response,args);
+			await requesthandlers.getFile(response, args);
 
 			//logger.log(args);
 
 			// getting the list of applications and generating the resulting docx file
 
 
-/*
-			temper.render('getfile', context)
-				.then((output) => {
-					response.send(output)
-				}, (reason) => {
-					console.log(reason);
-					
-				})
-				*/
+			/*
+						temper.render('getfile', context)
+							.then((output) => {
+								response.send(output)
+							}, (reason) => {
+								console.log(reason);
+								
+							})
+							*/
 		} catch (err) {
 			logger.timestamp(err.stack, 'nice_dev_init');
 		}
@@ -326,7 +356,7 @@ async function postProcessing(content, args, socket) {
 
 }
 
-function prepareResults(content){
+function prepareResults(content) {
 	var ps = new postprocessor();
 	ps.init(content);
 	return ps.format();
@@ -350,7 +380,7 @@ function prepareTask(item) {
 	task.time = item.time;
 	task.input = item.input;
 	task.id = item._id;
-	task.link = new LinkHTML('Go to results', '#','','getresult', item._id).toString();
+	task.link = new LinkHTML('Go to results', '#', '', 'getresult', item._id).toString();
 	//.addOnClick('submitData(\'getresults\', { \'id\': '+item._id+' })').toString();
 	return task;
 }

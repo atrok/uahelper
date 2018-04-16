@@ -40,7 +40,52 @@
         console.log(data);
         id = data.id;
         socket.emit('tasks', {});
+        socket.emit('get_solutions', {});
     });
+
+    socket.on('solutions', function (data) { //populate solutions dropdown list
+
+        if (data) {
+            console.log(data);
+            Object.keys(data).forEach((key) => {
+                $("#solution").append("<option size=25 value='" + data[key].key + "'>" + data[key].key + "</option>");
+            });
+        }
+        // attaching event listeners to process generate document requests;
+
+        $(document).ready(function () {
+            solutions = document.getElementById("solution");
+            document.getElementById("solution").addEventListener("change", function () {
+
+                solutions.options[solutions.options.selectedIndex].selected = true;
+                socket.emit('get_components', $("#solution option:selected").attr("value"));
+
+                return false;
+
+            });
+        });
+    })
+
+    socket.on('components', function (data) {
+        console.log(data);
+        if (data) {
+            removeOptions(document.getElementById("apptype"))
+            Object.keys(data).forEach((key) => {
+                $("#apptype").append("<option size=25 value='" + data[key].key[1] + "'>" + data[key].key[1] + "</option>");
+            });
+
+            // since we add options dynamically we need to set selected flag on change event
+            $(document).ready(function () {
+            applications = document.getElementById("apptype");
+            document.getElementById("apptype").addEventListener("change", function () {
+
+                applications.options[applications.options.selectedIndex].selected = true;
+                return false;
+
+            });
+        });
+        }
+    })
 
     socket.on('progress', function (data) {
         console.log(data.percents);
@@ -59,7 +104,7 @@
         });
 
         // clearing the cache
-        obj=[];
+        obj = [];
 
         // saving object for postprocesing in cache
         if (data.parsed_obj) {
@@ -175,7 +220,7 @@
             args.dbname = (checkField($("#dbname").val(), 100)) ? $("#dbname").val() : errors.push('DB name can\t be longer than 100');
             args.user = (checkField($("#user").val(), 100)) ? $("#user").val() : errors.push('User can\'t be longer than 100');
             args.pass = (checkField($("#pass").val(), 25)) ? $("#pass").val() : errors.push('Password can\'t be longer than 25');
-            args.genfile=$("input:checked")? true: false; 
+            args.genfile = $("input:checked") ? true : false;
 
             var res = {};
             res.form = 'form_dbs';
@@ -199,7 +244,7 @@
             var errors = []
             args.apptype = $("#apptype option:selected").attr("value");
             args.ostype = $("#ostype option:selected").attr("value");
-            args.genfile=$("input:checked")? true: false; 
+            args.genfile = $("input:checked") ? true : false;
 
             args.release = (checkField($("#release").val(), 10)) ? $("#release").val() : errors.push('Release can\'t be longer than 10');
             var res = {}
@@ -398,6 +443,13 @@
             mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         }) //Output the document using Data-URI
         saveAs(out, "output.docx")
+    }
+
+    function removeOptions(selectbox) {
+        var i;
+        for (i = selectbox.options.length - 1; i >= 0; i--) {
+            selectbox.remove(i);
+        }
     }
 
 </script>
