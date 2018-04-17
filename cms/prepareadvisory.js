@@ -250,6 +250,9 @@
 			databases:[
 				{name: "genesys_releases"}
 			]
+		},
+		form_csv:{
+			header: "Upload CSV file with component versions"
 		}
 
 

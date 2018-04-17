@@ -5,6 +5,7 @@
 <script src="/assets/js/jszip.min.js"></script>
 <script src="/assets/js/file-saver.min.js"></script>
 <script src="/assets/js/jszip-utils.js"></script>
+<script src="/assets/js/LineReader.js"></script>
 <!--
     Mandatory in IE 6, 7, 8 and 9.
     -->
@@ -29,6 +30,7 @@
 
 
     var obj = [];
+    var components=[];
 
     var socket = io.connect('/prepareadvisory');
 
@@ -76,14 +78,14 @@
 
             // since we add options dynamically we need to set selected flag on change event
             $(document).ready(function () {
-            applications = document.getElementById("apptype");
-            document.getElementById("apptype").addEventListener("change", function () {
+                applications = document.getElementById("apptype");
+                document.getElementById("apptype").addEventListener("change", function () {
 
-                applications.options[applications.options.selectedIndex].selected = true;
-                return false;
+                    applications.options[applications.options.selectedIndex].selected = true;
+                    return false;
 
+                });
             });
-        });
         }
     })
 
@@ -450,6 +452,41 @@
         for (i = selectbox.options.length - 1; i >= 0; i--) {
             selectbox.remove(i);
         }
+    }
+
+    function handleFiles(event) {
+        var file = event.target.files[0];
+        var reader = new LineReader();
+
+        var hasHeader= $('#hasHeader').is(':checked') ? true : false;
+        var header=[];
+
+
+        reader.on('line', function (line, next) {
+            // Do something with line....
+
+            if(hasHeader&&header.length==0){
+                header=line.split(',');
+            }else{
+
+            var array = line.split(',');
+            var obj={};
+            for(var i=0;i<array.length;i++){
+                obj[header[i]]=array[i];
+            }
+            components.push(obj);
+
+            }
+
+       
+            next(); // Call next to resume...
+        });
+
+        reader.on('end',function(evt){
+            console.log(components);
+        })
+
+        reader.read(file);
     }
 
 </script>

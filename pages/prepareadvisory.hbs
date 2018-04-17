@@ -28,6 +28,7 @@
 
 			<button class="w3-bar-item w3-button  tablink w3-red" onclick="openTab(event, 'db')">Database</button>
 			<button class="w3-bar-item w3-button  tablink" onclick="openTab(event, 'app')">Application</button>
+			<button class="w3-bar-item w3-button  tablink" onclick="openTab(event, 'csv')">File</button>
 			<button class="w3-bar-item w3-button  tablink" onclick="openTab(event, 'admin')">Views management</button>
 
 		</div>
@@ -139,6 +140,30 @@
 
 							<div>
 								<button>Search</button>
+							</div>
+						</li>
+				</form>
+			</div>
+
+			<div id="csv" class="tab height300" style="display:none">
+				<form id="form_csv">
+					<h1>{{form_csv.header}}</h1>
+					<ul>
+
+						<li>
+							<label class="description" for="element_1">Select file</label>
+							<div >
+								<input id="uploadInput" type="file" name="myFiles" onchange="handleFiles(event);">
+							</div>
+						</li>
+						<li >
+							<label class="description" for="element_5" class="form_element_height">File has a header</label>
+								<input type="checkbox"  id="hasHeader" name="hasHeader" class="form_element_height width40" />
+						</li>
+						<li>
+
+							<div>
+								<button>Run</button>
 							</div>
 						</li>
 				</form>

@@ -39,6 +39,7 @@
 
 			<button class="w3-bar-item w3-button  tablink w3-red" onclick="openTab(event, 'db')">Database</button>
 			<button class="w3-bar-item w3-button  tablink" onclick="openTab(event, 'app')">Application</button>
+			<button class="w3-bar-item w3-button  tablink" onclick="openTab(event, 'csv')">File</button>
 			<button class="w3-bar-item w3-button  tablink" onclick="openTab(event, 'admin')">Views management</button>
 
 		</div>
@@ -365,6 +366,30 @@
 				</form>
 			</div>
 
+			<div id="csv" class="tab height300" style="display:none">
+				<form id="form_csv">
+					<h1>Upload CSV file with component versions</h1>
+					<ul>
+
+						<li>
+							<label class="description" for="element_1">Select file</label>
+							<div >
+								<input id="uploadInput" type="file" name="myFiles" onchange="handleFiles(event);">
+							</div>
+						</li>
+						<li >
+							<label class="description" for="element_5" class="form_element_height">File has a header</label>
+								<input type="checkbox"  id="hasHeader" name="hasHeader" class="form_element_height width40" />
+						</li>
+						<li>
+
+							<div>
+								<button>Run</button>
+							</div>
+						</li>
+				</form>
+			</div>
+
 			<div id="admin" class="tab height300" style="display:none">
 				<form id="form_admin">
 					<h1>Choose Database to recreate views</h1>
@@ -431,6 +456,7 @@
 <script src="/assets/js/jszip.min.js"></script>
 <script src="/assets/js/file-saver.min.js"></script>
 <script src="/assets/js/jszip-utils.js"></script>
+<script src="/assets/js/LineReader.js"></script>
 <!--
     Mandatory in IE 6, 7, 8 and 9.
     -->
@@ -455,6 +481,7 @@
 
 
     var obj = [];
+    var components=[];
 
     var socket = io.connect('/prepareadvisory');
 
@@ -502,14 +529,14 @@
 
             // since we add options dynamically we need to set selected flag on change event
             $(document).ready(function () {
-            applications = document.getElementById("apptype");
-            document.getElementById("apptype").addEventListener("change", function () {
+                applications = document.getElementById("apptype");
+                document.getElementById("apptype").addEventListener("change", function () {
 
-                applications.options[applications.options.selectedIndex].selected = true;
-                return false;
+                    applications.options[applications.options.selectedIndex].selected = true;
+                    return false;
 
+                });
             });
-        });
         }
     })
 
@@ -876,6 +903,41 @@
         for (i = selectbox.options.length - 1; i >= 0; i--) {
             selectbox.remove(i);
         }
+    }
+
+    function handleFiles(event) {
+        var file = event.target.files[0];
+        var reader = new LineReader();
+
+        var hasHeader= $('#hasHeader').is(':checked') ? true : false;
+        var header=[];
+
+
+        reader.on('line', function (line, next) {
+            // Do something with line....
+
+            if(hasHeader&&header.length==0){
+                header=line.split(',');
+            }else{
+
+            var array = line.split(',');
+            var obj={};
+            for(var i=0;i<array.length;i++){
+                obj[header[i]]=array[i];
+            }
+            components.push(obj);
+
+            }
+
+       
+            next(); // Call next to resume...
+        });
+
+        reader.on('end',function(evt){
+            console.log(components);
+        })
+
+        reader.read(file);
     }
 
 </script>
