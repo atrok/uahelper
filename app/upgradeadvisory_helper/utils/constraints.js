@@ -57,9 +57,9 @@ var constraints = {
     apptype:{
         presence: true,
         length:{
-            minimum: 4,
+            minimum: 3,
             maximum: 100,
-            message: "^Application name should be 4-100 symbols long"
+            message: "^Application name should be 3-100 symbols long"
         }
 
     },
