@@ -4,7 +4,7 @@ var cradle = require('cradle');
 var StringBuilder = require('../stringbuilder');
 var Logger = require('../logger');
 
-const view_names = require('./queries/view_definitions');
+const views_def = require('./queries/view_definitions');
 
 
 cradle.setup({
@@ -91,7 +91,7 @@ class CouchDB {
             logger.log('Design doc id: ' + row.id + ', rev: ' + row.value.rev);
             if (row.id === '_design/test'||row.id === '_design/test2') {
               var views = Object.getOwnPropertyNames(row.doc.views);
-              view_names.forEach(function (value) {
+              views_def.view_definitions.forEach(function (value) {
                 if (views.find(x => x == value.name)) {
                   mask = mask | value.flag;
                   logger.log("'" + value.name + "' function, adjusted mask:" + parseInt(mask).toString(2));
@@ -133,7 +133,7 @@ class CouchDB {
       var func = {};
       var view=[];
 
-      view_names.forEach(function (value) {
+      views_def.view_definitions.forEach(function (value) {
 
         // Check mask against views predefined bitmask and include its function if missing
         if (mask & value.flag) {

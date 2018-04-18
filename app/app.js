@@ -23,6 +23,8 @@ const LinkHTML = require('./upgradeadvisory_helper/html/linkhtml');
 const couchdb = require('./upgradeadvisory_helper/dbms/queries/query_couchdb');
 
 const requesthandlers = require('./upgradeadvisory_helper/requestHandlers');
+
+const views = require('./upgradeadvisory_helper/dbms/queries/view_definitions')
 // * ———————————————————————————————————————————————————————— * //
 // * 	init
 // *
@@ -65,7 +67,7 @@ local_app.prototype.init = function (app) {
 			socket.on('get_solutions', async function (args) {
 
 				try {
-					var res = await couchdb.query(socket, 'test/solutions_by_components', { group: true, reduce: true, inclusive_end: true }, 'genesys_releases');
+					var res = await couchdb.query(socket, views.views_names.solutions.path(), { group: true, reduce: true, inclusive_end: true }, views.views_names.solutions.db);
 
 					socket.emit('solutions', res);
 
@@ -80,7 +82,7 @@ local_app.prototype.init = function (app) {
 			socket.on('get_components', async function (args) {
 
 				try {
-					var res = await couchdb.query(socket, 'test/components', { startkey:[args,""], endkey:[args,{}],group: true, reduce: true, inclusive_end: true }, 'genesys_releases');
+					var res = await couchdb.query(socket, views.views_names.components_by_solutions.path(), { startkey:[args,""], endkey:[args,{}],group: true, reduce: true, inclusive_end: true }, views.views_names.components_by_solutions.db);
 
 					socket.emit('components', res);
 
