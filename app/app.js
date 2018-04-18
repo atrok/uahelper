@@ -65,7 +65,7 @@ local_app.prototype.init = function (app) {
 			socket.on('get_solutions', async function (args) {
 
 				try {
-					var res = await couchdb.query(socket, 'test2/solutions_by_components', { group: true, reduce: true, inclusive_end: true }, 'genesys_releases');
+					var res = await couchdb.query(socket, 'test/solutions_by_components', { group: true, reduce: true, inclusive_end: true }, 'genesys_releases');
 
 					socket.emit('solutions', res);
 
@@ -80,7 +80,7 @@ local_app.prototype.init = function (app) {
 			socket.on('get_components', async function (args) {
 
 				try {
-					var res = await couchdb.query(socket, 'test2/components', { startkey:[args,""], endkey:[args,{}],group: true, reduce: true, inclusive_end: true }, 'genesys_releases');
+					var res = await couchdb.query(socket, 'test/components', { startkey:[args,""], endkey:[args,{}],group: true, reduce: true, inclusive_end: true }, 'genesys_releases');
 
 					socket.emit('components', res);
 
@@ -175,6 +175,29 @@ local_app.prototype.init = function (app) {
 				}
 			})
 
+			socket.on('components', async function (args) {
+				// todo validation check for component form
+				if (isValidated(args, socket)) {
+					var components = args.components;
+					var genfile = args.genfile;
+
+					
+					try {
+						var content = await docProcessing.start(socket, components, genfile);
+						//content.input=;
+
+						postProcessing(content, args.args, socket);
+
+					} catch (e) {
+						console.log('Emit 6:', e.stack);
+						socket.emit('errors', { error: e.message })
+
+
+					} finally {
+						socket.emit('done', {});
+					}
+				}
+			})
 			socket.on('deleteresults', async function (args) {
 				try {
 					var arr = Object.keys(args);

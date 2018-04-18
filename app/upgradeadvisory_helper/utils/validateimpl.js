@@ -15,8 +15,10 @@ validator.prototype.validate = function (args) {
             console.log(result);
 
             return result;
+        case "form_csv":
+            return undefined;
         default:
-            return {validator:'Can\'t find form '+args.form+' to validate'};
+            return { validator: 'Can\'t find form ' + args.form + ' to validate' };
     }
 }
 

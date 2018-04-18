@@ -30,7 +30,14 @@
 
 
     var obj = [];
-    var components=[];
+    var components={
+        file:{
+            name:'',
+            size:0, 
+            mimeType:''
+        },
+        components:[]
+    };
 
     var socket = io.connect('/prepareadvisory');
 
@@ -284,6 +291,31 @@
 
     })
 
+    $("#form_csv").submit(function(){
+        try{
+            var errors = [];
+            var res={};
+            var genfile = $('#genfile_c').is(':checked') ? true : false;
+
+            if(components.length==0){
+                errors.push('components list is empty');
+            }
+
+            if(!lotsoferrors(errors)){
+                res.form="form_csv";
+                res.args=components.file;
+                res.components=components.components;
+                res.genfile=genfile;
+
+                submitData('components', res);
+            }
+        }catch(e){
+            console.log(e.stack);
+        }finally{
+            return false;
+        }
+    })
+
     $("#form_admin").submit(function () {
         try {
             var args = {};
@@ -456,6 +488,10 @@
 
     function handleFiles(event) {
         var file = event.target.files[0];
+        components.file.name=file.name;
+        components.file.size=file.size;
+        components.file.mimeType=file.mimeType;
+
         var reader = new LineReader();
 
         var hasHeader= $('#hasHeader').is(':checked') ? true : false;
@@ -472,9 +508,9 @@
             var array = line.split(',');
             var obj={};
             for(var i=0;i<array.length;i++){
-                obj[header[i]]=array[i];
+                obj[header[i]]=""+array[i]+"";
             }
-            components.push(obj);
+            components.components.push(obj);
 
             }
 
