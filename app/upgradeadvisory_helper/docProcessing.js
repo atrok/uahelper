@@ -14,7 +14,7 @@ var LinkHTML = require('./html/linkhtml');
 var CombinedHTML = require('./html/combinedhtml');
 
 
-var start = (response, components, isGenerateReport,recreateViews) => {
+var start = (response, components, isGenerateReport, recreateViews) => {
   var logger = new Logger(response);
 
   return new Promise(async (resolve, reject) => {
@@ -23,6 +23,7 @@ var start = (response, components, isGenerateReport,recreateViews) => {
       // await couchdb.initialize(recreateViews, response);//set true if need to recreate view
 
 
+      var solutions={solutions:[]}
 
       var obj = { components: [] };
       var apptypes = new ApplicationTypes();
@@ -34,9 +35,12 @@ var start = (response, components, isGenerateReport,recreateViews) => {
       for (var i = 0; i < components.length; i++) {
         try {
 
+          // check if solution was passed among with input arguments
+          var solution_from_client = (components[i].solution) ? components[i].solution : '';
+
           var p = apptypes.findByLCValue(components[i].APPLICATION_TYPE);
           var application = (null === p) ? components[i].APPLICATION_TYPE : p.name;
-          var solution = (null === p) ? '' : p.solution;
+          var solution = (null === p) ? solution_from_client : p.solution;
           var o = ostypes.findByTypeID(components[i].OS_TYPE);
           var os = (null === o) ? components[i].OS_TYPE : o.name;
 
@@ -54,6 +58,19 @@ var start = (response, components, isGenerateReport,recreateViews) => {
             // group: true
             //descending: true
           };
+
+          // if solution is empty let's try to find it in release notes DB
+          if (solution.length == 0) {//empty
+            var solutions_fromDB = await couchdb.select('test2/solutions_by_components',
+              {
+                startkey: [application, ""],
+                endkey: [application, {}],
+                group: true, reduce: true, inclusive_end: true
+              }, response
+            )
+
+
+          }
 
           logger.log('Processing: ' + application + ' ' + os + ' ' + components[i].RELEASE);
           var component = parser.findComponent(obj, application);

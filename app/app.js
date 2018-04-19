@@ -12,6 +12,8 @@ const socketio = require('./upgradeadvisory_helper/socketio');
 const mylog = require('./upgradeadvisory_helper/logger');
 const html = require('./upgradeadvisory_helper/html/html');
 var url = require('url');
+var datesorting=require('./upgradeadvisory_helper/utils/datesorting');
+
 const validator = require('./upgradeadvisory_helper/utils/validateimpl');
 
 const local_app = function () { }
@@ -25,6 +27,7 @@ const couchdb = require('./upgradeadvisory_helper/dbms/queries/query_couchdb');
 const requesthandlers = require('./upgradeadvisory_helper/requestHandlers');
 
 const views = require('./upgradeadvisory_helper/dbms/queries/view_definitions')
+
 // * ———————————————————————————————————————————————————————— * //
 // * 	init
 // *
@@ -396,6 +399,10 @@ function prepareTasksList(content) {
 		})
 	} else
 		res.push(prepareTask(content));
+
+		res.sort(function(a, b){
+			return datesorting.compare(a.time,b.time);
+		})
 
 	return res;
 }
