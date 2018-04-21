@@ -23,7 +23,7 @@ var start = (response, components, isGenerateReport, recreateViews) => {
       // await couchdb.initialize(recreateViews, response);//set true if need to recreate view
 
 
-      var solutions={solutions:[]}
+      var solutions = { solutions: [] }
 
       var obj = { components: [] };
       var apptypes = new ApplicationTypes();
@@ -35,12 +35,35 @@ var start = (response, components, isGenerateReport, recreateViews) => {
       for (var i = 0; i < components.length; i++) {
         try {
 
-          // check if solution was passed among with input arguments
-          var solution_from_client = (components[i].solution) ? components[i].solution : '';
+          var couchdb = new db.CouchDB({ host: db.couchdb_host, port: db.couchdb_port, username: db.couchdb_username, password: db.couchdb_pass });
 
-          var p = apptypes.findByLCValue(components[i].APPLICATION_TYPE);
-          var application = (null === p) ? components[i].APPLICATION_TYPE : p.name;
-          var solution = (null === p) ? solution_from_client : p.solution;
+          couchdb.getDBConnection(db.couchdb_name);
+          // check if solution was passed among with input arguments
+          // could 2 use case
+          // 1. application types are from cfg_locale (ie input results are from CFG DB query or from csv file)
+          // 2. solution and application type from Application Tab' dropdown lists - these are based on solution_name and component fields of release notes DB
+          // application types from both sources are different, and some applications names from release notes doesn't exist in cfg_locale, as an example - all TServers, or GMS, GWS etc
+          // in first case we need to find release notes component name from apptype enum where we are looking based on lc_value, once found we can pull solution name and release notes component name to be used in query
+          // in second case we will get component name and solution name that we can use in query, and we don't need to check that in apptype
+          // to distinguish both use cases we can use solution field - if it's among input parameters then we don't need to go in apptype
+          // if there is no solution - we need to get into apptype and pull component name + solution name
+
+          var solution = (components[i].solution) ? components[i].solution : null;
+
+          if (solution === null) {
+            var p = apptypes.findByLCValue(components[i].APPLICATION_TYPE);
+            var application = '';
+            if (null === p) {
+              application = components[i].APPLICATION_TYPE;
+              solution = await findSolution(couchdb, application, response);
+            } else {
+              application = p.name;
+              solution = p.solution;
+            }
+          }else{
+            application = components[i].APPLICATION_TYPE;
+          }
+
           var o = ostypes.findByTypeID(components[i].OS_TYPE);
           var os = (null === o) ? components[i].OS_TYPE : o.name;
 
@@ -48,31 +71,18 @@ var start = (response, components, isGenerateReport, recreateViews) => {
           var dbtype = dbtypes.findByTypeID(components[i].RELEASE.slice(0, 3));
           if (null === dbtype) throw new Error('Database is not found for ' + application + ' release ' + components[i].RELEASE);
 */
-          var couchdb = new db.CouchDB({ host: db.couchdb_host, port: db.couchdb_port, username: db.couchdb_username, password: db.couchdb_pass });
 
-          couchdb.getDBConnection(db.couchdb_name);
 
           var opts = {
-            startkey: [application, os, components[i].RELEASE],
-            endkey: [application, os, {}],
+            startkey: [solution, application, os, components[i].RELEASE],
+            endkey: [solution, application, os, {}],
             // group: true
             //descending: true
           };
 
-          // if solution is empty let's try to find it in release notes DB
-          if (solution.length == 0) {//empty
-            var solutions_fromDB = await couchdb.select('test2/solutions_by_components',
-              {
-                startkey: [application, ""],
-                endkey: [application, {}],
-                group: true, reduce: true, inclusive_end: true
-              }, response
-            )
 
 
-          }
-
-          logger.log('Processing: ' + application + ' ' + os + ' ' + components[i].RELEASE);
+          logger.log('Processing: ' + solution + application + ' ' + os + ' ' + components[i].RELEASE);
           var component = parser.findComponent(obj, application);
 
 
@@ -100,8 +110,8 @@ var start = (response, components, isGenerateReport, recreateViews) => {
 
             // Populate latest release of the same family info
             var delta_same_family_res = await couchdb.select('test/group-releases-by-family', {
-              startkey: [application, os, component.current_release[cur_release_index].family, components[i].RELEASE],
-              endkey: [application, os, component.current_release[cur_release_index].family, {}],
+              startkey: [solution, application, os, component.current_release[cur_release_index].family, components[i].RELEASE],
+              endkey: [solution, application, os, component.current_release[cur_release_index].family, {}],
               group: true
             },
               null);
@@ -121,8 +131,8 @@ var start = (response, components, isGenerateReport, recreateViews) => {
 
             // Populate delta of latest release of the latest family 
             var delta_latest_release_res = await couchdb.select('test/group-releases-by-family', {
-              startkey: [application, os, component.current_release[cur_release_index].family, components[i].RELEASE],
-              endkey: [application, os, {}, {}],
+              startkey: [solution, application, os, component.current_release[cur_release_index].family, components[i].RELEASE],
+              endkey: [solution, application, os, {}, {}],
               group: true
             },
               null);
@@ -188,5 +198,30 @@ var start = (response, components, isGenerateReport, recreateViews) => {
     };
   })
 };
+
+function error(str) {
+  throw new Error(str);
+}
+
+async function findSolution(couchdb, component, response) {
+  // if solution is empty let's try to find it in release notes DB
+  //empty
+  return new Promise(async (resolve, reject) => {
+    try {
+      var solutions_fromDB = await couchdb.select('test2/solutions_by_components',
+        {
+          startkey: [component, ""],
+          endkey: [component, {}],
+          group: true, reduce: true, inclusive_end: true
+        }, response
+      )
+
+      resolve(solutions_fromDB[0].key[1]);
+    } catch (e) {
+      console.log("FindSolution: " + e.stack);
+      reject(e);
+    }
+  })
+}
 
 module.exports = { start };

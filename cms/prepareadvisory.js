@@ -253,6 +253,10 @@
 		},
 		form_csv:{
 			header: "Upload CSV file with component versions"
+		},
+		form_lists:{
+			header: "Load components from saved configuration",
+			description: "Create configuration lists either from Application tab or by uploading csv file with list of components"
 		}
 
 

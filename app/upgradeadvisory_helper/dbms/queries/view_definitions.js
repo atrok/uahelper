@@ -81,7 +81,8 @@ const view_definitions = [
             for (var i = 0, l = os.length; i < l; i++) {
               if (doc.release && doc.component) {
                 var family = doc.release.slice(0, 3);
-                emit([doc.component, os[i], doc.release, doc.restricted], {
+                var solution_name=(doc.solution_name)?doc.solution_name : 'Unknown';
+                emit([solution_name, doc.component, os[i], doc.release, doc.restricted], {
                   _id: doc._id,
                   _rev: doc._rev,
                   aix: doc.aix,
@@ -98,7 +99,7 @@ const view_definitions = [
                   'release-link-href': doc['release-link-href'],
                   restrictions: doc.restrictions,
                   solaris: doc.solaris,
-                  solution_name: doc.solution_name,
+                  solution_name: solution_name,
                   upgrade_notes: doc.upgrade_notes,
                   'web-scraper-start-url': doc['web-scraper-start-url'],
                   windows: doc.windows
@@ -173,7 +174,8 @@ const view_definitions = [
               }
   
               for (var i = 0, l = os.length; i < l; i++) {
-                emit([doc.component, os[i], family, doc.release, doc.release_date, doc.release_type], 1);
+                var solution_name=(doc.solution_name)?doc.solution_name : 'Unknown';
+                emit([solution_name, doc.component, os[i], family, doc.release, doc.release_date, doc.release_type], 1);
               }
             }
           },
@@ -187,7 +189,8 @@ const view_definitions = [
         name: views_names.components_by_solutions.name, flag: 0x20, function: {
             [views_names.components_by_solutions.name]: {
                 map: function (doc) {
-                    emit([doc.solution_name, doc.component], 1);
+                    var solution_name=(doc.solution_name)?doc.solution_name : 'Unknown';
+                    emit([solution_name, doc.component], 1);
                   },
                   reduce: function (keys, values) {
                     return count(values);
@@ -199,7 +202,8 @@ const view_definitions = [
         name: views_names.solutions.name, flag: 0x40, function: {
             [views_names.solutions.name]:{
                 map: function (doc) {
-                    emit(doc.solution_name, 1);
+                    var solution_name=(doc.solution_name)?doc.solution_name : 'Unknown';
+                    emit(solution_name, 1);
                   },
                 reduce: function (keys, values) {
                     return count(values);

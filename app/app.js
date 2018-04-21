@@ -159,6 +159,7 @@ local_app.prototype.init = function (app) {
 					var genfile = a.genfile;
 
 					var component = [{
+						SOLUTION: (null !== a.solution) ? a.solution : null,
 						APPLICATION_TYPE: (null !== a.apptype) ? a.apptype : "SIP Server",
 						OS_TYPE: (null !== a.ostype) ? a.ostype : 'linux',
 						RELEASE: (null !== a.release) ? a.release : "8.1.102.95"

@@ -29,6 +29,7 @@
 			<button class="w3-bar-item w3-button  tablink w3-red" onclick="openTab(event, 'db')">Database</button>
 			<button class="w3-bar-item w3-button  tablink" onclick="openTab(event, 'app')">Application</button>
 			<button class="w3-bar-item w3-button  tablink" onclick="openTab(event, 'csv')">File</button>
+			<button class="w3-bar-item w3-button  tablink" onclick="openTab(event, 'lists')">Saved configurations</button>
 			<button class="w3-bar-item w3-button  tablink" onclick="openTab(event, 'admin')">Views management</button>
 
 		</div>
@@ -165,6 +166,34 @@
 							<label class="description" for="element_5" class="form_element_height">Generate report on server</label>
 								<input type="checkbox"  id="genfile_c" name="genfile" class="form_element_height width40" />
 						</li>
+						<li>
+
+							<div>
+								<button>Run</button>
+							</div>
+						</li>
+				</form>
+			</div>
+
+			<div id="lists" class="tab height300" style="display:none">
+				<form id="form_lists">
+					<h1>{{form_lists.header}}</h1>
+					<p>{{form_lists.description}}</p>
+					<ul>
+						<li>
+							<label class="description" for="element_0">Saved configurations</label>
+							<div class="dropdown">
+								<select id="solution" class="dropdown_select">
+									
+								</select>
+							</div>
+						</li>
+
+						<li id="li_genfile">
+							<label class="description" for="element_5" class="form_element_height">Generate report on server</label>
+								<input type="checkbox"  id="genfile_d" name="genfile" class="form_element_height width40" />
+						</li>
+
 						<li>
 
 							<div>

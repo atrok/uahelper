@@ -251,6 +251,7 @@
         try {
             var args = {};
             var errors = []
+            args.solution=$("#solution option:selected").attr("value");
             args.apptype = $("#apptype option:selected").attr("value");
             args.ostype = $("#ostype option:selected").attr("value");
             args.genfile = $('#genfile_a').is(':checked') ? true : false;

@@ -40,6 +40,7 @@
 			<button class="w3-bar-item w3-button  tablink w3-red" onclick="openTab(event, 'db')">Database</button>
 			<button class="w3-bar-item w3-button  tablink" onclick="openTab(event, 'app')">Application</button>
 			<button class="w3-bar-item w3-button  tablink" onclick="openTab(event, 'csv')">File</button>
+			<button class="w3-bar-item w3-button  tablink" onclick="openTab(event, 'lists')">Saved configurations</button>
 			<button class="w3-bar-item w3-button  tablink" onclick="openTab(event, 'admin')">Views management</button>
 
 		</div>
@@ -395,6 +396,34 @@
 				</form>
 			</div>
 
+			<div id="lists" class="tab height300" style="display:none">
+				<form id="form_lists">
+					<h1>Load components from saved configuration</h1>
+					<p>Create configuration lists either from Application tab or by uploading csv file with list of components</p>
+					<ul>
+						<li>
+							<label class="description" for="element_0">Saved configurations</label>
+							<div class="dropdown">
+								<select id="solution" class="dropdown_select">
+									
+								</select>
+							</div>
+						</li>
+
+						<li id="li_genfile">
+							<label class="description" for="element_5" class="form_element_height">Generate report on server</label>
+								<input type="checkbox"  id="genfile_d" name="genfile" class="form_element_height width40" />
+						</li>
+
+						<li>
+
+							<div>
+								<button>Run</button>
+							</div>
+						</li>
+				</form>
+			</div>
+
 			<div id="admin" class="tab height300" style="display:none">
 				<form id="form_admin">
 					<h1>Choose Database to recreate views</h1>
@@ -707,6 +736,7 @@
         try {
             var args = {};
             var errors = []
+            args.solution=$("#solution option:selected").attr("value");
             args.apptype = $("#apptype option:selected").attr("value");
             args.ostype = $("#ostype option:selected").attr("value");
             args.genfile = $('#genfile_a').is(':checked') ? true : false;
