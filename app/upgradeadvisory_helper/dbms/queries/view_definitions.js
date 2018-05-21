@@ -6,6 +6,7 @@ const views_names= {
     group_releases_by_family : {name :'group-releases-by-family', view: 'test', path: function(){return this.view+'/'+this.name},db:'genesys_releases'},
     components_by_solutions : {name: 'components_by_solutions', view: 'test',path: function(){return this.view+'/'+this.name},db:'genesys_releases'},
     solutions: {name:'solutions', view: 'test',path: function(){return this.view+'/'+this.name},db:'genesys_releases'},
+    solutions_by_components: {name:'solutions_by_components', view: 'test',path: function(){return this.view+'/'+this.name},db:'genesys_releases'},
 }
 const view_definitions = [
     {
@@ -210,7 +211,20 @@ const view_definitions = [
                   }
             }
         }, view: views_names.solutions.view
-    }
+    },
+    {
+      name: views_names.solutions_by_components.name, flag: 0x80, function: {
+          [views_names.solutions_by_components.name]: {
+              map: function (doc) {
+                  var solution_name=(doc.solution_name)?doc.solution_name : 'Unknown';
+                  emit([doc.component, solution_name], 1);
+                },
+                reduce: function (keys, values) {
+                  return count(values);
+                } 
+          }
+      }, view: views_names.solutions_by_components.view
+  }
   ];
 
   module.exports={view_definitions, views_names};

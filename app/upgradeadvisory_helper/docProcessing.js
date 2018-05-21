@@ -13,6 +13,8 @@ var Logger = require('./logger');
 var LinkHTML = require('./html/linkhtml');
 var CombinedHTML = require('./html/combinedhtml');
 
+const view_names=require('./dbms/queries/view_definitions');
+
 
 var start = (response, components, isGenerateReport, recreateViews) => {
   var logger = new Logger(response);
@@ -48,7 +50,7 @@ var start = (response, components, isGenerateReport, recreateViews) => {
           // to distinguish both use cases we can use solution field - if it's among input parameters then we don't need to go in apptype
           // if there is no solution - we need to get into apptype and pull component name + solution name
 
-          var solution = (components[i].solution) ? components[i].solution : null;
+          var solution = (components[i].SOLUTION) ? components[i].SOLUTION : null;
 
           if (solution === null) {
             var p = apptypes.findByLCValue(components[i].APPLICATION_TYPE);
@@ -208,7 +210,7 @@ async function findSolution(couchdb, component, response) {
   //empty
   return new Promise(async (resolve, reject) => {
     try {
-      var solutions_fromDB = await couchdb.select('test2/solutions_by_components',
+      var solutions_fromDB = await couchdb.select(view_names.views_names.solutions_by_components.path(),
         {
           startkey: [component, ""],
           endkey: [component, {}],
