@@ -32,7 +32,16 @@ constructor (){
             { typeid:1072,lc_value:'SIP Switch T-Server',	name:"SIP Server", solution: "SIP Server"},
             { typeid:0, lc_value:'Virtual Switch for IVR In-Front T-Server', name:'IVR Server', solution:'Interactive Voice Response'},
             { typeid:168, lc_value:'Business Rules Application Server', name:'Authoring Tool', solution:'Genesys Rules System'},
-            { typeid:169, lc_value:'Business Rules Execution Server', name:'Engine', solution:'Genesys Rules System'}
+            { typeid:169, lc_value:'Business Rules Execution Server', name:'Engine', solution:'Genesys Rules System'},
+            { typeid:0, lc_value:'WFM API', name:'API', solution:'Workforce Management'},
+            { typeid:97, lc_value:'WFM Builder', name:'Builder', solution:'Workforce Management'},
+            { typeid:47, lc_value:'WFM Client', name:'Client', solution:'Workforce Management'},
+            { typeid:113, lc_value:'WFM Daemon', name:'Daemon', solution:'Workforce Management'},
+            { typeid:48, lc_value:'WFM Data Aggregator', name:'Data Aggregator', solution:'Workforce Management'},
+            { typeid:98, lc_value:'WFM Reports', name:'Reports', solution:'Workforce Management'},
+            { typeid:50, lc_value:'WFM Schedule Server', name:'Schedule Server', solution:'Workforce Management'},
+            { typeid:96, lc_value:'WFM Server', name:'Server', solution:'Workforce Management'},
+            { typeid:99, lc_value:'WFM Web', name:'Web', solution:'Workforce Management'}
             ];
         }
 
