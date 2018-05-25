@@ -41,7 +41,13 @@ constructor (){
             { typeid:98, lc_value:'WFM Reports', name:'Reports', solution:'Workforce Management'},
             { typeid:50, lc_value:'WFM Schedule Server', name:'Schedule Server', solution:'Workforce Management'},
             { typeid:96, lc_value:'WFM Server', name:'Server', solution:'Workforce Management'},
-            { typeid:99, lc_value:'WFM Web', name:'Web', solution:'Workforce Management'}
+            { typeid:99, lc_value:'WFM Web', name:'Web', solution:'Workforce Management'},
+            { typeid:0, lc_value:'WFM Configuration Utility', name:'Configuration Utility', solution:'Workforce Management'},
+            { typeid:0, lc_value:'WFM Database Utility', name:'Database Utility', solution:'Workforce Management'},
+            { typeid:0, lc_value:'Privacy Manager Plugin for GAX', name:'Privacy Manager Plugin for GAX', solution:'eServices'},
+            { typeid:0, lc_value:'Genesys Info Mart Manager', name:'Genesys Info Mart Manager', solution:'Genesys Info Mart'},
+            { typeid:9, lc_value:'Call Concentrator', name:'Interaction Concentrator', solution:'Interaction Concentrator'},
+            { typeid:0, lc_value:'SIP Feature Server Plug-In for GAX', name:'Plug-in for Genesys Administrator Extension', solution:'SIP Feature Server'}
             ];
         }
 
