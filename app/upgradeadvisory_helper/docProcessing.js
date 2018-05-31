@@ -56,6 +56,9 @@ var start = (response, components, isGenerateReport, recreateViews) => {
             var p = apptypes.findByLCValue(components[i].APPLICATION_TYPE);
             var application = '';
             if (null === p) {
+              p=apptypes.findByName(components[i].APPLICATION_TYPE);
+            }
+            if (null === p) {
               application = components[i].APPLICATION_TYPE;
               solution = await findSolution(couchdb, application, response);
             } else {
