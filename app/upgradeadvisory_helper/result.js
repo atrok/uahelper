@@ -27,7 +27,7 @@ class OracleDBResult extends Result {
         
         if (super.display()) {
 
-            sb.append("<table>");
+            sb.append('<table class="table">');
             var result = this.result;
             // Column Title
             if (result.metaData && result.rows) { // results in array form (from oracle driver)

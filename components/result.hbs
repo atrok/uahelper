@@ -1,33 +1,96 @@
 {{!-- adding client side socket io to handle reports from uahelper --}}
 
 <!--div class="ldBar" data-value=""></div -->
-<div id="myItem1"></div>
-<form id="form_generate">
-    <div id="result">
 
-    </div>
-    <div id="generate" style="visibility: hidden">
-<label>Generate report:</label>
-        <button id='docx'>Docx</button>
-        <button id='xlsx'>Xlsx</button>
 
-    </div>
-</form>
-<div id="tasksContainer">
-    <h3>Executed tasks</h3>
-    <form id="form_tasks">
-        <table id="tasks">
-            <tr>
-                <th>Delete</th>
-                <th>Time</th>
-                <th>Arguments</th>
-                <th>ID</th>
-            </tr>
-        </table>
-        <div>
-            <button>Delete</button>
+<div>
+    <div id="myItem1"></div>
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs">
+        <li class="active">
+            <a href="#conflist_tab" aria-expanded="false">Configuration Lists</a>
+        </li>
+        <li class>
+            <a href="#result_tab" aria-expanded="false">Results</a>
+        </li>
+        <li class>
+            <a href="#tasks_tab" aria-expanded="false">Tasks</a>
+        </li>
+        <li class>
+            <a href="#console_tab" aria-expanded="false">Console</a>
+        </li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="conflist_tab">
+            <div id="configlist_container">
+                <h1>Configuration list</h1>
+                <p>
+                    Adding components into the configuration list to save it and use later.
+                </p>
+
+
+
+                <div id="config_list" class="table-editable" style="visibility: hidden">
+                    <span class="table-add glyphicon glyphicon-plus"></span>
+                    <table id="config_list_t" class="table">
+                        <tr id="config_list_t_header">
+                        </tr>
+                        <!-- This is our clonable table line -->
+<!-- This is our clonable table line -->
+      <tr class="hide">
+        <td contenteditable="true">Untitled</td>
+        <td contenteditable="true">undefined</td>
+        <td>
+          <span class="table-remove glyphicon glyphicon-remove"></span>
+        </td>
+        <td>
+          <span class="table-up glyphicon glyphicon-arrow-up"></span>
+          <span class="table-down glyphicon glyphicon-arrow-down"></span>
+        </td>
+      </tr>
+
+                    </table>
+                </div>
+
+
+            </div>
         </div>
-    </form>
-</div>
+        <div role="tabpanel" class="tab-pane" id="result_tab">
+            <form id="form_generate">
+                <div id="result">
 
-<div id="console"></div>
+                </div>
+                <div id="generate" style="visibility: hidden">
+                    <label>Generate report:</label>
+                    <button id='docx'>Docx</button>
+                    <button id='xlsx'>Xlsx</button>
+
+                </div>
+            </form>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="tasks_tab">
+            <div id="tasksContainer">
+                <h3>Executed tasks</h3>
+                <form id="form_tasks">
+                    <table id="tasks">
+                        <tr>
+                            <th>Delete</th>
+                            <th>Time</th>
+                            <th>Arguments</th>
+                            <th>ID</th>
+                        </tr>
+                    </table>
+                    <div>
+                        <button>Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="console_tab">
+            <div id="console"></div>
+        </div>
+    </div>
+
+</div>

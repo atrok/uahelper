@@ -6,6 +6,10 @@
 <script src="/assets/js/file-saver.min.js"></script>
 <script src="/assets/js/jszip-utils.js"></script>
 <script src="/assets/js/LineReader.js"></script>
+<script src="/assets/js/bootstrap.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<!-- script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
 <!--
     Mandatory in IE 6, 7, 8 and 9.
     -->
@@ -503,11 +507,15 @@
         reader.on('line', function (line, next) {
             // Do something with line....
 
-            if(hasHeader&&header.length==0){
+            if(header.length==0){
                 header=line.split(',');
+                add_header_to_configlist(header);
             }else{
 
             var array = line.split(',');
+
+            add_row_to_configlist(array);
+
             var obj={};
             for(var i=0;i<array.length;i++){
                 obj[header[i]]=""+array[i]+"";
@@ -522,9 +530,137 @@
 
         reader.on('end',function(evt){
             console.log(components);
+            $("#config_list").visible();
         })
 
         reader.read(file);
     }
 
+function add_row_to_configlist(data){
+        console.log('Got item for config list');
+        if (data instanceof Array) {
+            var row='';
+            data.forEach((item) => {
+                
+                   row=row+'<td contenteditable="true">' + item+ '</td>';
+                
+            })
+            $('#config_list_t').append('<tr>'+row
+                +'<td><span class="table-remove glyphicon glyphicon-remove"></span></td>'
+                +'<td><span class="table-up glyphicon glyphicon-arrow-up"></span>'
+                +'<span class="table-down glyphicon glyphicon-arrow-down"></span>'
+                +'</td></tr>');
+
+            $(document).ready(function () {
+                init_config_lists();
+            });
+        }
+}
+
+function add_header_to_configlist(data){
+        console.log('Got header item for config list');
+
+        $('#config_list').detach();
+        $('#export_div').detach();
+
+        $('#configlist_container').append(
+              '<div id="config_list" class="table-editable" style="visibility: hidden">'
+                +'<span class="table-add glyphicon glyphicon-plus"></span>'
+                +'<table id="config_list_t" class="table">'
+                +'<tr id="config_list_t_header">'
+                +'</tr>'
+                +'<!-- This is our clonable table line -->'
+                +'</table>'
+                +'</div>'
+        );
+        if (data instanceof Array) {
+            var row='';
+            data.forEach((item) => {
+                
+                   row=row+'<th>' + item + '</th>';
+                
+            })
+            $('#config_list_t_header').append(row+'<th></th><th></th>');
+
+            $("#configlist_container").append('<div id="export_div"><button id="export-btn" class="btn btn-primary">'
+                +'Export Data</button><p id="export"></p></div>');
+
+            $(document).ready(function () {
+               init_config_lists();
+            });
+        }
+}
+</script>
+
+<!-- Configuration lists table management script -->
+
+    <script >
+        function init_config_lists(){
+      var $TABLE = $('#config_list_t');
+var $BTN = $('#export-btn');
+var $EXPORT = $('#export');
+
+$('.table-add').click(function () {
+  var $clone = $TABLE.find('tr.hide').clone(true).removeClass('hide table-line');
+  $TABLE.find('table').append($clone);
+});
+
+$('.table-remove').click(function () {
+  $(this).parents('tr').detach();
+});
+
+$('.table-up').click(function () {
+  var $row = $(this).parents('tr');
+  if ($row.index() === 1) return; // Don't go above the header
+  $row.prev().before($row.get(0));
+});
+
+$('.table-down').click(function () {
+  var $row = $(this).parents('tr');
+  $row.next().after($row.get(0));
+});
+
+// A few jQuery helpers for exporting only
+jQuery.fn.pop = [].pop;
+jQuery.fn.shift = [].shift;
+
+$BTN.click(function () {
+  var $rows = $TABLE.find('tr:not(:hidden)');
+  var headers = [];
+  var data = [];
+  
+  // Get the headers (add special header logic here)
+  $($rows.shift()).find('th:not(:empty)').each(function () {
+    headers.push($(this).text().toLowerCase());
+  });
+  
+  // Turn all existing rows into a loopable array
+  $rows.each(function () {
+    var $td = $(this).find('td');
+    var h = {};
+    
+    // Use the headers from earlier to name our hash keys
+    headers.forEach(function (header, i) {
+      h[header] = $td.eq(i).text();   
+    });
+    
+    data.push(h);
+  });
+  
+  // Output the result
+  $EXPORT.text(JSON.stringify(data));
+  //components.components.push(data);
+});
+}      //# sourceURL=pen.js
+    </script>
+
+
+<!-- Scripts to handle TABs -->
+
+<script>
+    $('.nav-tabs a').click(function (e) {
+        e.preventDefault();
+        $(this).tab('show');
+    });
+   
 </script>
