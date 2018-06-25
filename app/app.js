@@ -12,7 +12,7 @@ const socketio = require('./upgradeadvisory_helper/socketio');
 const mylog = require('./upgradeadvisory_helper/logger');
 const html = require('./upgradeadvisory_helper/html/html');
 var url = require('url');
-var datesorting=require('./upgradeadvisory_helper/utils/datesorting');
+var datesorting = require('./upgradeadvisory_helper/utils/datesorting');
 
 const validator = require('./upgradeadvisory_helper/utils/validateimpl');
 
@@ -81,11 +81,11 @@ local_app.prototype.init = function (app) {
 
 			});
 
-			//populate drop down list of solutions
+			//populate drop down list of components
 			socket.on('get_components', async function (args) {
 
 				try {
-					var res = await couchdb.query(socket, views.views_names.components_by_solutions.path(), { startkey:[args,""], endkey:[args,{}],group: true, reduce: true, inclusive_end: true }, views.views_names.components_by_solutions.db);
+					var res = await couchdb.query(socket, views.views_names.components_by_solutions.path(), { startkey: [args, ""], endkey: [args, {}], group: true, reduce: true, inclusive_end: true }, views.views_names.components_by_solutions.db);
 
 					socket.emit('components', res);
 
@@ -96,6 +96,35 @@ local_app.prototype.init = function (app) {
 
 			});
 
+			//populate drop down list of configuration lists
+			socket.on('get_all_configlists', async function (args) {
+
+				try {
+					var res = await couchdb.query(socket, 'documents/_all', { include_docs: true }, 'uahelper_configlists');
+
+					socket.emit('all_configlists', res);
+
+				} catch (e) {
+					console.log(e.stack);
+					socket.emit('errors', { error: e.message });
+				}
+
+			});
+			
+			//populate drop down list of configuration lists
+			socket.on('get_configlist', async function (args) {
+
+				try {
+					var res = await couchdb.get('uahelper_configlists', args, socket);
+
+					socket.emit('configlist', res);
+
+				} catch (e) {
+					console.log(e.stack);
+					socket.emit('errors', { error: e.message });
+				}
+
+			});
 			// prepare UA document based on customer database
 			socket.on('my other event', function (args) {
 				mylogger.log(args);
@@ -187,7 +216,7 @@ local_app.prototype.init = function (app) {
 					var components = args.components;
 					var genfile = args.genfile;
 
-					
+
 					try {
 						var content = await docProcessing.start(socket, components, genfile);
 						//content.input=;
@@ -224,6 +253,7 @@ local_app.prototype.init = function (app) {
 				}
 			});
 
+
 			socket.on('getresults', async function (args) {
 				try {
 
@@ -259,6 +289,41 @@ local_app.prototype.init = function (app) {
 
 				} catch (e) {
 					console.log('recreate_view:', e.stack);
+					socket.emit('errors', { error: e.message })
+				} finally {
+					socket.emit('done', {});
+				}
+			});
+
+			// configuration lists handling
+			// channel to save configuration lists
+			socket.on('save_configlist', async function (args) {
+				try {
+					var res = await couchdb.save(socket, args, 'uahelper_configlists');
+					console.log('saved', args.cfglist_name);
+					socket.emit('saved_configlist', { id: res._id, cfglist_name: args.cfglist_name });
+
+
+
+				} catch (e) {
+					console.log('Emit 7:', e.stack);
+					socket.emit('errors', { error: e.message })
+				} finally {
+					socket.emit('done', {});
+				}
+			});
+
+			// channel to save configuration lists
+			socket.on('get_configlist', async function (args) {
+				try {
+					var res = await couchdb.get('uahelper_configlists', args, socket);
+					console.log('Found', res._id);
+					socket.emit('configlist', res);
+
+
+
+				} catch (e) {
+					console.log('Emit 7:', e.stack);
 					socket.emit('errors', { error: e.message })
 				} finally {
 					socket.emit('done', {});
@@ -401,9 +466,9 @@ function prepareTasksList(content) {
 	} else
 		res.push(prepareTask(content));
 
-		res.sort(function(a, b){
-			return datesorting.compare(a.time,b.time);
-		})
+	res.sort(function (a, b) {
+		return datesorting.compare(a.time, b.time);
+	})
 
 	return res;
 }

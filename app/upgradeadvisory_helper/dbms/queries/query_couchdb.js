@@ -36,6 +36,57 @@ var remove = async function (response, id, revid, dbname) {
     }
 }
 
+var save = async function (response, result, dbname) {
+
+    try {
+        var logger = new Logger(response);
+
+        if (typeof dbname === 'undefined')
+            logger.log('DB name is not provided, using default set name');
+
+        //var db = couchdb.getDBConnection(dbname);
+        return couchdb.save(dbname, result);
+
+    } catch (err) {
+        console.log(err.stack);
+        throw err;
+    }
+}
+
+var update = async function (response, id, result, dbname, revid) {
+
+    try {
+        var logger = new Logger(response);
+
+        if (typeof dbname === 'undefined')
+            logger.log('DB name is not provided, using default set name');
+
+        var db = couchdb.getDBConnection(dbname);
+
+        if (!revid) {
+            var revid = await getRevision(db, id);
+        }
+
+        return new Promise((resolve, reject) => {
+            db.save(id, revid, result, function (err, res) {
+                if(err){
+                    reject(err);
+                    return;
+                }else{
+                logger.log('updated: '+id+' revid:'+revid);
+                resolve(res);
+                }
+            });
+        });
+
+    } catch (err) {
+        console.log(err.stack);
+        throw err;
+    }
+}
+
+
+
 function getRevision(db, id) {
     return new Promise((resolve, reject) => {
         db.get(id, function (err, doc) {
@@ -82,6 +133,35 @@ var query = (response, view, opts, dbname) => {
     });
 };
 
+var get = (dbname, doc_id, response ) => {
+
+    var logger = new Logger(response);
+
+    if (typeof dbname === 'undefined')
+        logger.log('DB name is not provided, using default set name');
+
+    return new Promise(async (resolve, reject) => {
+
+        try {
+            couchdb.getDBConnection(dbname);
+
+            var logger = new Logger(null);
+
+            var res = await couchdb.get(doc_id, response);
+
+            
+
+            //    rows.forEach(function(value,key){
+            //        logger.log(value.key.toString());
+            //    })
+            resolve(res);
+        } catch (err) {
+            console.log(err.stack);
+            reject(err);
+        }
+    });
+};
+
 var init=function(dbname,response){
 
     var logger = new Logger(response);
@@ -97,5 +177,8 @@ var init=function(dbname,response){
 module.exports = {
     query,
     remove,
+    save,
+    update,
+    get,
     init
 };

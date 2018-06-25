@@ -8,7 +8,8 @@
 <script src="/assets/js/LineReader.js"></script>
 <script src="/assets/js/bootstrap.min.js"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+    crossorigin="anonymous"></script>
 <!-- script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
 <!--
     Mandatory in IE 6, 7, 8 and 9.
@@ -34,13 +35,13 @@
 
 
     var obj = [];
-    var components={
-        file:{
-            name:'',
-            size:0, 
-            mimeType:''
+    var components = {
+        file: {
+            name: '',
+            size: 0,
+            mimeType: ''
         },
-        components:[]
+        components: []
     };
 
     var socket = io.connect('/prepareadvisory');
@@ -54,6 +55,7 @@
         id = data.id;
         socket.emit('tasks', {});
         socket.emit('get_solutions', {});
+        socket.emit('get_all_configlists', {});
     });
 
     socket.on('solutions', function (data) { //populate solutions dropdown list
@@ -97,6 +99,77 @@
 
                 });
             });
+        }
+    })
+
+    socket.on('all_configlists', function (data) {
+        console.log(data);
+        if (data) {
+            removeOptions(document.getElementById("configlist"))
+            Object.keys(data).forEach((key) => {
+                $("#configlist").append("<option size=25 id='#" + data[key].id + "' value='" + data[key].id + "'>" + data[key].doc.cfglist_name + "</option>");
+                //$('#'+data[key].id).data("components",data[key].doc.components);
+            });
+
+            // since we add options dynamically we need to set selected flag on change event
+            $(document).ready(function () {
+                configlist = document.getElementById("configlist");
+                document.getElementById("configlist").addEventListener("change", function () {
+
+                    configlist.options[configlist.options.selectedIndex].selected = true;
+
+                    var doc_id = configlist.options[configlist.options.selectedIndex].value;
+                    submitData('get_configlist', doc_id);
+                })
+                return false;
+
+            });
+        }
+    })
+
+    socket.on('configlist', function (data) {
+        console.log(data);
+        if (data) {
+            //removeOptions(document.getElementById("configlist"))
+
+
+            $("#configlist_name").text('');
+            $("#configlist_docid").text('');
+            $("#configlist_revid").text('');
+            $("#configlist_time").text('');
+
+
+            $("#configlist_name").append(data.cfglist_name);
+            $("#configlist_docid").append("_id:" + data._id);
+            $("#configlist_revid").append("_rev:" + data._rev);
+            $("#configlist_time").append("Creation time:" + data._time);
+
+            // since we add options dynamically we need to set selected flag on change event
+            var components = data.components;
+            var header = []
+
+            components.forEach(function (item, i) {
+                if (header.length == 0) {
+                    Object.keys(item).forEach((key) => {
+                        header.push(key);
+                    });
+
+                    add_header_to_configlist(header);
+
+                }
+                var row = []
+                Object.values(item).forEach((value) => {
+                    row.push(value);
+                })
+                add_row_to_configlist(row);
+            })
+
+                        // initialize config list buttons
+            $(document).ready(function () {
+                init_config_lists();
+            });
+
+            $("#config_list").visible();
         }
     })
 
@@ -223,6 +296,12 @@
         $('tr#' + data.id).remove();
     })
 
+    socket.on('saved_configlist', function (data) {
+        console.log('Configlist saved: ', data);
+        $("#configlist").append("<option size=25 value='" + data.id + "'>" + data.cfglist_name + "</option>");
+        $("#configlist_name").append(data.cfglist_name);
+    })
+
     $("#form_dbs").submit(function () {
         try {
             var args = {};
@@ -255,7 +334,7 @@
         try {
             var args = {};
             var errors = []
-            args.solution=$("#solution option:selected").attr("value");
+            args.solution = $("#solution option:selected").attr("value");
             args.apptype = $("#apptype option:selected").attr("value");
             args.ostype = $("#ostype option:selected").attr("value");
             args.genfile = $('#genfile_a').is(':checked') ? true : false;
@@ -296,30 +375,35 @@
 
     })
 
-    $("#form_csv").submit(function(){
-        try{
-            var errors = [];
-            var res={};
-            var genfile = $('#genfile_c').is(':checked') ? true : false;
+    $("#form_csv").submit(submit_csv())
 
-            if(components.length==0){
+    function submit_csv() {
+        try {
+            var errors = [];
+            var res = {};
+            var genfile = $('#genfile_c').is(':checked') ? true : false;
+            var create_config_list = $('#hasHeader').is(':checked') ? true : false;
+
+            if (components.length == 0) {
                 errors.push('components list is empty');
             }
 
-            if(!lotsoferrors(errors)){
-                res.form="form_csv";
-                res.args=components.file;
-                res.components=components.components;
-                res.genfile=genfile;
+
+            if (!lotsoferrors(errors)) {
+                res.form = "form_csv";
+                res.args = components.file;
+                res.components = components.components;
+                res.genfile = genfile;
 
                 submitData('components', res);
+
             }
-        }catch(e){
+        } catch (e) {
             console.log(e.stack);
-        }finally{
+        } finally {
             return false;
         }
-    })
+    }
 
     $("#form_admin").submit(function () {
         try {
@@ -357,8 +441,17 @@
         $('div #myItem1').visible();
     }
 
-    var checkField = function (text, condition) {
-        return (text.length > condition) ? false : true;
+
+    // function to check length of field content. It compares to desired max length of string and min length of string.
+    // in case min length is not defind it compares against 0;
+
+    var checkField = function (text, maxcondition, mincondition) {
+        if (!mincondition) {
+            var mincondition = 1;
+        }
+
+        return (text.length > maxcondition || text.length < mincondition) ? false : true;
+
     }
 
     var lotsoferrors = function (errors) {
@@ -493,174 +586,232 @@
 
     function handleFiles(event) {
         var file = event.target.files[0];
-        components.file.name=file.name;
-        components.file.size=file.size;
-        components.file.mimeType=file.mimeType;
-        components.components=[];
+        components.file.name = file.name;
+        components.file.size = file.size;
+        components.file.mimeType = file.mimeType;
+        components.components = [];
 
         var reader = new LineReader();
 
-        var hasHeader= $('#hasHeader').is(':checked') ? true : false;
-        var header=[];
+        var hasHeader = $('#hasHeader').is(':checked') ? true : false;
+        var header = [];
 
 
         reader.on('line', function (line, next) {
             // Do something with line....
 
-            if(header.length==0){
-                header=line.split(',');
+            if (header.length == 0) {
+                header = line.split(',');
                 add_header_to_configlist(header);
-            }else{
+            } else {
 
-            var array = line.split(',');
+                var array = line.split(',');
 
-            add_row_to_configlist(array);
+                add_row_to_configlist(array);
 
-            var obj={};
-            for(var i=0;i<array.length;i++){
-                obj[header[i]]=""+array[i]+"";
+                var obj = {};
+                for (var i = 0; i < array.length; i++) {
+                    obj[header[i]] = "" + array[i] + "";
+                }
+                //components.components.push(obj);
+
             }
-            components.components.push(obj);
 
-            }
 
-       
             next(); // Call next to resume...
         });
 
-        reader.on('end',function(evt){
+        reader.on('end', function (evt) {
             console.log(components);
+
+            // initialize config list buttons
+            $("#configlist_name").text('');
+            $("#configlist_docid").text('');
+            $("#configlist_revid").text('');
+            $("#configlist_time").text('');
+
+            $(document).ready(function () {
+                init_config_lists();
+            });
+
             $("#config_list").visible();
         })
 
         reader.read(file);
     }
 
-function add_row_to_configlist(data){
+    function add_row_to_configlist(data) {
         console.log('Got item for config list');
         if (data instanceof Array) {
-            var row='';
+            var row = '';
             data.forEach((item) => {
-                
-                   row=row+'<td contenteditable="true">' + item+ '</td>';
-                
+
+                row = row + '<td contenteditable="true">' + item + '</td>';
+
             })
-            $('#config_list_t').append('<tr>'+row
-                +'<td><span class="table-remove glyphicon glyphicon-remove"></span></td>'
-                +'<td><span class="table-up glyphicon glyphicon-arrow-up"></span>'
-                +'<span class="table-down glyphicon glyphicon-arrow-down"></span>'
-                +'</td></tr>');
+            $('#config_list_t').append('<tr>' + row
+                + '<td><span class="table-remove glyphicon glyphicon-remove"></span></td>'
+                + '<td><span class="table-up glyphicon glyphicon-arrow-up"></span>'
+                + '<span class="table-down glyphicon glyphicon-arrow-down"></span>'
+                + '</td></tr>');
 
-            $(document).ready(function () {
-                init_config_lists();
-            });
+
         }
-}
+    }
 
-function add_header_to_configlist(data){
+    function add_header_to_configlist(data) {
         console.log('Got header item for config list');
 
         $('#config_list').detach();
         $('#export_div').detach();
 
         $('#configlist_container').append(
-              '<div id="config_list" class="table-editable" style="visibility: hidden">'
-                +'<span class="table-add glyphicon glyphicon-plus"></span>'
-                +'<table id="config_list_t" class="table">'
-                +'<tr id="config_list_t_header">'
-                +'</tr>'
-                +'<!-- This is our clonable table line -->'
-                +'</table>'
-                +'</div>'
+            '<div id="config_list" class="table-editable" style="visibility: hidden">'
+            + '<span class="table-add glyphicon glyphicon-plus"></span>'
+            + '<table id="config_list_t" class="table">'
+            + '<tr id="config_list_t_header">'
+            + '</tr>'
+            + '<!-- This is our clonable table line -->'
+            + '</table>'
+            + '</div>'
         );
         if (data instanceof Array) {
-            var row='';
+            var row = '';
             data.forEach((item) => {
-                
-                   row=row+'<th>' + item + '</th>';
-                
+
+                row = row + '<th>' + item + '</th>';
+
             })
-            $('#config_list_t_header').append(row+'<th></th><th></th>');
+            $('#config_list_t_header').append(row + '<th></th><th></th>');
 
-            $("#configlist_container").append('<div id="export_div"><button id="export-btn" class="btn btn-primary">'
-                +'Export Data</button><p id="export"></p></div>');
+            $("#configlist_container").append('<div id="export_div"><button id="run-btn" class="btn btn-primary">'
+                + 'Run</button><button id="save-btn" class="btn btn-primary">'
+                + 'Save</button><p id="export"></p></div>');
 
+            /*
             $(document).ready(function () {
                init_config_lists();
             });
+            */
         }
-}
-</script>
+    }
 
-<!-- Configuration lists table management script -->
+    // Configuration lists table management script 
 
-    <script >
-        function init_config_lists(){
-      var $TABLE = $('#config_list_t');
-var $BTN = $('#export-btn');
-var $EXPORT = $('#export');
+    function init_config_lists() {
+        var $TABLE = $('#config_list_t');
+        var $BTN = $('#run-btn');
+        var $BTN_SAVE = $('#save-btn');
+        var $EXPORT = $('#export');
 
-$('.table-add').click(function () {
-  var $clone = $TABLE.find('tr.hide').clone(true).removeClass('hide table-line');
-  $TABLE.find('table').append($clone);
-});
+        $('.table-add').click(function () {
+            var $clone = $TABLE.find('tr.hide').clone(true).removeClass('hide table-line');
+            $TABLE.find('table').append($clone);
+        });
 
-$('.table-remove').click(function () {
-  $(this).parents('tr').detach();
-});
+        $('.table-remove').click(function () {
+            $(this).parents('tr').detach();
+        });
 
-$('.table-up').click(function () {
-  var $row = $(this).parents('tr');
-  if ($row.index() === 1) return; // Don't go above the header
-  $row.prev().before($row.get(0));
-});
+        $('.table-up').click(function () {
+            var $row = $(this).parents('tr');
+            if ($row.index() === 1) return; // Don't go above the header
+            $row.prev().before($row.get(0));
+        });
 
-$('.table-down').click(function () {
-  var $row = $(this).parents('tr');
-  $row.next().after($row.get(0));
-});
+        $('.table-down').click(function () {
+            var $row = $(this).parents('tr');
+            $row.next().after($row.get(0));
+        });
 
-// A few jQuery helpers for exporting only
-jQuery.fn.pop = [].pop;
-jQuery.fn.shift = [].shift;
-
-$BTN.click(function () {
-  var $rows = $TABLE.find('tr:not(:hidden)');
-  var headers = [];
-  var data = [];
-  
-  // Get the headers (add special header logic here)
-  $($rows.shift()).find('th:not(:empty)').each(function () {
-    headers.push($(this).text().toLowerCase());
-  });
-  
-  // Turn all existing rows into a loopable array
-  $rows.each(function () {
-    var $td = $(this).find('td');
-    var h = {};
-    
-    // Use the headers from earlier to name our hash keys
-    headers.forEach(function (header, i) {
-      h[header] = $td.eq(i).text();   
-    });
-    
-    data.push(h);
-  });
-  
-  // Output the result
-  $EXPORT.text(JSON.stringify(data));
-  //components.components.push(data);
-});
-}      //# sourceURL=pen.js
-    </script>
+        // A few jQuery helpers for exporting only
+        jQuery.fn.pop = [].pop;
+        jQuery.fn.shift = [].shift;
 
 
-<!-- Scripts to handle TABs -->
+        var get_table_data = function () {
+            var $rows = $TABLE.find('tr:not(:hidden)');
+            var headers = [];
+            var data = [];
 
-<script>
+            // Get the headers (add special header logic here)
+            $($rows.shift()).find('th:not(:empty)').each(function () {
+                headers.push($(this).text().toUpperCase());
+            });
+
+            // Turn all existing rows into a loopable array
+            $rows.each(function () {
+                var $td = $(this).find('td');
+                var h = {};
+
+                // Use the headers from earlier to name our hash keys
+                headers.forEach(function (header, i) {
+                    h[header] = $td.eq(i).text();
+                });
+
+                data.push(h);
+            });
+
+            return data;
+
+        }
+
+        $BTN.click(function () {
+
+            console.log('Configuration list is to be sent to backend for evaluation')
+
+            var data = get_table_data();
+
+
+            // Output the result
+            console.log(data);
+            components.components = data;
+            submit_csv();
+
+        });
+
+        $BTN_SAVE.click(function () {
+
+            console.log('Saving config list');
+            var data = get_table_data();
+            $('#configlist_modal').data("components", data)
+            $('#configlist_modal').modal('show');
+
+        })
+    }
+
+    // Handling of config list modal save button
+    $('#save-event').on(
+        'click',
+        function (evt) {
+            console.log('Saving of config list has been triggered');
+            var errors = [];
+            var args = {};
+
+            var modal_data = $('#configlist_modal').data();
+            var cfglist_name = $("#configlist-name").val();
+
+            args.cfglist_name = (checkField($("#configlist-name").val(), 20)) ? $("#configlist-name").val() : errors.push('Configuration list name is too long, can\'t be longer than 20');
+            args.components = modal_data.components;
+
+            if (!lotsoferrors(errors)) {
+
+                submitData('save_configlist', args);
+            }
+
+            $('#configlist_modal').modal('hide');
+
+
+        }
+    );
+
+
+    // Scripts to handle TABs
+
+
     $('.nav-tabs a').click(function (e) {
         e.preventDefault();
         $(this).tab('show');
     });
-   
+
 </script>

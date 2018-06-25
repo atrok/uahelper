@@ -25,9 +25,15 @@
     <div class="tab-content">
         <div role="tabpanel" class="tab-pane active" id="conflist_tab">
             <div id="configlist_container">
-                <h1>Configuration list</h1>
+                <h1>Configuration list </h1>
                 <p>
-                    Adding components into the configuration list to save it and use later.
+                    Add components into the configuration list to save it and use for later.
+                </p>
+                <p>
+                    <span id="configlist_name"></span>
+                    <span id="configlist_docid"></span>
+                    <span id="configlist_revid"></span>
+                    <span id="configlist_time"></span>
                 </p>
 
 
@@ -38,22 +44,46 @@
                         <tr id="config_list_t_header">
                         </tr>
                         <!-- This is our clonable table line -->
-<!-- This is our clonable table line -->
-      <tr class="hide">
-        <td contenteditable="true">Untitled</td>
-        <td contenteditable="true">undefined</td>
-        <td>
-          <span class="table-remove glyphicon glyphicon-remove"></span>
-        </td>
-        <td>
-          <span class="table-up glyphicon glyphicon-arrow-up"></span>
-          <span class="table-down glyphicon glyphicon-arrow-down"></span>
-        </td>
-      </tr>
+                        <!-- This is our clonable table line -->
+                        <tr class="hide">
+                            <td contenteditable="true">Untitled</td>
+                            <td contenteditable="true">undefined</td>
+                            <td>
+                                <span class="table-remove glyphicon glyphicon-remove"></span>
+                            </td>
+                            <td>
+                                <span class="table-up glyphicon glyphicon-arrow-up"></span>
+                                <span class="table-down glyphicon glyphicon-arrow-down"></span>
+                            </td>
+                        </tr>
 
                     </table>
                 </div>
 
+                <div class="modal fade" id="configlist_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Save configuration list</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form>
+                                    <div class="form-group">
+                                        <label for="configlist-name" class="col-form-label">Enter configuration list name:</label>
+                                        <input type="text" class="form-control" id="configlist-name">
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" id="save-event">Save configuration list</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
             </div>
         </div>

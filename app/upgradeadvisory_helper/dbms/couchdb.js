@@ -196,7 +196,7 @@ select(view, opts, response) {
   return new Promise(async (resolve, reject) => {
     this.checkDB();
     var db = this.db;
-    logger.log('Getting data from ' + view + ' with options')
+    logger.log('Getting data from ' + db.name+" / "+view + ' with options')
     logger.log(opts);
     try {
       var error;
@@ -218,6 +218,36 @@ select(view, opts, response) {
     }
   });
 };
+
+get (doc_id, response){
+  var logger = new Logger(response);
+
+  return new Promise(async (resolve, reject) => {
+    this.checkDB();
+    var db = this.db;
+
+    logger.log('Getting data with id ' + doc_id )
+    //logger.log(opts);
+    try {
+      var error;
+      var result;
+      db.get(doc_id, function (err, res) {
+        if (err) {
+          logger.log(err);
+          reject(err)
+        } else {
+
+          logger.log("Record found");
+
+
+          resolve(res);
+        }
+      });
+    } catch (err) {
+      throw err;
+    }
+  });
+}
 
 //var logger = null;
 
@@ -255,24 +285,37 @@ databases(cb){
 }
 
 
+// function to add documents into db with dbname
+// if db doesn't exist it will try to create one
+// as result it should return rev_id of created document
 
-  /*
-  db.view('test/features-by-release', {key: ['Interaction Server','8.5.107.22']}, function (err, res) {
-    //console.log('Getting data from '+view+' with options '+opts);
-    console.log(typeof res);
-    res.rows.forEach(function(value){
-    
-      console.log(value);
-    });
-     if(err) console.log(err);
-    //current_release=res;
-    
+async save (dbname,result) {
+  //check if database uahelper exists
+  var db = this.getDBConnection(dbname);
+
+  await new Promise((resolve,reject)=>{
+      db.exists(function (err, exists) {
+      if (err) {
+          console.log('error', err);
+          reject(err);
+      } else if (exists) {
+          console.log('db exists, continue.');
+      } else {
+          console.log('database does not exists, creating.');
+          db.create();
+      }
+      resolve();        
+      });
   });
-  */
-  //DBSetup.initialize();
-  //console.log('In process of DB initialization');
 
-
+  return new Promise((resolve,reject)=>{
+      db.save(result, function (err, res) {
+      console.log('saved id:', res);
+      resolve(res);
+      })
+  })
+ 
+}
 }
 
 
