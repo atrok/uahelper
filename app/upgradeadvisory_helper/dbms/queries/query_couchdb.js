@@ -45,8 +45,12 @@ var save = async function (response, result, dbname) {
             logger.log('DB name is not provided, using default set name');
 
         //var db = couchdb.getDBConnection(dbname);
-        return couchdb.save(dbname, result);
-
+        result.time=new Date().toString();
+        return new Promise(async (resolve,reject)=>{
+           var res= await couchdb.save(dbname, result);
+           res.time=result.time;
+           resolve(res);
+        })
     } catch (err) {
         console.log(err.stack);
         throw err;
@@ -68,12 +72,14 @@ var update = async function (response, id, result, dbname, revid) {
         }
 
         return new Promise((resolve, reject) => {
+            result.updated=new Date().toString();
             db.save(id, revid, result, function (err, res) {
                 if(err){
                     reject(err);
                     return;
                 }else{
                 logger.log('updated: '+id+' revid:'+revid);
+                res.updated=result.updated;
                 resolve(res);
                 }
             });

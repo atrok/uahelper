@@ -62,6 +62,7 @@
 
         if (data) {
             console.log(data);
+            $("#solution").append("<option value=''>Select One …</option>");
             Object.keys(data).forEach((key) => {
                 $("#solution").append("<option size=25 value='" + data[key].key + "'>" + data[key].key + "</option>");
             });
@@ -105,7 +106,8 @@
     socket.on('all_configlists', function (data) {
         console.log(data);
         if (data) {
-            removeOptions(document.getElementById("configlist"))
+            removeOptions(document.getElementById("configlist"));
+            $("#configlist").append("<option value=''>Select One …</option>");
             Object.keys(data).forEach((key) => {
                 $("#configlist").append("<option size=25 id='#" + data[key].id + "' value='" + data[key].id + "'>" + data[key].doc.cfglist_name + "</option>");
                 //$('#'+data[key].id).data("components",data[key].doc.components);
@@ -132,18 +134,6 @@
         if (data) {
             //removeOptions(document.getElementById("configlist"))
 
-
-            $("#configlist_name").text('');
-            $("#configlist_docid").text('');
-            $("#configlist_revid").text('');
-            $("#configlist_time").text('');
-
-
-            $("#configlist_name").append(data.cfglist_name);
-            $("#configlist_docid").append("_id:" + data._id);
-            $("#configlist_revid").append("_rev:" + data._rev);
-            $("#configlist_time").append("Creation time:" + data._time);
-
             // since we add options dynamically we need to set selected flag on change event
             var components = data.components;
             var header = []
@@ -155,6 +145,7 @@
                     });
 
                     add_header_to_configlist(header);
+                    console.log("config list header is created");
 
                 }
                 var row = []
@@ -162,16 +153,41 @@
                     row.push(value);
                 })
                 add_row_to_configlist(row);
+                console.log("config list rows are added");
             })
 
-                        // initialize config list buttons
+            // initialize config list buttons
             $(document).ready(function () {
+                init_config_lists_caption(data);
                 init_config_lists();
+
+                // TODO:
+                // add listeners for editable cells change events
+                editable_setlisteners()
             });
 
             $("#config_list").visible();
         }
     })
+
+    function editable_setlisteners() {
+        $('body').on('focus', '[contenteditable]', function () {
+            var $this = $(this);
+            $this.data('before', $this.html());
+            return $this;
+        }).on('blur keyup paste input', '[contenteditable]', function () {
+            var $this = $(this);
+            if ($this.data('before') !== $this.html()) {
+                $this.data('before', $this.html());
+                $this.trigger('cl_editable_change');
+            }
+            return $this;
+        }).on('cl_editable_change', function () {
+            var $this = $(this)
+            console.log($this + " triggered cl_editable_change")
+            button_enable($("#update-btn"))
+        });
+    }
 
     socket.on('progress', function (data) {
         console.log(data.percents);
@@ -298,8 +314,29 @@
 
     socket.on('saved_configlist', function (data) {
         console.log('Configlist saved: ', data);
-        $("#configlist").append("<option size=25 value='" + data.id + "'>" + data.cfglist_name + "</option>");
-        $("#configlist_name").append(data.cfglist_name);
+        $("#configlist").append("<option size=25 value='" + data._id + "'>" + data.cfglist_name + "</option>");
+        $(document).ready(function () {
+            init_config_lists_caption(data);
+            button_enable($("delete-btn"));
+        })
+    })
+
+    socket.on('updated_configlist', function (data) {
+        console.log('Configlist updated: ', data);
+        
+        $(document).ready(function () {
+            $("#configlist_updated").text("");
+            $("#configlist_updated").append(data.updated);
+        })
+    })
+
+    socket.on('deleted_configlist', function (data) {
+        console.log('Configlist deleted: ', data);
+        $("#configlist option[value='" + data.id + "']").remove();
+        $(document).ready(function () {
+            configlist_detach();
+            init_config_lists_clear_text();
+        })
     })
 
     $("#form_dbs").submit(function () {
@@ -432,7 +469,8 @@
     })
 
     function done() {
-        $(':submit').removeAttr('disabled');
+        $('.active_submitter').removeAttr('disabled');
+        $(':submit').removeClass('active_submitter');
         $('div #myItem1').invisible();
     }
 
@@ -629,9 +667,14 @@
             $("#configlist_docid").text('');
             $("#configlist_revid").text('');
             $("#configlist_time").text('');
+            $("#configlist_updated").text('');
 
             $(document).ready(function () {
                 init_config_lists();
+                button_disable($("#delete-btn"));
+                editable_setlisteners()
+
+
             });
 
             $("#config_list").visible();
@@ -659,11 +702,15 @@
         }
     }
 
+    function configlist_detach() {
+        $('#config_list').detach();
+        $('#export_div').detach();
+        console.log("export_div detached");
+    }
     function add_header_to_configlist(data) {
         console.log('Got header item for config list');
 
-        $('#config_list').detach();
-        $('#export_div').detach();
+        configlist_detach();
 
         $('#configlist_container').append(
             '<div id="config_list" class="table-editable" style="visibility: hidden">'
@@ -684,9 +731,11 @@
             })
             $('#config_list_t_header').append(row + '<th></th><th></th>');
 
-            $("#configlist_container").append('<div id="export_div"><button id="run-btn" class="btn btn-primary">'
-                + 'Run</button><button id="save-btn" class="btn btn-primary">'
-                + 'Save</button><p id="export"></p></div>');
+            $("#configlist_container").append('<div id="export_div">'
+                + '<button id="run-btn" class="btn btn-primary">Run</button>'
+                + '<button id="save-btn" class="btn btn-primary">Save as</button>'
+                + '<button id="update-btn" class="btn btn-primary" disabled="true">Update</button>'
+                + '<button id="delete-btn" class="btn btn-primary">Delete</button><p id="export"></p></div>');
 
             /*
             $(document).ready(function () {
@@ -698,30 +747,67 @@
 
     // Configuration lists table management script 
 
+    function init_config_lists_clear_text() {
+
+        $("#configlist_name").text('');
+        $("#configlist_docid").text('');
+        $("#configlist_revid").text('');
+        $("#configlist_time").text('');
+        $("#configlist_updated").text('');
+    }
+
+
+    function init_config_lists_caption(data) {
+
+        init_config_lists_clear_text();
+
+        $("#configlist_name").append(data.cfglist_name);
+        $("#configlist_docid").append(data._id);
+        $("#configlist_revid").append(data._rev);
+        $("#configlist_time").append(data.time);
+        $("#configlist_updated").append(data.updated);
+    }
+
+    function button_enable(elem) {
+        console.log(elem + " is enabled")
+        elem.prop("disabled", false);
+    }
+
+    function button_disable(elem) {
+        console.log(elem + " is disabled")
+        elem.prop("disabled", true)
+    }
+
     function init_config_lists() {
         var $TABLE = $('#config_list_t');
         var $BTN = $('#run-btn');
         var $BTN_SAVE = $('#save-btn');
+        var $BTN_UPDATE = $('#update-btn');
+        var $BTN_DELETE = $('#delete-btn');
         var $EXPORT = $('#export');
 
         $('.table-add').click(function () {
             var $clone = $TABLE.find('tr.hide').clone(true).removeClass('hide table-line');
             $TABLE.find('table').append($clone);
+            button_enable($BTN_UPDATE);
         });
 
         $('.table-remove').click(function () {
             $(this).parents('tr').detach();
+            button_enable($BTN_UPDATE);
         });
 
         $('.table-up').click(function () {
             var $row = $(this).parents('tr');
             if ($row.index() === 1) return; // Don't go above the header
             $row.prev().before($row.get(0));
+            button_enable($BTN_UPDATE);
         });
 
         $('.table-down').click(function () {
             var $row = $(this).parents('tr');
             $row.next().after($row.get(0));
+            button_enable($BTN_UPDATE);
         });
 
         // A few jQuery helpers for exporting only
@@ -778,6 +864,41 @@
             $('#configlist_modal').modal('show');
 
         })
+
+        $BTN_UPDATE.click(function () {
+
+            var cl = {
+                cfglist_name: $("#configlist_name").text(),
+                _id: $("#configlist_docid").text(),
+                _rev: $("#configlist_revid").text(),
+                time: $("#configlist_time").text()
+            }
+
+            console.log('Updating config list: ' + cl.cfglist_name + ' _id:' + cl._id + ' _rev: ' + cl._rev);
+            console.log('Updating config list');
+            cl.components = get_table_data();
+
+            $('#configlist_update_modal').data("document", cl)
+            
+            $('#configlist_update_modal').modal('show');
+
+        })
+
+        $BTN_DELETE.click(function () {
+
+            var cl = {
+                name: $("#configlist_name"),
+                id: $("#configlist_docid")
+            }
+
+            cl.name;
+
+            console.log('Deleting config list: ' + cl.name.text() + ' _id:' + cl.id.text());
+
+            $('#configlist_delete_modal').data("id", cl.id.text())
+            $('#configlist_delete_modal').modal('show');
+
+        })
     }
 
     // Handling of config list modal save button
@@ -797,6 +918,7 @@
             if (!lotsoferrors(errors)) {
 
                 submitData('save_configlist', args);
+                $('#save-btn').addClass("active_submitter");
             }
 
             $('#configlist_modal').modal('hide');
@@ -805,6 +927,30 @@
         }
     );
 
+    $("#update-event").on(
+        'click',
+        function (evt) {
+            console.log('Update of config list has been triggered');
+
+            var data = $('#configlist_update_modal').data();
+
+            submitData('update_configlist', data.document);
+            $('#configlist_update_modal').modal('hide');
+            $('#update-btn').addClass("active_submitter");
+        }
+    )
+
+    $("#delete-event").on(
+        'click',
+        function (evt) {
+            console.log('Deleting of config list has been triggered');
+
+            var id = $('#configlist_delete_modal').data('id');
+            submitData('delete_configlist', id);
+            $('#configlist_delete_modal').modal('hide');
+            $('#delete-btn').addClass("active_submitter");
+        }
+    )
 
     // Scripts to handle TABs
 

@@ -299,9 +299,10 @@ local_app.prototype.init = function (app) {
 			// channel to save configuration lists
 			socket.on('save_configlist', async function (args) {
 				try {
+					
 					var res = await couchdb.save(socket, args, 'uahelper_configlists');
 					console.log('saved', args.cfglist_name);
-					socket.emit('saved_configlist', { id: res._id, cfglist_name: args.cfglist_name });
+					socket.emit('saved_configlist', { _id: res._id, _rev:res.rev, cfglist_name: args.cfglist_name, time: res.time });
 
 
 
@@ -313,7 +314,26 @@ local_app.prototype.init = function (app) {
 				}
 			});
 
+						// configuration lists handling
 			// channel to save configuration lists
+			socket.on('update_configlist', async function (args) {
+				try {
+					
+					var res = await couchdb.update(socket, args._id, args, 'uahelper_configlists',args._rev);
+					console.log('updated', args.cfglist_name);
+					socket.emit('updated_configlist', { _id: args._id, _rev:args._rev, updated:res.updated });
+
+
+
+				} catch (e) {
+					console.log('Emit 7:', e.stack);
+					socket.emit('errors', { error: e.message })
+				} finally {
+					socket.emit('done', {});
+				}
+			});
+
+			// channel to get configuration lists
 			socket.on('get_configlist', async function (args) {
 				try {
 					var res = await couchdb.get('uahelper_configlists', args, socket);
@@ -324,6 +344,23 @@ local_app.prototype.init = function (app) {
 
 				} catch (e) {
 					console.log('Emit 7:', e.stack);
+					socket.emit('errors', { error: e.message })
+				} finally {
+					socket.emit('done', {});
+				}
+			});
+
+			socket.on('delete_configlist', async function (args) {
+				try {
+					var id=args
+
+						var res = await couchdb.remove(socket, id, null, 'uahelper_configlists');
+						console.log('deleted', id);
+						socket.emit('deleted_configlist', { id: id});
+
+
+					
+				} catch (e) {
 					socket.emit('errors', { error: e.message })
 				} finally {
 					socket.emit('done', {});

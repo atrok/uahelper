@@ -310,7 +310,10 @@ async save (dbname,result) {
 
   return new Promise((resolve,reject)=>{
       db.save(result, function (err, res) {
-      console.log('saved id:', res);
+      if (err) {
+          console.log('error', err);
+          reject(err);
+      }
       resolve(res);
       })
   })
