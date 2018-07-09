@@ -50,6 +50,8 @@
     //var bar2 = document.getElementById('myItem1').ldBar;
 
     var id;
+
+
     socket.on('connected', function (data) {
         console.log(data);
         id = data.id;
@@ -136,25 +138,8 @@
 
             // since we add options dynamically we need to set selected flag on change event
             var components = data.components;
-            var header = []
 
-            components.forEach(function (item, i) {
-                if (header.length == 0) {
-                    Object.keys(item).forEach((key) => {
-                        header.push(key);
-                    });
-
-                    add_header_to_configlist(header);
-                    console.log("config list header is created");
-
-                }
-                var row = []
-                Object.values(item).forEach((value) => {
-                    row.push(value);
-                })
-                add_row_to_configlist(row);
-                console.log("config list rows are added");
-            })
+            add_config_list_item(components);
 
             // initialize config list buttons
             $(document).ready(function () {
@@ -187,6 +172,29 @@
             console.log($this + " triggered cl_editable_change")
             button_enable($("#update-btn"))
         });
+    }
+
+    function add_config_list_item(arr) {
+        arr.forEach(function (item, i) {
+            var header = []
+
+            var head = $("#config_list_t").find('th:not(:empty)')
+            if (head.length == 0) {
+                Object.keys(item).forEach((key) => {
+                    header.push(key);
+                });
+
+                add_header_to_configlist(header);
+                console.log("config list header is created");
+
+            }
+            var row = []
+            Object.values(item).forEach((value) => {
+                row.push(value);
+            })
+            add_row_to_configlist(row);
+            console.log("config list rows are added");
+        })
     }
 
     socket.on('progress', function (data) {
@@ -323,7 +331,7 @@
 
     socket.on('updated_configlist', function (data) {
         console.log('Configlist updated: ', data);
-        
+
         $(document).ready(function () {
             $("#configlist_updated").text("");
             $("#configlist_updated").append(data.updated);
@@ -367,20 +375,29 @@
         } // to avoid page reload
 
     })
+
+    function get_selected_components() {
+        var result = {
+            args: {}, errors: []
+        };
+
+        result.args.solution = $("#solution option:selected").attr("value");
+        result.args.apptype = $("#apptype option:selected").attr("value");
+        result.args.ostype = $("#ostype option:selected").attr("value");
+        result.args.release = (checkField($("#release").val(), 10)) ? $("#release").val() : result.errors.push('Release can\'t be longer than 10');
+        result.args.genfile = $('#genfile_a').is(':checked') ? true : false;
+        return result;
+    }
+
     $("#form_comp").submit(function () {
         try {
-            var args = {};
-            var errors = []
-            args.solution = $("#solution option:selected").attr("value");
-            args.apptype = $("#apptype option:selected").attr("value");
-            args.ostype = $("#ostype option:selected").attr("value");
-            args.genfile = $('#genfile_a').is(':checked') ? true : false;
 
-            args.release = (checkField($("#release").val(), 10)) ? $("#release").val() : errors.push('Release can\'t be longer than 10');
+            var component = get_selected_components();
+
             var res = {}
             res.form = 'form_comp';
-            res.args = args;
-            if (!lotsoferrors(errors)) {
+            res.args = component.args;
+            if (!lotsoferrors(component.errors)) {
                 submitData('search', res);
 
             }
@@ -468,6 +485,30 @@
         } // to avoid page reload
     })
 
+    $("#addto-cs-event").click(function () {
+
+        var result = get_selected_components();
+
+        var data =[];//get_table_data();
+
+        if (!lotsoferrors(result.errors)) {
+            data.push(result.args);
+
+            add_config_list_item(data)
+
+            $(document).ready(function () {
+                init_config_lists();
+                button_disable($("#delete-btn"));
+                editable_setlisteners()
+
+
+            });
+
+            $("#config_list").visible();
+
+        }
+    })
+
     function done() {
         $('.active_submitter').removeAttr('disabled');
         $(':submit').removeClass('active_submitter');
@@ -475,6 +516,7 @@
     }
 
     function submitData(channel, data) {
+        console.log("Sending data to /"+channel+", "+data);
         socket.emit(channel, data);
         $('div #myItem1').visible();
     }
@@ -778,6 +820,38 @@
         elem.prop("disabled", true)
     }
 
+    function get_table_data() {
+        var $TABLE = $('#config_list_t');
+
+        var $rows = $TABLE.find('tr:not(:hidden)');
+        var headers = [];
+        var data = [];
+
+        // Get the headers (add special header logic here)
+
+        if ($rows.length > 1) {
+            $($rows.shift()).find('th:not(:empty)').each(function () {
+                headers.push($(this).text().toUpperCase());
+            });
+
+            // Turn all existing rows into a loopable array
+            $rows.each(function () {
+                var $td = $(this).find('td');
+                var h = {};
+
+                // Use the headers from earlier to name our hash keys
+                headers.forEach(function (header, i) {
+                    h[header] = $td.eq(i).text();
+                });
+
+                data.push(h);
+            });
+        }
+
+        return data;
+
+    }
+
     function init_config_lists() {
         var $TABLE = $('#config_list_t');
         var $BTN = $('#run-btn');
@@ -815,32 +889,6 @@
         jQuery.fn.shift = [].shift;
 
 
-        var get_table_data = function () {
-            var $rows = $TABLE.find('tr:not(:hidden)');
-            var headers = [];
-            var data = [];
-
-            // Get the headers (add special header logic here)
-            $($rows.shift()).find('th:not(:empty)').each(function () {
-                headers.push($(this).text().toUpperCase());
-            });
-
-            // Turn all existing rows into a loopable array
-            $rows.each(function () {
-                var $td = $(this).find('td');
-                var h = {};
-
-                // Use the headers from earlier to name our hash keys
-                headers.forEach(function (header, i) {
-                    h[header] = $td.eq(i).text();
-                });
-
-                data.push(h);
-            });
-
-            return data;
-
-        }
 
         $BTN.click(function () {
 
@@ -879,7 +927,7 @@
             cl.components = get_table_data();
 
             $('#configlist_update_modal').data("document", cl)
-            
+
             $('#configlist_update_modal').modal('show');
 
         })
