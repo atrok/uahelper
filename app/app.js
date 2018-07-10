@@ -336,9 +336,11 @@ local_app.prototype.init = function (app) {
 			// channel to get configuration lists
 			socket.on('get_configlist', async function (args) {
 				try {
+					console.log(new Date().toString()+" [Socket "+socket.id+"][get_configlist] got new message, data: "+args );
 					var res = await couchdb.get('uahelper_configlists', args, socket);
-					console.log('Found', res._id);
+					console.log(new Date().toString()+' Found', res._id);
 					socket.emit('configlist', res);
+					console.log(new Date().toString()+' [Socket '+socket.id+'][get_configlist] Sent result back ', res._id);
 
 
 

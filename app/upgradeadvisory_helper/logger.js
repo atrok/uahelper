@@ -4,17 +4,27 @@ const StringBuilder=require('./stringbuilder');
 
 class Logger{
     
-    constructor(response) {
+    constructor(response, options) {
         this.response=this.assignServerResponse(response);
         this.sb=new StringBuilder();
+        this.dateformat=(options)? options: {
+            year:"numeric",
+            month:"numeric",
+            day:"numeric",
+            hour:"numeric",
+            minute: "numeric",
+            second: "numeric",
+            timeZoneName:"short"
+        }
     };
 
     
 
     log(str){
         var processed=this.stringify(str);
+        var date=this.get_date();
 
-        console.log(processed);
+        console.log("%s "+processed, date);
 
         if(typeof this.response!=='undefined') 
            this.response.emit('console',{r: processed.replace('\t', '&nbsp;').replace('\n', '<br/>')+'<br/>'});
@@ -25,6 +35,11 @@ class Logger{
 
    stringify(str){
        return (typeof str==="string") ? str : this.processObject(str, this.sb,1).toString();
+   }
+
+   get_date(){
+       var date=new Date().toLocaleDateString('en-US',this.dateformat);
+       return date;
    }
 
    processObject(opts,stringbuilder, cycle){

@@ -139,6 +139,8 @@
             // since we add options dynamically we need to set selected flag on change event
             var components = data.components;
 
+            configlist_detach();
+
             add_config_list_item(components);
 
             // initialize config list buttons
@@ -489,7 +491,7 @@
 
         var result = get_selected_components();
 
-        var data =[];//get_table_data();
+        var data = [];//get_table_data();
 
         if (!lotsoferrors(result.errors)) {
             data.push(result.args);
@@ -498,7 +500,18 @@
 
             $(document).ready(function () {
                 init_config_lists();
-                button_disable($("#delete-btn"));
+                button_disable($("#delete-btn"), {
+                    eval: function () {
+                        return ($("#configlist_docid").text().length > 0) ? false : true;
+                    }
+                });
+
+                button_enable($("#update-btn"), {
+                    eval: function () {
+                        return ($("#configlist_docid").text().length > 0) ? true : false;
+                    }
+
+                });
                 editable_setlisteners()
 
 
@@ -516,7 +529,7 @@
     }
 
     function submitData(channel, data) {
-        console.log("Sending data to /"+channel+", "+data);
+        console.log("Sending data to /" + channel + ", " + data);
         socket.emit(channel, data);
         $('div #myItem1').visible();
     }
@@ -777,7 +790,8 @@
                 + '<button id="run-btn" class="btn btn-primary">Run</button>'
                 + '<button id="save-btn" class="btn btn-primary">Save as</button>'
                 + '<button id="update-btn" class="btn btn-primary" disabled="true">Update</button>'
-                + '<button id="delete-btn" class="btn btn-primary">Delete</button><p id="export"></p></div>');
+                + '<button id="delete-btn" class="btn btn-primary">Delete</button>'
+                + '<button id="reset-btn" class="btn btn-primary">Reset</button><p id="export"></p></div>');
 
             /*
             $(document).ready(function () {
@@ -810,13 +824,28 @@
         $("#configlist_updated").append(data.updated);
     }
 
-    function button_enable(elem) {
+    function button_enable(elem, condition) {
         console.log(elem + " is enabled")
+        if (condition) {
+            if (condition.eval()) {
+                elem.prop("disabled", false)
+            }
+            return
+        }
         elem.prop("disabled", false);
     }
 
-    function button_disable(elem) {
+    // condition is an object where eval is a user defined function to evaluate true/false condition to disable an object
+
+    function button_disable(elem, condition) {
         console.log(elem + " is disabled")
+        if (condition) {
+            if (condition.eval()) {
+                elem.prop("disabled", true)
+            }
+            return
+        }
+
         elem.prop("disabled", true)
     }
 
@@ -858,6 +887,7 @@
         var $BTN_SAVE = $('#save-btn');
         var $BTN_UPDATE = $('#update-btn');
         var $BTN_DELETE = $('#delete-btn');
+        var $BTN_RESET = $('#reset-btn');
         var $EXPORT = $('#export');
 
         $('.table-add').click(function () {
@@ -947,9 +977,18 @@
             $('#configlist_delete_modal').modal('show');
 
         })
+
+        $BTN_RESET.click(function () {
+            if (!$("#update-btn").prop("disabled")) {
+                $('#configlist_forced_update_modal').modal('show');
+
+            } else {
+                $("#reset-event").click()
+            }
+        })
     }
 
-    // Handling of config list modal save button
+    // Handling of config list modal  buttons
     $('#save-event').on(
         'click',
         function (evt) {
@@ -1000,7 +1039,43 @@
         }
     )
 
+    $("#forced-update-event").on('click',
+        function (evt) {
+            var queue = new function_pipeline();
+            console.log('Forced update of config list has been triggered');
+            $('#configlist_forced_update_modal').modal('hide');
+            if ($("#configlist_docid").text.length > 0) {
+                queue.push(function(){$('#save-btn').click()});
+            } else {
+                queue.push(function(){$('#update-btn').click()});
+            }
+            queue.push(function(){$('#reset-event').click()});
+
+            queue.execute();
+
+
+
+        })
+    $("#reset-event").on('click',
+        function (evt) {
+            init_config_lists_clear_text();
+            configlist_detach();
+        })
     // Scripts to handle TABs
+
+    var function_pipeline = function () {
+        this.queue = []
+    }
+
+    function_pipeline.prototype.push = function (arg) {
+        this.queue.push(arg)
+    }
+
+    function_pipeline.prototype.execute = function () {
+        while (this.queue.length) {
+            this.queue.shift().call();
+        }
+    }
 
 
     $('.nav-tabs a').click(function (e) {
