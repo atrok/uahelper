@@ -87,15 +87,15 @@
     socket.on('components', function (data) {
         console.log(data);
         if (data) {
-            removeOptions(document.getElementById("apptype"))
+            removeOptions(document.getElementById("application_type"))
             Object.keys(data).forEach((key) => {
-                $("#apptype").append("<option size=25 value='" + data[key].key[1] + "'>" + data[key].key[1] + "</option>");
+                $("#application_type").append("<option size=25 value='" + data[key].key[1] + "'>" + data[key].key[1] + "</option>");
             });
 
             // since we add options dynamically we need to set selected flag on change event
             $(document).ready(function () {
-                applications = document.getElementById("apptype");
-                document.getElementById("apptype").addEventListener("change", function () {
+                applications = document.getElementById("application_type");
+                document.getElementById("application_type").addEventListener("change", function () {
 
                     applications.options[applications.options.selectedIndex].selected = true;
                     return false;
@@ -286,7 +286,7 @@
 
     socket.on('validation', function (data) {
         console.log(data);
-        $(':submit').attr('disabled', 'disabled');
+       // $(':submit').attr('disabled', 'disabled');
         if (data.submitted) {
             $("#div_result #console").append(data.reason);
         } else {
@@ -384,8 +384,8 @@
         };
 
         result.args.solution = $("#solution option:selected").attr("value");
-        result.args.apptype = $("#apptype option:selected").attr("value");
-        result.args.ostype = $("#ostype option:selected").attr("value");
+        result.args.application_type = $("#application_type option:selected").attr("value");
+        result.args.os_type = $("#os_type option:selected").attr("value");
         result.args.release = (checkField($("#release").val(), 10)) ? $("#release").val() : result.errors.push('Release can\'t be longer than 10');
         result.args.genfile = $('#genfile_a').is(':checked') ? true : false;
         return result;
@@ -930,6 +930,7 @@
             // Output the result
             console.log(data);
             components.components = data;
+            $(this).addClass("active_submitter");
             submit_csv();
 
         });

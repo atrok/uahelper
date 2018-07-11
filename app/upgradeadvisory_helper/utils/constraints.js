@@ -54,7 +54,7 @@ var constraints = {
 
 
   var search_component_constraints = {
-    apptype:{
+    application_type:{
         presence: true,
         length:{
             minimum: 3,
@@ -63,7 +63,7 @@ var constraints = {
         }
 
     },
-    ostype:{
+    os_type:{
         presence: true,
         format: {
             // Must be numbers and numbers and -,_ allowed

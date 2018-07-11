@@ -23,7 +23,7 @@
 	},
 	form_comp:{
 		header:"Select component",
-		ostype: [
+		os_type: [
 
             { typeid:1	, lc_value:'Solaris', name:'solaris'},
             { typeid:2	, lc_value:'Solaris x86', name:'solaris'},
@@ -45,7 +45,7 @@
             { typeid:18	, lc_value:'Windows Vista', name:'windows'},
             { typeid:19	, lc_value:'Windows Server 2012', name:'windows'}
 			],
-		apptype:[
+		application_type:[
 			{"name": ".NET Web API Server and Samples" ,"value":8},
 			{"name": "Aastra MXONE CSTA I" ,"value":22},
 			{"name": "Administration Console" ,"value":8},

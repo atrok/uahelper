@@ -189,8 +189,8 @@ local_app.prototype.init = function (app) {
 
 					var component = [{
 						SOLUTION: (null !== a.solution) ? a.solution : null,
-						APPLICATION_TYPE: (null !== a.apptype) ? a.apptype : "SIP Server",
-						OS_TYPE: (null !== a.ostype) ? a.ostype : 'linux',
+						APPLICATION_TYPE: (null !== a.application_type) ? a.application_type : "SIP Server",
+						OS_TYPE: (null !== a.os_type) ? a.os_type : 'linux',
 						RELEASE: (null !== a.release) ? a.release : "8.1.102.95"
 					}]
 					try {

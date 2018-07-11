@@ -109,8 +109,8 @@
 						<li>
 							<label class="description" for="element_1">Component</label>
 							<div class="dropdown">
-								<select id="apptype" class="dropdown_select">
-									{{#each form_comp.apptype}}
+								<select id="application_type" class="dropdown_select">
+									{{#each form_comp.application_type}}
 									<option size="25" value='{{name}}'>{{name}}</option>
 									{{/each}}
 								</select>
@@ -126,8 +126,8 @@
 						<li>
 							<label class="description" for="element_1">OS type</label>
 							<div class="dropdown">
-								<select id="ostype" class="dropdown_select">
-									{{#each form_comp.ostype}}
+								<select id="os_type" class="dropdown_select">
+									{{#each form_comp.os_type}}
 									<option value='{{name}}'>{{lc_value}}</option>
 									{{/each}}
 								</select>
