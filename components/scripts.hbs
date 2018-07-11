@@ -327,7 +327,7 @@
         $("#configlist").append("<option size=25 value='" + data._id + "'>" + data.cfglist_name + "</option>");
         $(document).ready(function () {
             init_config_lists_caption(data);
-            button_enable($("delete-btn"));
+            button_enable($("#delete-btn"));
         })
     })
 
