@@ -9,8 +9,9 @@
 	<link rel="stylesheet" type="text/css" href="/assets/css/loading-bar.css" />
 	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 	<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-	
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+	 crossorigin="anonymous">
+
 </head>
 
 <body>
@@ -32,6 +33,7 @@
 			<button class="w3-bar-item w3-button  tablink" onclick="openTab(event, 'app')">Application</button>
 			<button class="w3-bar-item w3-button  tablink" onclick="openTab(event, 'csv')">File</button>
 			<button class="w3-bar-item w3-button  tablink" onclick="openTab(event, 'lists')">Saved configurations</button>
+			<button class="w3-bar-item w3-button  tablink" onclick="openTab(event, 'options')">Settings</button>
 			<button class="w3-bar-item w3-button  tablink" onclick="openTab(event, 'admin')">Views management</button>
 
 		</div>
@@ -78,10 +80,7 @@
 								<input id="pass" name="pass" class="element text medium" type="password" size="25" maxlength="255" value="" />
 							</div>
 						</li>
-						<li id="li_genfile">
-							<label class="description" for="element_5" class="form_element_height">Generate report on server</label>
-								<input type="checkbox"  id="genfile_d" name="genfile" class="form_element_height width40" />
-						</li>
+
 						<li id="li_3">
 
 							<li class="buttons">
@@ -102,7 +101,7 @@
 							<label class="description" for="element_0">Solution</label>
 							<div class="dropdown">
 								<select id="solution" class="dropdown_select">
-									
+
 								</select>
 							</div>
 						</li>
@@ -119,7 +118,7 @@
 
 						<li>
 							<label class="description" for="element_1">Version</label>
-							<div >
+							<div>
 								<input id="release" name="release" class="element text medium" type="text" size="25" maxlength="255" value="" />
 							</div>
 						</li>
@@ -132,11 +131,6 @@
 									{{/each}}
 								</select>
 							</div>
-						</li>
-
-						<li id="li_genfile">
-							<label class="description" for="element_5" class="form_element_height">Generate report on server</label>
-								<input type="checkbox"  id="genfile_a" name="genfile" class="form_element_height width40" />
 						</li>
 
 						<li>
@@ -155,24 +149,9 @@
 					<ul>
 
 						<li>
-	
-							<div >
-								<input id="uploadInput" type="file" name="myFiles" onchange="handleFiles(event);">
-							</div>
-						</li>
-						<li >
-							<label class="description" for="element_5" class="form_element_height">File has a header</label>
-								<input type="checkbox"  id="hasHeader" name="hasHeader" class="form_element_height width40" />
-						</li>
-
-						<li id="li_genfile">
-							<label class="description" for="element_5" class="form_element_height">Generate report on server</label>
-								<input type="checkbox"  id="genfile_c" name="genfile" class="form_element_height width40" />
-						</li>
-						<li>
 
 							<div>
-								<button>Run</button>
+								<input id="uploadInput" type="file" name="myFiles" onchange="handleFiles(event);">
 							</div>
 						</li>
 				</form>
@@ -192,18 +171,22 @@
 							</div>
 						</li>
 
-						<li id="li_genfile">
-							<label class="description" for="element_5" class="form_element_height">Generate report on server</label>
-								<input type="checkbox"  id="genfile_s" name="genfile" class="form_element_height width40" />
-						</li>
-
-						<li>
-
-							<div>
-								<button>Run</button>
-							</div>
-						</li>
 				</form>
+			</div>
+
+			<div id="options" class="tab height300" style="display:none">
+
+				<h1>{{form_options.header}}</h1>
+				
+				<div class="form-check">
+					<input type="checkbox" class="form-check-input" id="genfile">
+					<label class="form-check-label" for="exampleCheck1">Generate file on server</label>
+				</div>
+
+				<div class="form-check">
+					<input type="checkbox" class="form-check-input" id="save_task">
+					<label class="form-check-label" for="exampleCheck1">Save tasks to task list</label>
+				</div>
 			</div>
 
 			<div id="admin" class="tab height300" style="display:none">

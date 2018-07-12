@@ -110,7 +110,7 @@ local_app.prototype.init = function (app) {
 				}
 
 			});
-			
+
 			//populate drop down list of configuration lists
 			socket.on('get_configlist', async function (args) {
 
@@ -125,6 +125,22 @@ local_app.prototype.init = function (app) {
 				}
 
 			});
+
+			// get table of available release notes per solution, component, family, os
+			socket.on('get_rn_statdata', async function (args) {
+
+				try {
+					var res = await couchdb.query(socket, views.views_names.components_by_solutions_detailed.path(), { group: true, reduce: true, inclusive_end: true }, views.views_names.components_by_solutions_detailed.db);
+
+					socket.emit('statdata', res);
+
+				} catch (e) {
+					console.log(e.stack);
+					socket.emit('errors', { error: e.message });
+				}
+
+			});
+
 			// prepare UA document based on customer database
 			socket.on('my other event', function (args) {
 				mylogger.log(args);
@@ -299,10 +315,10 @@ local_app.prototype.init = function (app) {
 			// channel to save configuration lists
 			socket.on('save_configlist', async function (args) {
 				try {
-					
+
 					var res = await couchdb.save(socket, args, 'uahelper_configlists');
 					console.log('saved', args.cfglist_name);
-					socket.emit('saved_configlist', { _id: res._id, _rev:res.rev, cfglist_name: args.cfglist_name, time: res.time });
+					socket.emit('saved_configlist', { _id: res._id, _rev: res.rev, cfglist_name: args.cfglist_name, time: res.time });
 
 
 
@@ -314,14 +330,14 @@ local_app.prototype.init = function (app) {
 				}
 			});
 
-						// configuration lists handling
+			// configuration lists handling
 			// channel to save configuration lists
 			socket.on('update_configlist', async function (args) {
 				try {
-					
-					var res = await couchdb.update(socket, args._id, args, 'uahelper_configlists',args._rev);
+
+					var res = await couchdb.update(socket, args._id, args, 'uahelper_configlists', args._rev);
 					console.log('updated', args.cfglist_name);
-					socket.emit('updated_configlist', { _id: args._id, _rev:args._rev, updated:res.updated });
+					socket.emit('updated_configlist', { _id: args._id, _rev: args._rev, updated: res.updated });
 
 
 
@@ -336,11 +352,11 @@ local_app.prototype.init = function (app) {
 			// channel to get configuration lists
 			socket.on('get_configlist', async function (args) {
 				try {
-					console.log(new Date().toString()+" [Socket "+socket.id+"][get_configlist] got new message, data: "+args );
+					console.log(new Date().toString() + " [Socket " + socket.id + "][get_configlist] got new message, data: " + args);
 					var res = await couchdb.get('uahelper_configlists', args, socket);
-					console.log(new Date().toString()+' Found', res._id);
+					console.log(new Date().toString() + ' Found', res._id);
 					socket.emit('configlist', res);
-					console.log(new Date().toString()+' [Socket '+socket.id+'][get_configlist] Sent result back ', res._id);
+					console.log(new Date().toString() + ' [Socket ' + socket.id + '][get_configlist] Sent result back ', res._id);
 
 
 
@@ -354,14 +370,14 @@ local_app.prototype.init = function (app) {
 
 			socket.on('delete_configlist', async function (args) {
 				try {
-					var id=args
+					var id = args
 
-						var res = await couchdb.remove(socket, id, null, 'uahelper_configlists');
-						console.log('deleted', id);
-						socket.emit('deleted_configlist', { id: id});
+					var res = await couchdb.remove(socket, id, null, 'uahelper_configlists');
+					console.log('deleted', id);
+					socket.emit('deleted_configlist', { id: id });
 
 
-					
+
 				} catch (e) {
 					socket.emit('errors', { error: e.message })
 				} finally {
@@ -478,13 +494,17 @@ async function postProcessing(content, args, socket) {
 	content.input = new mylog().stringify(args);
 	content.time = new Date().toString();
 	var ps = new postprocessor();
-	var res = await ps.init(content).save();
+	ps.init(content);
 
-	content._id = res._id;
-	var task = prepareTasksList(content);
+	// if result needs to be saved to db
+	if (args.save) {
+		var res = await ps.save();
 
-	socket.emit('tasks', task);
+		content._id = res._id;
+		var task = prepareTasksList(content);
 
+		socket.emit('tasks', task);
+	}
 	socket.emit('result', ps.format());
 
 }

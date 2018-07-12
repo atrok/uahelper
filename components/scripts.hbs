@@ -199,6 +199,31 @@
         })
     }
 
+
+    socket.on('statdata', function (data) {
+        console.log(data);
+        if (data) {
+
+            var components = data.components;
+
+            configlist_detach();
+
+            add_config_list_item(components);
+
+            // initialize config list buttons
+            $(document).ready(function () {
+                init_config_lists_caption(data);
+                init_config_lists();
+
+                // TODO:
+                // add listeners for editable cells change events
+                editable_setlisteners()
+            });
+
+            $("#config_list").visible();
+        }
+    })
+
     socket.on('progress', function (data) {
         console.log(data.percents);
         bar1.set(data.percents);
@@ -359,7 +384,8 @@
             args.dbname = (checkField($("#dbname").val(), 100)) ? $("#dbname").val() : errors.push('DB name can\t be longer than 100');
             args.user = (checkField($("#user").val(), 100)) ? $("#user").val() : errors.push('User can\'t be longer than 100');
             args.pass = (checkField($("#pass").val(), 25)) ? $("#pass").val() : errors.push('Password can\'t be longer than 25');
-            args.genfile = $('#genfile_d').is(':checked') ? true : false;
+            args.genfile = $('#genfile').is(':checked') ? true : false;
+            args.save=$('#save_task').is(':checked') ? true : false;
 
             var res = {};
             res.form = 'form_dbs';
@@ -387,7 +413,8 @@
         result.args.application_type = $("#application_type option:selected").attr("value");
         result.args.os_type = $("#os_type option:selected").attr("value");
         result.args.release = (checkField($("#release").val(), 10)) ? $("#release").val() : result.errors.push('Release can\'t be longer than 10');
-        result.args.genfile = $('#genfile_a').is(':checked') ? true : false;
+        result.args.genfile = $('#genfile').is(':checked') ? true : false;
+        result.args.save = $('#save_task').is(':checked') ? true : false;
         return result;
     }
 
@@ -437,7 +464,8 @@
         try {
             var errors = [];
             var res = {};
-            var genfile = $('#genfile_c').is(':checked') ? true : false;
+            var genfile = $('#genfile').is(':checked') ? true : false;
+            var save = $('#save_task').is(':checked') ? true : false;
             var create_config_list = $('#hasHeader').is(':checked') ? true : false;
 
             if (components.length == 0) {
@@ -450,6 +478,7 @@
                 res.args = components.file;
                 res.components = components.components;
                 res.genfile = genfile;
+                res.save=save;
 
                 submitData('components', res);
 
@@ -1062,6 +1091,14 @@
             init_config_lists_clear_text();
             configlist_detach();
         })
+    
+    $("#get-statdata-event").on('click',
+        function (evt) {
+            submitData('get_rn_statdata',{});
+        })
+
+    
+    
     // Scripts to handle TABs
 
     var function_pipeline = function () {

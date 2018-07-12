@@ -5,6 +5,7 @@ const views_names= {
     short_release_info: {name: 'short-release-info', view: 'test', path: function(){return this.view+'/'+this.name},db:'genesys_releases'},
     group_releases_by_family : {name :'group-releases-by-family', view: 'test', path: function(){return this.view+'/'+this.name},db:'genesys_releases'},
     components_by_solutions : {name: 'components_by_solutions', view: 'test',path: function(){return this.view+'/'+this.name},db:'genesys_releases'},
+    components_by_solutions_detailed : {name: 'components_by_solutions_detailed', view: 'test',path: function(){return this.view+'/'+this.name},db:'genesys_releases'},
     solutions: {name:'solutions', view: 'test',path: function(){return this.view+'/'+this.name},db:'genesys_releases'},
     solutions_by_components: {name:'solutions_by_components', view: 'test',path: function(){return this.view+'/'+this.name},db:'genesys_releases'},
 }
@@ -224,7 +225,67 @@ const view_definitions = [
                 } 
           }
       }, view: views_names.solutions_by_components.view
-  }
+  },
+  {
+    name: views_names.components_by_solutions_detailed.name, flag: 0x100, function: {
+        [views_names.components_by_solutions_detailed.name]: {
+            map: function (doc) {
+              if (doc.release) {
+                var family = doc.release.slice(0, 3);
+                var os = [];
+                if (doc.windows) {
+                  if (doc.windows === 'X') {
+                    os.push('windows');
+                  }
+                }
+                if (doc.linux) {
+                  if (doc.linux === 'X') {
+                    os.push('linux');
+                  }
+                }
+    
+                if (doc.solaris) {
+                  if (doc.solaris === 'X') {
+                    os.push('solaris');
+                  }
+                }
+    
+                if (doc.aix) {
+                  if (doc.aix === 'X') {
+                    os.push('aix');
+                  }
+                }
+    
+                if (doc['HP-UX']) {
+                  if (doc['HP-UX'] === 'X') {
+                    os.push('hpux');
+                  }
+                }
+    
+                if (doc.hpuxpa||doc.hpuxipf) {
+                  if (doc.hpuxpa === 'X'||doc.hpuxipf==='X') {
+                    os.push('hpux');
+                  }
+                }
+      
+                if (doc['TRUE64 UNIX']) {
+                  if (doc['TRUE64 UNIX'] === 'X') {
+                    os.push('trux');
+                  }
+                }
+    
+                for (var i = 0, l = os.length; i < l; i++) {
+                  var solution_name=(doc.solution_name)?doc.solution_name : 'Unknown';
+                  emit([solution_name, doc.component, os[i], family], 1);
+                }
+              }
+            },
+              reduce: function (keys, values) {
+                return count(values);
+              } 
+        }
+    }, view: views_names.components_by_solutions_detailed.view
+}
   ];
 
   module.exports={view_definitions, views_names};

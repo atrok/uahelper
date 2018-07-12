@@ -19,6 +19,9 @@
         <li class>
             <a href="#console_tab" aria-expanded="false">Console</a>
         </li>
+                <li class>
+            <a href="#stat_tab" aria-expanded="false">Statistics</a>
+        </li>
     </ul>
 
     <!-- Tab panes -->
@@ -44,7 +47,7 @@
                     </li>
                     <li>Updated time:
                         <span id="configlist_updated"></span>
-                    </li>                    
+                    </li>
                 </ul>
 
 
@@ -149,7 +152,8 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <p>There are unsaved changes in configuration list. Do you want to save them before resetting to a new configuration list?</p>
+                        <p>There are unsaved changes in configuration list. Do you want to save them before resetting to a new
+                            configuration list?</p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" id="forced-update-event">Save</button>
@@ -188,6 +192,36 @@
                         <button>Delete</button>
                     </div>
                 </form>
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="stat_tab">
+            <div id="statContainer">
+                <h3>Summary overview of release notes per solution, component, os type and family</h3>
+
+                <p>
+                    <button type="button" class="btn btn-primary" id="get-statdata-event">Save</button>
+                </p>
+                <div id="stat_data" class="table-editable" style="visibility: hidden">
+                    <span class="table-add glyphicon glyphicon-plus"></span>
+                    <table id="stat_data_t" class="table">
+                        <tr id="stat_data_t_header">
+                        </tr>
+                        <!-- This is our clonable table line -->
+                        <!-- This is our clonable table line -->
+                        <tr class="hide">
+                            <td contenteditable="true">Untitled</td>
+                            <td contenteditable="true">undefined</td>
+                            <td>
+                                <span class="table-remove glyphicon glyphicon-remove"></span>
+                            </td>
+                            <td>
+                                <span class="table-up glyphicon glyphicon-arrow-up"></span>
+                                <span class="table-down glyphicon glyphicon-arrow-down"></span>
+                            </td>
+                        </tr>
+
+                    </table>
+                </div>
             </div>
         </div>
         <div role="tabpanel" class="tab-pane" id="console_tab">
