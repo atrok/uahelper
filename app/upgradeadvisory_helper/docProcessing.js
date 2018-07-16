@@ -182,9 +182,9 @@ var start = (response, components, isGenerateReport, recreateViews) => {
       // preparing and formating results 
 
       //result.table=html.displayTableResults(new ArrayResult(components),'Results');
-      result.components = components;
+      result.components = new ArrayResult(components);
       result.obj = obj;
-      result.errors = errors;
+      result.errors =new ArrayResult(errors);
 
 
       //console.log(JSON.stringify(obj));
@@ -193,7 +193,7 @@ var start = (response, components, isGenerateReport, recreateViews) => {
 
         file.link = new LinkHTML(file.filename, '/getfile?filename=' + file.filename).toString();
         file.deletelink = new LinkHTML('delete', '/deletefile?filename=' + file.filename).toString();
-        result.file = file;
+        result.file = new SimpleObjectResult(file);
       }
       resolve(result);
 

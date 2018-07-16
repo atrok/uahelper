@@ -204,23 +204,20 @@
         console.log(data);
         if (data) {
 
-            var components = data.components;
+            $("#stat_data").empty();
 
-            configlist_detach();
+        Object.keys(data).forEach((key) => {
+            if (key === 'file' || key === 'error' || key == 'table') // 
+                $("#stat_data").append(data[key]);
+        })
 
-            add_config_list_item(components);
-
-            // initialize config list buttons
+            // placeholder
             $(document).ready(function () {
-                init_config_lists_caption(data);
-                init_config_lists();
 
-                // TODO:
-                // add listeners for editable cells change events
-                editable_setlisteners()
             });
 
-            $("#config_list").visible();
+            $("#stat_data").visible();
+
         }
     })
 
