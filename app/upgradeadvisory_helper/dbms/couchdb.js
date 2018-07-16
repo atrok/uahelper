@@ -284,6 +284,12 @@ databases(cb){
   return new (cradle.Connection)({ auth: { username: this.username, password: this.password } }).databases(cb);
 }
 
+info(cb){
+  var res = this.db.database(this.database_name).info();
+
+  return res;
+}
+
 
 // function to add documents into db with dbname
 // if db doesn't exist it will try to create one

@@ -6,6 +6,12 @@ var html=require('../html/html');
 
 postprocessor.prototype.init = function (obj) {
     this.result = obj;
+    var names=(obj.names)?obj.names:{};
+
+    this.resulttableName=(names.resulttableName)? names.resulttableName : 'Results';
+    this.filetableName=(names.filetableName)? names.filetableName : 'Resulting file';
+    this.errortableName=(names.errortableName)? names.errortableName: 'Errors';
+    
     //this.couchdb = new db.CouchDB({ host: db.couchdb_host, port: db.couchdb_port, username: db.couchdb_username, password: db.couchdb_pass });
     
     return this;
@@ -31,12 +37,14 @@ postprocessor.prototype.log = function () {
     return new clientlogger();
 }
 
-
+postprocessor.prototype.setResultTableName=function(name){
+    this.tableName=name;
+}
 postprocessor.prototype.format = function (id) {
     var output = {}
-    output.table = html.displayTableResults(this.result.components, 'Results');
+    output.table = html.displayTableResults(this.result.components, this.resulttableName);
     if (this.result.file)
-        output.file = html.displayTableResults(this.result.file, 'Resulting file');
+        output.file = html.displayTableResults(this.result.file, this.filetableName);
 
     output.parsed_obj=this.result.obj;
     output._id=this.result._id;
@@ -44,9 +52,9 @@ postprocessor.prototype.format = function (id) {
 
     if (this.result.errors){
         if (this.result.errors.length > 0) {
-        output.errors = html.displayTableResults(this.result.errors, 'Errors');
+        output.errors = html.displayTableResults(this.result.errors, this.errortableName);
     }}
-    
+
     
     return output;
 

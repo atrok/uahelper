@@ -58,6 +58,7 @@
         socket.emit('tasks', {});
         socket.emit('get_solutions', {});
         socket.emit('get_all_configlists', {});
+        socket.emit('get_dbinfo', {});
     });
 
     socket.on('solutions', function (data) { //populate solutions dropdown list
@@ -298,6 +299,17 @@
         console.log(data);
         //$("#div_result").empty();
         lotsoferrors(data);
+
+
+    })
+
+    socket.on('dbinfo', function (data) {
+        console.log(data);
+        $("#dbinfo").empty();
+        $("#dbinfo").append(data.table);
+        $("#dbinfo").visible();
+
+        
 
 
     })

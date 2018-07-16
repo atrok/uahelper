@@ -28,7 +28,7 @@ const requesthandlers = require('./upgradeadvisory_helper/requestHandlers');
 
 const views = require('./upgradeadvisory_helper/dbms/queries/view_definitions')
 
-const {CouchDBResult}=require('./upgradeadvisory_helper/result');
+const { CouchDBResult,SimpleObjectResult,SimpleKeyValueResult } = require('./upgradeadvisory_helper/result');
 
 // * ———————————————————————————————————————————————————————— * //
 // * 	init
@@ -134,16 +134,38 @@ local_app.prototype.init = function (app) {
 				try {
 					var res = await couchdb.query(socket, views.views_names.components_by_solutions_detailed.path(), { group: true, reduce: true, inclusive_end: true }, views.views_names.components_by_solutions_detailed.db);
 
-					var content={components: new CouchDBResult(res), errors: null};
+					var content = { components: new CouchDBResult(res), errors: null , names: {resulttableName: 'Release Notes Summary'} };
 
-					(args.save) ? args.save=false: args;
+					(args.save) ? args.save = false : args;
 
-					postProcessing(content,'statdata',args,socket);
+					postProcessing(content, 'statdata', args, socket);
 
 				} catch (e) {
 					console.log(e.stack);
 					socket.emit('errors', { error: e.message });
-				}finally{
+				} finally {
+					socket.emit('done', {});
+				}
+
+			});
+
+			// get table of available release notes per solution, component, family, os
+			socket.on('get_dbinfo', async function (args) {
+
+				try {
+					var res = await couchdb.info(views.views_names.maindDBall.db, socket);
+
+					var content = { components: new SimpleKeyValueResult(res), errors: null, names: {resulttableName: 'DB Info'} };
+
+					
+
+
+					postProcessing(content, 'dbinfo', args, socket);
+
+				} catch (e) {
+					console.log(e.stack);
+					socket.emit('errors', { error: e.message });
+				} finally {
 					socket.emit('done', {});
 				}
 
@@ -221,7 +243,7 @@ local_app.prototype.init = function (app) {
 						var content = await docProcessing.start(socket, component, genfile);
 						//content.input=;
 
-						postProcessing(content,'result', args.args, socket);
+						postProcessing(content, 'result', args.args, socket);
 
 					} catch (e) {
 						console.log('Emit 6:', e.stack);
@@ -498,11 +520,11 @@ function isValidated(args, socket) {
 
 }
 
-async function postProcessing(content,channel, args, socket) {
+async function postProcessing(content, channel, args, socket) {
 	content.input = new mylog().stringify(args);
 	content.time = new Date().toString();
 	var ps = new postprocessor();
-	var s= await ps.init(content);
+	var s = await ps.init(content);
 
 	// if result needs to be saved to db
 	if (args.save) {

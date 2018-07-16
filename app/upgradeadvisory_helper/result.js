@@ -1,5 +1,5 @@
-var ListHTML=require('./html/listhtml');
-var StringBuilder=require('./stringbuilder');
+var ListHTML = require('./html/listhtml');
+var StringBuilder = require('./stringbuilder');
 
 class Result {
     constructor(result) {
@@ -9,11 +9,13 @@ class Result {
     display() {
         var result = this.result;
 
-        if (result.length == 0) {
-            return false;
+        if (result) {
+            if (result.length == 0) {
+                return false;
+            }
+            return true;
         }
-        return true;
-
+        return false;
     }
 }
 
@@ -23,8 +25,8 @@ class OracleDBResult extends Result {
     }
 
     display() {
-        var sb=new StringBuilder();
-        
+        var sb = new StringBuilder();
+
         if (super.display()) {
 
             sb.append('<table class="table">');
@@ -47,7 +49,7 @@ class OracleDBResult extends Result {
                 }
                 sb.append("</table>");
             }
-        }else{
+        } else {
             sb.append('<p> Found 0 records </p>');
         }
         return sb.toString();
@@ -61,13 +63,13 @@ class CouchDBResult extends Result {
 
     display() {
 
-        var sb=new StringBuilder();
+        var sb = new StringBuilder();
         if (super.display()) {
 
             var result = this.result;
 
             if (result[0].key) { // results in Object form (from couchdb)
-                sb.append("<table>");
+                sb.append("<table class='table'>");
                 //Column Title
                 sb.append("<tr>");
                 var columns = result[0].key.length;
@@ -89,7 +91,7 @@ class CouchDBResult extends Result {
                 sb.append("</table>");
             }
 
-        }else{
+        } else {
             sb.append('<p>Found 0 records</p>');
         }
         return sb.toString();
@@ -103,31 +105,67 @@ class SimpleObjectResult extends Result {
 
     display() {
 
-        var sb=new StringBuilder();
+        var sb = new StringBuilder();
         if (super.display()) {
 
             var result = this.result;
 
-          //  if (result[0].key) { // results in Object form (from couchdb)
-                sb.append("<table>");
-                //Column Title
+            //  if (result[0].key) { // results in Object form (from couchdb)
+            sb.append("<table class='table'>");
+            //Column Title
+            sb.append("<tr>");
+            var columns = Object.keys(result);
+            for (var col = 0; col < columns.length; col++) {
+                sb.append("<th>" + columns[col] + "</th>");
+            }
+            sb.append("</tr>");
+            // Rows
+
+            columns.forEach(function (key) {
+                sb.append("<td>" + result[key].toString() + "</td>");
+            })
+            sb.append("</tr>");
+
+            sb.append("</table>");
+            //   }
+
+        } else {
+            sb.append('<p>Found 0 records</p>');
+        }
+        return sb.toString();
+    }
+}
+
+class SimpleKeyValueResult extends Result {
+    constructor(result) {
+        super(result);
+    }
+
+    display() {
+
+        var sb = new StringBuilder();
+        if (super.display()) {
+
+            var result = this.result;
+
+            //  if (result[0].key) { // results in Object form (from couchdb)
+            sb.append("<table class='table'>");
+            //Column Title
+            
+            var rows = Object.keys(result);
+            for (var col = 0; col < rows.length; col++) {
                 sb.append("<tr>");
-                var columns = Object.keys(result);
-                for (var col = 0; col < columns.length; col++) {
-                    sb.append("<th>" + columns[col] + "</th>");
-                }
+                sb.append("<td>" + rows[col] + "</td>");
+                sb.append("<td>" + JSON.stringify(result[rows[col]]) + "</td>");
                 sb.append("</tr>");
-                // Rows
+            }
+            
+            // Rows
 
-                columns.forEach(function (key) {
-                        sb.append("<td>" + result[key].toString() + "</td>");
-                    })
-                sb.append("</tr>");
+            sb.append("</table>");
+            //   }
 
-                sb.append("</table>");
-         //   }
-
-        }else{
+        } else {
             sb.append('<p>Found 0 records</p>');
         }
         return sb.toString();
@@ -161,15 +199,15 @@ class ArrayResult extends Result {
             for (var i = 0; i < result.length; i++) {
                 var arr = [];
                 for (var k = 0; k < propNames.length; k++) {
-                    
-                    const desc = Object.getOwnPropertyDescriptor(result[i], propNames[k]);
-                    try{
-                    var v=(typeof desc!=='undefined')?desc.value:{value:''};
 
-                    var t=new ListHTML().KVtolist(v);
-                    arr[k] = (v instanceof String)?v:t.toString();
-                    }catch(err){
-                        throw new Error("ERROR!! "+JSON.stringify(result[i].toString()) +' property:'+propNames[i],err.stack);
+                    const desc = Object.getOwnPropertyDescriptor(result[i], propNames[k]);
+                    try {
+                        var v = (typeof desc !== 'undefined') ? desc.value : { value: '' };
+
+                        var t = new ListHTML().KVtolist(v);
+                        arr[k] = (v instanceof String) ? v : t.toString();
+                    } catch (err) {
+                        throw new Error("ERROR!! " + JSON.stringify(result[i].toString()) + ' property:' + propNames[i], err.stack);
                     }
                 }
                 obj.rows[i] = arr;
@@ -188,5 +226,6 @@ module.exports = {
     OracleDBResult,
     CouchDBResult,
     ArrayResult,
-    SimpleObjectResult
+    SimpleObjectResult,
+    SimpleKeyValueResult
 }

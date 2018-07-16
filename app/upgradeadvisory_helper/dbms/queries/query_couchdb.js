@@ -180,11 +180,29 @@ var init=function(dbname,response){
     return couchdb.initialize("true", response)
 }
 
+var info=function(dbname,response){
+    return new Promise((resolve,reject)=>{
+    var logger = new Logger(response);
+    if (typeof dbname === 'undefined')
+    logger.log('DB name is not provided, using default set name');
+
+    var db =couchdb.getDBConnection(dbname);
+    db.info(function(err, res){
+        if (err){ reject(err)}
+
+        console.log(res);
+        resolve(res);
+    });
+    
+})
+}
+
 module.exports = {
     query,
     remove,
     save,
     update,
     get,
-    init
+    init,
+    info
 };
