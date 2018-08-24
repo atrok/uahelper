@@ -42,9 +42,15 @@ postprocessor.prototype.setResultTableName=function(name){
 }
 postprocessor.prototype.format = function (id) {
     var output = {}
-    output.table = html.displayTableResults(this.result.components, this.resulttableName);
+
+    var components = (this.result.components instanceof ArrayResult)?this.result.components : Object.assign(new ArrayResult(null),this.result.components);
+    var file=(this.result.file instanceof SimpleObjectResult)?this.result.file: Object.assign(new SimpleObjectResult(null),this.result.file);
+    var errors = (this.result.errors instanceof ArrayResult)? this.result.errors: Object.assign(new ArrayResult(null), this.result.errors);
+    
+    this.result.components
+    output.table = html.displayTableResults(components, this.resulttableName);
     if (this.result.file)
-        output.file = html.displayTableResults(this.result.file, this.filetableName);
+        output.file = html.displayTableResults(file, this.filetableName);
 
     output.parsed_obj=this.result.obj;
     output._id=this.result._id;
@@ -52,7 +58,7 @@ postprocessor.prototype.format = function (id) {
 
     if (this.result.errors){
         if (this.result.errors.length > 0) {
-        output.errors = html.displayTableResults(this.result.errors, this.errortableName);
+        output.errors = html.displayTableResults(errors, this.errortableName);
     }}
 
     
@@ -67,7 +73,7 @@ postprocessor.prototype.save = async function () {
 
     var db = couchdb.getDBConnection('uahelper');
 
-    var result = this.result;
+    var result =this.result;
 
     await new Promise((resolve,reject)=>{
         db.exists(function (err, exists) {
@@ -86,8 +92,13 @@ postprocessor.prototype.save = async function () {
 
     return new Promise((resolve,reject)=>{
         db.save(result, function (err, res) {
+            if(err){
+                console.log('error', err);
+                reject(err)
+            }else{
         console.log('saved id:', res);
         resolve(res);
+        }
         })
     })
    

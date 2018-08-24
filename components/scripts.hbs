@@ -207,10 +207,10 @@
 
             $("#stat_data").empty();
 
-        Object.keys(data).forEach((key) => {
-            if (key === 'file' || key === 'error' || key == 'table') // 
-                $("#stat_data").append(data[key]);
-        })
+            Object.keys(data).forEach((key) => {
+                if (key === 'file' || key === 'error' || key == 'table') // 
+                    $("#stat_data").append(data[key]);
+            })
 
             // placeholder
             $(document).ready(function () {
@@ -309,7 +309,7 @@
         $("#dbinfo").append(data.table);
         $("#dbinfo").visible();
 
-        
+
 
 
     })
@@ -320,7 +320,7 @@
 
     socket.on('validation', function (data) {
         console.log(data);
-       // $(':submit').attr('disabled', 'disabled');
+        // $(':submit').attr('disabled', 'disabled');
         if (data.submitted) {
             $("#div_result #console").append(data.reason);
         } else {
@@ -394,7 +394,7 @@
             args.user = (checkField($("#user").val(), 100)) ? $("#user").val() : errors.push('User can\'t be longer than 100');
             args.pass = (checkField($("#pass").val(), 25)) ? $("#pass").val() : errors.push('Password can\'t be longer than 25');
             args.genfile = $('#genfile').is(':checked') ? true : false;
-            args.save=$('#save_task').is(':checked') ? true : false;
+            args.save = $('#save_task').is(':checked') ? true : false;
 
             var res = {};
             res.form = 'form_dbs';
@@ -487,7 +487,7 @@
                 res.args = components.file;
                 res.components = components.components;
                 res.genfile = genfile;
-                res.save=save;
+                res.save = save;
 
                 submitData('components', res);
 
@@ -782,7 +782,7 @@
             var row = '';
             data.forEach((item) => {
 
-                row = row + '<td contenteditable="true">' + item + '</td>';
+                row = row + '<td contenteditable="true">' + normalizeConfigListItem(item) + '</td>';
 
             })
             $('#config_list_t').append('<tr>' + row
@@ -795,6 +795,14 @@
         }
     }
 
+    function normalizeConfigListItem(item) {//remove " if the string is wrapped into double qoutes
+        if (item instanceof String) {
+            if (item.startsWith('"') && item.endsWith('"')) {
+                return item.substring(1, item.length - 1);
+            }
+        }
+        return item;
+    }
     function configlist_detach() {
         $('#config_list').detach();
         $('#export_div').detach();
@@ -819,7 +827,7 @@
             var row = '';
             data.forEach((item) => {
 
-                row = row + '<th>' + item + '</th>';
+                row = row + '<th>' + normalizeConfigListItem(item) + '</th>';
 
             })
             $('#config_list_t_header').append(row + '<th></th><th></th>');
@@ -1084,11 +1092,11 @@
             console.log('Forced update of config list has been triggered');
             $('#configlist_forced_update_modal').modal('hide');
             if ($("#configlist_docid").text.length > 0) {
-                queue.push(function(){$('#save-btn').click()});
+                queue.push(function () { $('#save-btn').click() });
             } else {
-                queue.push(function(){$('#update-btn').click()});
+                queue.push(function () { $('#update-btn').click() });
             }
-            queue.push(function(){$('#reset-event').click()});
+            queue.push(function () { $('#reset-event').click() });
 
             queue.execute();
 
@@ -1100,14 +1108,14 @@
             init_config_lists_clear_text();
             configlist_detach();
         })
-    
+
     $("#get-statdata-event").on('click',
         function (evt) {
-            submitData('get_rn_statdata',{});
+            submitData('get_rn_statdata', {});
         })
 
-    
-    
+
+
     // Scripts to handle TABs
 
     var function_pipeline = function () {
