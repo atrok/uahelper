@@ -125,6 +125,7 @@
 
                     var doc_id = configlist.options[configlist.options.selectedIndex].value;
                     submitData('get_configlist', doc_id);
+                    $('.nav-tabs a#conflist_tab').tab('show');
                 })
                 return false;
 
@@ -133,7 +134,7 @@
     })
 
     socket.on('configlist', function (data) {
-        console.log('configlist received:'+JSON.stringify(data));
+        console.log('configlist received:' + JSON.stringify(data));
         if (data) {
             //removeOptions(document.getElementById("configlist"))
 
@@ -144,6 +145,7 @@
 
             add_config_list_item(components);
 
+            $('.nav-tabs a[href="#conflist_tab"]').tab('show');
             // initialize config list buttons
             $(document).ready(function () {
                 init_config_lists_caption(data);
@@ -155,6 +157,7 @@
             });
 
             $("#config_list").visible();
+
         }
     })
 
@@ -283,6 +286,8 @@
 
             });
         });
+
+        $('.nav-tabs a[href="#result_tab"]').tab('show');
 
 
     })
@@ -557,6 +562,7 @@
             });
 
             $("#config_list").visible();
+            $('.nav-tabs a[href="#conflist_tab"]').tab('show');
 
         }
     })
@@ -772,6 +778,8 @@
             });
 
             $("#config_list").visible();
+            $('.nav-tabs a[href="#conflist_tab"]').tab('show');
+
         })
 
         reader.read(file);
@@ -991,6 +999,7 @@
             console.log(data);
             components.components = data;
             $(this).addClass("active_submitter");
+            $('.nav_tab a#result_tab').tab('show');
             submit_csv();
 
         });
