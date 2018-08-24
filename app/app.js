@@ -267,7 +267,7 @@ local_app.prototype.init = function (app) {
 						var content = await docProcessing.start(socket, components, genfile);
 						//content.input=;
 
-						postProcessing(content, 'result', args.args, socket);
+						postProcessing(content, 'result', args, socket);
 
 					} catch (e) {
 						console.log('Emit 6:', e.stack);
@@ -521,7 +521,7 @@ function isValidated(args, socket) {
 }
 
 async function postProcessing(content, channel, args, socket) {
-	content.input = new mylog().stringify(args);
+	content.input = new mylog().stringify(args.args);
 	content.time = new Date().toString();
 	var ps = new postprocessor();
 	var s = await ps.init(content);
