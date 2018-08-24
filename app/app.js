@@ -114,6 +114,7 @@ local_app.prototype.init = function (app) {
 			});
 
 			//populate drop down list of configuration lists
+			/*
 			socket.on('get_configlist', async function (args) {
 
 				try {
@@ -127,7 +128,7 @@ local_app.prototype.init = function (app) {
 				}
 
 			});
-
+*/
 			// get table of available release notes per solution, component, family, os
 			socket.on('get_rn_statdata', async function (args) {
 
@@ -243,7 +244,7 @@ local_app.prototype.init = function (app) {
 						var content = await docProcessing.start(socket, component, genfile);
 						//content.input=;
 
-						postProcessing(content, 'result', args.args, socket);
+						postProcessing(content, 'result', args, socket);
 
 					} catch (e) {
 						console.log('Emit 6:', e.stack);
@@ -563,10 +564,10 @@ function prepareTasksList(content) {
 }
 
 function prepareTask(item) {
-	var task = {}
-	task.time = item.time;
-	task.input = item.input;
-	task.id = item._id;
+	var task = Object.assign({}, item)
+	//task.time = item.time;
+	//task.input = item.input;
+	//task.id = item._id;
 	task.link = new LinkHTML('Go to results', '#', '', 'getresult', item._id).toString();
 	//.addOnClick('submitData(\'getresults\', { \'id\': '+item._id+' })').toString();
 	return task;

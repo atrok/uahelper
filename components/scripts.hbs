@@ -133,7 +133,7 @@
     })
 
     socket.on('configlist', function (data) {
-        console.log(data);
+        console.log('configlist received:'+JSON.stringify(data));
         if (data) {
             //removeOptions(document.getElementById("configlist"))
 
@@ -334,8 +334,8 @@
         if (data instanceof Array) {
             data.forEach((item) => {
                 $('#tasks').append(
-                    '<tr id="' + item.id + '">'
-                    + '<td><input type="checkbox" id="' + item.id + '" /></td>'
+                    '<tr id="' + item._id + '">'
+                    + '<td><input type="checkbox" id="' + item._id + '" /></td>'
                     + '<td>' + item.time.toString() + '</td>'
                     + '<td>' + item.input.toString() + '</td>'
                     + '<td>' + item.link.toString() + '</td>'
@@ -499,6 +499,7 @@
         }
     }
 
+
     $("#form_admin").submit(function () {
         try {
             var args = {};
@@ -567,7 +568,7 @@
     }
 
     function submitData(channel, data) {
-        console.log("Sending data to /" + channel + ", " + data);
+        console.log("Sending data to /" + channel + ", " + JSON.stringify(data));
         socket.emit(channel, data);
         $('div #myItem1').visible();
     }
@@ -928,6 +929,8 @@
     }
 
     function init_config_lists() {
+
+        console.log('init_config_lists is entered')
         var $TABLE = $('#config_list_t');
         var $BTN = $('#run-btn');
         var $BTN_SAVE = $('#save-btn');
@@ -971,6 +974,17 @@
             console.log('Configuration list is to be sent to backend for evaluation')
 
             var data = get_table_data();
+
+            var cl = {
+                cfglist_name: $("#configlist_name").text(),
+                _id: $("#configlist_docid").text(),
+                _rev: $("#configlist_revid").text(),
+                time: $("#configlist_time").text()
+            }
+
+            if (cl._id.length > 0) {
+                components.file = cl;
+            }
 
 
             // Output the result
