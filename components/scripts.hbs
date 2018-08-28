@@ -46,7 +46,9 @@
 
     var socket = io.connect('/prepareadvisory');
 
-    var bar1 = new ldBar("#myItem1");
+    var bar1 = new ldBar("#myItem1", {
+        "preset":"stripe"
+    });
     //var bar2 = document.getElementById('myItem1').ldBar;
 
     var id;
@@ -570,13 +572,13 @@
     function done() {
         $('.active_submitter').removeAttr('disabled');
         $(':submit').removeClass('active_submitter');
-        $('div #myItem1').invisible();
+        $('div #loadBar').invisible();
     }
 
     function submitData(channel, data) {
         console.log("Sending data to /" + channel + ", " + JSON.stringify(data));
         socket.emit(channel, data);
-        $('div #myItem1').visible();
+        $('div #loadBar').visible();
     }
 
 
