@@ -46,7 +46,9 @@
 
     var socket = io.connect('/prepareadvisory');
 
-    var bar1 = new ldBar("#myItem1");
+    var bar1 = new ldBar("#myItem1", {
+        "preset":"stripe"
+    });
     //var bar2 = document.getElementById('myItem1').ldBar;
 
     var id;
@@ -125,6 +127,7 @@
 
                     var doc_id = configlist.options[configlist.options.selectedIndex].value;
                     submitData('get_configlist', doc_id);
+                    $('.nav-tabs a#conflist_tab').tab('show');
                 })
                 return false;
 
@@ -133,7 +136,7 @@
     })
 
     socket.on('configlist', function (data) {
-        console.log(data);
+        console.log('configlist received:' + JSON.stringify(data));
         if (data) {
             //removeOptions(document.getElementById("configlist"))
 
@@ -144,6 +147,7 @@
 
             add_config_list_item(components);
 
+            $('.nav-tabs a[href="#conflist_tab"]').tab('show');
             // initialize config list buttons
             $(document).ready(function () {
                 init_config_lists_caption(data);
@@ -155,6 +159,7 @@
             });
 
             $("#config_list").visible();
+
         }
     })
 
@@ -284,6 +289,8 @@
             });
         });
 
+        $('.nav-tabs a[href="#result_tab"]').tab('show');
+
 
     })
 
@@ -334,8 +341,8 @@
         if (data instanceof Array) {
             data.forEach((item) => {
                 $('#tasks').append(
-                    '<tr id="' + item.id + '">'
-                    + '<td><input type="checkbox" id="' + item.id + '" /></td>'
+                    '<tr id="' + item._id + '">'
+                    + '<td><input type="checkbox" id="' + item._id + '" /></td>'
                     + '<td>' + item.time.toString() + '</td>'
                     + '<td>' + item.input.toString() + '</td>'
                     + '<td>' + item.link.toString() + '</td>'
@@ -499,6 +506,7 @@
         }
     }
 
+
     $("#form_admin").submit(function () {
         try {
             var args = {};
@@ -556,6 +564,7 @@
             });
 
             $("#config_list").visible();
+            $('.nav-tabs a[href="#conflist_tab"]').tab('show');
 
         }
     })
@@ -563,13 +572,13 @@
     function done() {
         $('.active_submitter').removeAttr('disabled');
         $(':submit').removeClass('active_submitter');
-        $('div #myItem1').invisible();
+        $('div #loadBar').invisible();
     }
 
     function submitData(channel, data) {
-        console.log("Sending data to /" + channel + ", " + data);
+        console.log("Sending data to /" + channel + ", " + JSON.stringify(data));
         socket.emit(channel, data);
-        $('div #myItem1').visible();
+        $('div #loadBar').visible();
     }
 
 
@@ -771,6 +780,8 @@
             });
 
             $("#config_list").visible();
+            $('.nav-tabs a[href="#conflist_tab"]').tab('show');
+
         })
 
         reader.read(file);
@@ -928,6 +939,8 @@
     }
 
     function init_config_lists() {
+
+        console.log('init_config_lists is entered')
         var $TABLE = $('#config_list_t');
         var $BTN = $('#run-btn');
         var $BTN_SAVE = $('#save-btn');
@@ -972,11 +985,23 @@
 
             var data = get_table_data();
 
+            var cl = {
+                cfglist_name: $("#configlist_name").text(),
+                _id: $("#configlist_docid").text(),
+                _rev: $("#configlist_revid").text(),
+                time: $("#configlist_time").text()
+            }
+
+            if (cl._id.length > 0) {
+                components.file = cl;
+            }
+
 
             // Output the result
             console.log(data);
             components.components = data;
             $(this).addClass("active_submitter");
+            $('.nav_tab a#result_tab').tab('show');
             submit_csv();
 
         });
