@@ -260,6 +260,7 @@ initialize(recreate, response) {
       var p = await this.check_views(logger);
       if (p) await this.create_view(logger,p);
       logger.log(p);
+
       resolve();
       //response.end();
     } catch (e) {
@@ -269,6 +270,8 @@ initialize(recreate, response) {
     }
   });
 };
+
+
 
 checkDB() {
   if (this.db === null) throw new Error("Connection to DB is not opened. Please call getDBConnection(database)");
@@ -295,20 +298,26 @@ info(cb){
 // if db doesn't exist it will try to create one
 // as result it should return rev_id of created document
 
-async save (dbname,result) {
+async save (dbname,result,response) {
   //check if database uahelper exists
   var db = this.getDBConnection(dbname);
+
+  var logger = new Logger(response);
 
   await new Promise((resolve,reject)=>{
       db.exists(function (err, exists) {
       if (err) {
-          console.log('error', err);
+          logger.log('error', err);
           reject(err);
       } else if (exists) {
-          console.log('db exists, continue.');
+          logger.log('DB exists, continue: '+dbname);
       } else {
-          console.log('database does not exists, creating.');
-          db.create();
+          logger.log('DB does not exist, creating: '+dbname);
+          db.create(function(err){
+            if(err)
+            logger.log(err);
+            reject("Failed to create "+db.name);});
+            
       }
       resolve();        
       });
@@ -317,9 +326,11 @@ async save (dbname,result) {
   return new Promise((resolve,reject)=>{
       db.save(result, function (err, res) {
       if (err) {
-          console.log('error', err);
+          logger.log('error', err);
           reject(err);
       }
+
+      logger.log("Saved results to "+db.name+", res: "+res);
       resolve(res);
       })
   })

@@ -22,6 +22,7 @@ class Result {
 class OracleDBResult extends Result {
     constructor(result) {
         super(result);
+        this.__type="OracleDBResult";
     }
 
     display() {
@@ -59,6 +60,7 @@ class OracleDBResult extends Result {
 class CouchDBResult extends Result {
     constructor(result) {
         super(result);
+        this.__type="CouchDBResult";
     }
 
     display() {
@@ -101,6 +103,8 @@ class CouchDBResult extends Result {
 class SimpleObjectResult extends Result {
     constructor(result) {
         super(result);
+
+        this.__type="SimpleObjectResult";
     }
 
     display() {
@@ -136,9 +140,39 @@ class SimpleObjectResult extends Result {
     }
 }
 
+class CouchDBResult_DOC extends Result {
+    constructor(result) {
+        super(result);
+
+        this.__type="CouchDBResult_DOC";
+    }
+
+    display() {
+
+        var sb = new StringBuilder();
+        if (super.display()) {
+
+            var result = this.result;
+
+            if (result[0].doc) { // results in Object form from _all view (from couchdb)
+                var doc_array=[]
+                result.forEach(val=>{
+                    doc_array.push(val);
+                })
+            return new ArrayResult(doc_array).display();
+            }
+        } else {
+            sb.append('<p>Found 0 records</p>');
+        }
+        return sb.toString();
+    }
+}
+
+
 class SimpleKeyValueResult extends Result {
     constructor(result) {
         super(result);
+        this.__type="SimpleKeyValueResult";
     }
 
     display() {
@@ -175,6 +209,8 @@ class SimpleKeyValueResult extends Result {
 class ArrayResult extends Result {
     constructor(result) {
         super(result);
+
+        this.__type="ArrayResult";
     }
     display() {
 
@@ -227,5 +263,6 @@ module.exports = {
     CouchDBResult,
     ArrayResult,
     SimpleObjectResult,
-    SimpleKeyValueResult
+    SimpleKeyValueResult,
+    CouchDBResult_DOC
 }

@@ -20,12 +20,12 @@ var remove = async function (response, id, revid, dbname) {
 
         return new Promise((resolve, reject) => {
             db.remove(id, revid, function (err, res) {
-                if(err){
+                if (err) {
                     reject(err);
                     return;
-                }else{
-                console.log('deleted: '+id+' revid:'+revid);
-                resolve(res);
+                } else {
+                    console.log('deleted: ' + id + ' revid:' + revid);
+                    resolve(res);
                 }
             });
         });
@@ -45,11 +45,11 @@ var save = async function (response, result, dbname) {
             logger.log('DB name is not provided, using default set name');
 
         //var db = couchdb.getDBConnection(dbname);
-        result.time=new Date().toString();
-        return new Promise(async (resolve,reject)=>{
-           var res= await couchdb.save(dbname, result);
-           res.time=result.time;
-           resolve(res);
+        result.time = new Date().toString();
+        return new Promise(async (resolve, reject) => {
+            var res = await couchdb.save(dbname, result);
+            res.time = result.time;
+            resolve(res);
         })
     } catch (err) {
         console.log(err.stack);
@@ -72,15 +72,15 @@ var update = async function (response, id, result, dbname, revid) {
         }
 
         return new Promise((resolve, reject) => {
-            result.updated=new Date().toString();
+            result.updated = new Date().toString();
             db.save(id, revid, result, function (err, res) {
-                if(err){
+                if (err) {
                     reject(err);
                     return;
-                }else{
-                logger.log('updated: '+id+' revid:'+revid);
-                res.updated=result.updated;
-                resolve(res);
+                } else {
+                    logger.log('updated: ' + id + ' revid:' + revid);
+                    res.updated = result.updated;
+                    resolve(res);
                 }
             });
         });
@@ -99,10 +99,10 @@ function getRevision(db, id) {
             if (err) {
                 reject(err);
                 return;
-            }else{
+            } else {
 
-            console.log('Resolved revId:', doc._rev);
-            resolve(doc._rev);
+                console.log('Resolved revId:', doc._rev);
+                resolve(doc._rev);
             }
         });
     })
@@ -139,7 +139,7 @@ var query = (response, view, opts, dbname) => {
     });
 };
 
-var get = (dbname, doc_id, response ) => {
+var get = (dbname, doc_id, response) => {
 
     var logger = new Logger(response);
 
@@ -155,7 +155,7 @@ var get = (dbname, doc_id, response ) => {
 
             var res = await couchdb.get(doc_id, response);
 
-            
+
 
             //    rows.forEach(function(value,key){
             //        logger.log(value.key.toString());
@@ -168,33 +168,60 @@ var get = (dbname, doc_id, response ) => {
     });
 };
 
-var init=function(dbname,response){
+var init = async function (dbname, response) {
 
     var logger = new Logger(response);
 
     if (typeof dbname === 'undefined')
-    logger.log('DB name is not provided, using default set name');
+        logger.log('DB name is not provided, using default set name');
 
     couchdb.getDBConnection(dbname);
 
-    return couchdb.initialize("true", response)
+    try {
+        var res = await couchdb.initialize("true", response);
+
+        var history_record = await prepare_history_record();
+        var s = await save(response, history_record, "uahelper_history", );
+        logger.log("Saving to uahelper_history results: " + s);
+        return res;
+
+    } catch (err) {
+        throw err;
+    }
 }
 
-var info=function(dbname,response){
-    return new Promise((resolve,reject)=>{
-    var logger = new Logger(response);
-    if (typeof dbname === 'undefined')
-    logger.log('DB name is not provided, using default set name');
+var prepare_history_record = async function () {
 
-    var db =couchdb.getDBConnection(dbname);
-    db.info(function(err, res){
-        if (err){ reject(err)}
+    return new Promise(async (resolve, reject) => {
+        try {
+            var rec = {};
+            var inf = await info();
+            rec.db_name = inf.db_name;
+            rec.sizes = inf.sizes;
+            rec.doc_count = inf.doc_count;
+            resolve(rec);
+        } catch (err) {
+            reject(err)
+        }
+    })
 
-        console.log(res);
-        resolve(res);
-    });
-    
-})
+}
+
+var info = function (dbname, response) {
+    return new Promise((resolve, reject) => {
+        var logger = new Logger(response);
+        if (typeof dbname === 'undefined')
+            logger.log('DB name is not provided, using default set name');
+
+        var db = couchdb.getDBConnection(dbname);
+        db.info(function (err, res) {
+            if (err) { reject(err) }
+
+            console.log(res);
+            resolve(res);
+        });
+
+    })
 }
 
 module.exports = {

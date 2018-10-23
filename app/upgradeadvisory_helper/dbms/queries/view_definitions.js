@@ -280,9 +280,7 @@ const view_definitions = [
                 }
               }
             },
-              reduce: function (keys, values) {
-                return count(values);
-              } 
+              reduce: "_count" 
         }
     }, view: views_names.components_by_solutions_detailed.view
 }
