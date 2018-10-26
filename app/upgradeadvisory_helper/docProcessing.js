@@ -37,6 +37,14 @@ var start = (response, components, isGenerateReport, recreateViews) => {
       for (var i = 0; i < components.length; i++) {
         try {
 
+          //init component variables
+          components[i].DELTA_SAME = 'undefined';
+          components[i].DELTA_LATEST = 'undefined';
+          components[i].latest="";
+          components[i].date="";
+          components[i].type="";
+          components[i].releases = '';
+
           var couchdb = new db.CouchDB({ host: db.couchdb_host, port: db.couchdb_port, username: db.couchdb_username, password: db.couchdb_pass });
 
           couchdb.getDBConnection(db.couchdb_name);
@@ -101,9 +109,7 @@ var start = (response, components, isGenerateReport, recreateViews) => {
 
           if (new_releases.rows.length === 0) {
             console.log('Can\'t find ' + application + ' among available release notes');
-            components[i].DELTA_SAME = 'undefined';
-            components[i].DELTA_LATEST = 'undefined';
-            components[i].releases = '';
+            
           } else {
 
             var cur_release_index = component.current_release.push({
@@ -159,6 +165,11 @@ var start = (response, components, isGenerateReport, recreateViews) => {
             assemble.addElement('<div class="tableresultheader"><span>Expand</span></div><div class="rls_content" style="display:none">');
             assemble.addElement(reduced_releases);
             assemble.addElement('</div>');
+
+            var latest=new_releases[new_releases.length-1];
+            components[i].latest= latest.value.release;
+            components[i].date=latest.value.release_date;
+            components[i].type=latest.value.release_type;
             components[i].releases = assemble.toString();
 
 
@@ -229,4 +240,8 @@ async function findSolution(couchdb, component, response) {
   })
 }
 
+function getLatest(obj){
+  var arr=Object.getOwnPropertyNames(obj).sort();
+  return obj[arr[arr.length-1]]
+}
 module.exports = { start };
