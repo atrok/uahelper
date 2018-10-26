@@ -280,7 +280,11 @@ const view_definitions = [
                 }
               }
             },
+<<<<<<< HEAD
               reduce: "_count"
+=======
+              reduce: "_count" 
+>>>>>>> dev
         }
     }, view: views_names.components_by_solutions_detailed.view
 }

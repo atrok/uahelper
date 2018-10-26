@@ -1,8 +1,9 @@
 var docx = require('../docx');
-var {SimpleObjectResult, ArrayResult} = require('../result');
+var {SimpleObjectResult, ArrayResult, Result} = require('../result');
 const dbwrap = require('../dbms/couchdb');
 var postprocessor = function () { }
 var html=require('../html/html');
+var json=require('./json_serialize');
 
 postprocessor.prototype.init = function (obj) {
     this.result = obj;
@@ -43,7 +44,8 @@ postprocessor.prototype.setResultTableName=function(name){
 postprocessor.prototype.format = function (id) {
     var output = {}
 
-    var components = (this.result.components instanceof ArrayResult)?this.result.components : Object.assign(new ArrayResult(null),this.result.components);
+   // var components = (this.result.components instanceof ArrayResult)?this.result.components : Object.assign(new ArrayResult(null),this.result.components);
+    var components = (this.result.components instanceof Result)?this.result.components : json.assignType(this.result.components);
     var file=(this.result.file instanceof SimpleObjectResult)?this.result.file: Object.assign(new SimpleObjectResult(null),this.result.file);
     var errors = (this.result.errors instanceof ArrayResult)? this.result.errors: Object.assign(new ArrayResult(null), this.result.errors);
     

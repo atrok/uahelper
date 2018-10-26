@@ -28,7 +28,7 @@ const requesthandlers = require('./upgradeadvisory_helper/requestHandlers');
 
 const views = require('./upgradeadvisory_helper/dbms/queries/view_definitions')
 
-const { CouchDBResult,SimpleObjectResult,SimpleKeyValueResult } = require('./upgradeadvisory_helper/result');
+const { CouchDBResult,CouchDBResult_DOC,SimpleObjectResult,SimpleKeyValueResult, ArrayResult } = require('./upgradeadvisory_helper/result');
 
 // * ———————————————————————————————————————————————————————— * //
 // * 	init
@@ -154,9 +154,12 @@ local_app.prototype.init = function (app) {
 			socket.on('get_dbinfo', async function (args) {
 
 				try {
-					var res = await couchdb.info(views.views_names.maindDBall.db, socket);
+					
+					//var res = await couchdb.info(views.views_names.maindDBall.db, socket);
 
-					var content = { components: new SimpleKeyValueResult(res), errors: null, names: {resulttableName: 'DB Info'} };
+					var res = await couchdb.query(socket, 'documents/_all', { include_docs: true }, 'uahelper_history');
+
+					var content = { components: new CouchDBResult_DOC(res), errors: null, names: {resulttableName: 'DB Info'} };
 
 					
 
