@@ -4,6 +4,17 @@ var objects={
 
         return Object.getOwnPropertyNames(obj);
 
+    },
+
+    copy: function(obj, struct) {
+        //console.log(typeof obj);
+
+        const propNames = Object.getOwnPropertyNames(struct);
+        propNames.forEach(function (name) {
+            const desc = Object.getOwnPropertyDescriptor(struct, name);
+            Object.defineProperty(obj, name, desc);
+        });
+        return obj;
     }
 
 }
