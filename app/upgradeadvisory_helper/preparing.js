@@ -9,8 +9,8 @@ var processed_obj = function (res, obj) {
       doc = value,
 
       component_name = key[0],
-      release_version = key[2],
-      issue = (typeof doc.bugfixes == 'string') ? doc.bugfixes : undefined,
+      release_version = key[3],
+      issue = (typeof doc.issues == 'string') ? doc.issues : undefined,
       feature = (typeof doc.features == 'string') ? doc.features : undefined;
 
     var release_info = {

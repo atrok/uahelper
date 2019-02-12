@@ -83,7 +83,10 @@ const view_definitions = [
             for (var i = 0, l = os.length; i < l; i++) {
               if (doc.release && doc.component) {
                 var family = doc.release.slice(0, 3);
+                if (doc.family){family = doc.family;}
+                
                 var solution_name=(doc.solution_name)?doc.solution_name : 'Unknown';
+                /*
                 emit([solution_name, doc.component, os[i], doc.release, doc.restricted], {
                   _id: doc._id,
                   _rev: doc._rev,
@@ -106,6 +109,8 @@ const view_definitions = [
                   'web-scraper-start-url': doc['web-scraper-start-url'],
                   windows: doc.windows
                 });
+                */
+               emit([solution_name, doc.component, os[i], doc.release, doc.restricted], doc);
               }
             }
           }
@@ -117,7 +122,7 @@ const view_definitions = [
         [views_names.short_release_info.name]: {
           map: function (doc) {
             if (doc.release && doc.component) {
-              var family = doc.release.slice(0, 3);
+              var family = doc.family;
               emit([doc.component, doc.release, family, doc.release_date, doc.release_type], 1);
             }
           },
@@ -133,6 +138,8 @@ const view_definitions = [
           map: function (doc) {
             if (doc.release) {
               var family = doc.release.slice(0, 3);
+              if (doc.family){family = doc.family;}
+
               var os = [];
               if (doc.windows) {
                 if (doc.windows === 'X') {
@@ -232,6 +239,8 @@ const view_definitions = [
             map: function (doc) {
               if (doc.release) {
                 var family = doc.release.slice(0, 3);
+                if (doc.family){family = doc.family;}
+
                 var os = [];
                 if (doc.windows) {
                   if (doc.windows === 'X') {
