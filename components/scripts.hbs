@@ -952,12 +952,58 @@
 
     }
 
+    function set_cl_table_button_listeners() {
+        var $TABLE = $('#config_list_t');
+        var $BTN = $('#run-btn');
+        var $BTN_SAVE = $('#save-btn');
+        var $BTN_UPDATE = $('#update-btn');
+        var $BTN_DELETE = $('#delete-btn');
+        var $BTN_RESET = $('#reset-btn');
+        var $EXPORT = $('#export');
+
+        $('.table-add').click(function () {
+            var $clone = $TABLE.find('tr.hide').clone(true).removeClass('hide table-line');
+            $TABLE.find('table').append($clone);
+            button_enable($BTN_UPDATE);
+        });
+
+        $('.table-remove').click(function () {
+            $(this).parents('tr').detach();
+            button_enable($BTN_UPDATE);
+        });
+
+        $('.table-up').click(function () {
+            var $row = $(this).parents('tr');
+            if ($row.index() === 1) return; // Don't go above the header
+            $row.prev().before($row.get(0));
+            button_enable($BTN_UPDATE);
+        });
+
+        $('.table-down').click(function () {
+            var $row = $(this).parents('tr');
+            $row.next().after($row.get(0));
+            button_enable($BTN_UPDATE);
+        });
+
+        // A few jQuery helpers for exporting only
+        jQuery.fn.pop = [].pop;
+        jQuery.fn.shift = [].shift;
+    }
+
     function init_config_lists() {
 
         console.log('init_config_lists is entered. Checking initialization preconditions')
 
         var exp_div = $("#configlist_container").find("#export_div");
-        if (exp_div.length==0) {
+                var $TABLE = $('#config_list_t');
+        var $BTN = $('#run-btn');
+        var $BTN_SAVE = $('#save-btn');
+        var $BTN_UPDATE = $('#update-btn');
+        var $BTN_DELETE = $('#delete-btn');
+        var $BTN_RESET = $('#reset-btn');
+        var $EXPORT = $('#export');
+
+        if (exp_div.length == 0) {
 
             console.log('init_config_lists is not initialized. Initializing ...');
 
@@ -967,43 +1013,6 @@
                 + '<button id="update-btn" class="btn btn-primary" disabled="true">Update</button>'
                 + '<button id="delete-btn" class="btn btn-primary">Delete</button>'
                 + '<button id="reset-btn" class="btn btn-primary">Reset</button><p id="export"></p></div>');
-
-            var $TABLE = $('#config_list_t');
-            var $BTN = $('#run-btn');
-            var $BTN_SAVE = $('#save-btn');
-            var $BTN_UPDATE = $('#update-btn');
-            var $BTN_DELETE = $('#delete-btn');
-            var $BTN_RESET = $('#reset-btn');
-            var $EXPORT = $('#export');
-
-            $('.table-add').click(function () {
-                var $clone = $TABLE.find('tr.hide').clone(true).removeClass('hide table-line');
-                $TABLE.find('table').append($clone);
-                button_enable($BTN_UPDATE);
-            });
-
-            $('.table-remove').click(function () {
-                $(this).parents('tr').detach();
-                button_enable($BTN_UPDATE);
-            });
-
-            $('.table-up').click(function () {
-                var $row = $(this).parents('tr');
-                if ($row.index() === 1) return; // Don't go above the header
-                $row.prev().before($row.get(0));
-                button_enable($BTN_UPDATE);
-            });
-
-            $('.table-down').click(function () {
-                var $row = $(this).parents('tr');
-                $row.next().after($row.get(0));
-                button_enable($BTN_UPDATE);
-            });
-
-            // A few jQuery helpers for exporting only
-            jQuery.fn.pop = [].pop;
-            jQuery.fn.shift = [].shift;
-
 
 
             $BTN.click(function () {
@@ -1086,7 +1095,10 @@
                 }
             })
 
+           
+
         }
+         set_cl_table_button_listeners(); // set button listeners regardless to handle the case of added rows to existing configlist
     }
 
     // Handling of config list modal  buttons
