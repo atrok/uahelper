@@ -47,7 +47,7 @@
     var socket = io.connect('/prepareadvisory');
 
     var bar1 = new ldBar("#myItem1", {
-        "preset":"stripe"
+        "preset": "stripe"
     });
     //var bar2 = document.getElementById('myItem1').ldBar;
 
@@ -183,6 +183,8 @@
     }
 
     function add_config_list_item(arr) {
+
+
         arr.forEach(function (item, i) {
             var header = []
 
@@ -194,6 +196,7 @@
 
                 add_header_to_configlist(header);
                 console.log("config list header is created");
+                //init_config_lists();
 
             }
             var row = []
@@ -270,9 +273,12 @@
         });
 
         // attaching event listeners to process generate document requests;
+        $("#generate #docx").detach();
+        $("#generate").append('<button id="docx" class="btn btn-primary">Generate Docx</button>');
 
         $(document).ready(function () {
-            document.getElementById("docx").addEventListener("click", function () {
+
+            var init_form_fields = function () {
 
                 var values = {};
                 var fields = $("#form_generate :input").serializeArray();
@@ -286,7 +292,14 @@
 
                 return false;
 
-            });
+            };
+
+
+            //document.getElementById("docx").removeEventListener("click", init_form_fields,true);
+            document.getElementById("docx").addEventListener("click", init_form_fields, true);
+
+
+
         });
 
         $('.nav-tabs a[href="#result_tab"]').tab('show');
@@ -843,13 +856,14 @@
             })
             $('#config_list_t_header').append(row + '<th></th><th></th>');
 
-            $("#configlist_container").append('<div id="export_div">'
-                + '<button id="run-btn" class="btn btn-primary">Run</button>'
-                + '<button id="save-btn" class="btn btn-primary">Save as</button>'
-                + '<button id="update-btn" class="btn btn-primary" disabled="true">Update</button>'
-                + '<button id="delete-btn" class="btn btn-primary">Delete</button>'
-                + '<button id="reset-btn" class="btn btn-primary">Reset</button><p id="export"></p></div>');
-
+            /*
+                        $("#configlist_container").append('<div id="export_div">'
+                            + '<button id="run-btn" class="btn btn-primary">Run</button>'
+                            + '<button id="save-btn" class="btn btn-primary">Save as</button>'
+                            + '<button id="update-btn" class="btn btn-primary" disabled="true">Update</button>'
+                            + '<button id="delete-btn" class="btn btn-primary">Delete</button>'
+                            + '<button id="reset-btn" class="btn btn-primary">Reset</button><p id="export"></p></div>');
+            */
             /*
             $(document).ready(function () {
                init_config_lists();
@@ -938,9 +952,7 @@
 
     }
 
-    function init_config_lists() {
-
-        console.log('init_config_lists is entered')
+    function set_cl_table_button_listeners() {
         var $TABLE = $('#config_list_t');
         var $BTN = $('#run-btn');
         var $BTN_SAVE = $('#save-btn');
@@ -976,88 +988,117 @@
         // A few jQuery helpers for exporting only
         jQuery.fn.pop = [].pop;
         jQuery.fn.shift = [].shift;
+    }
+
+    function init_config_lists() {
+
+        console.log('init_config_lists is entered. Checking initialization preconditions')
+
+        var exp_div = $("#configlist_container").find("#export_div");
+                var $TABLE = $('#config_list_t');
+        var $BTN = $('#run-btn');
+        var $BTN_SAVE = $('#save-btn');
+        var $BTN_UPDATE = $('#update-btn');
+        var $BTN_DELETE = $('#delete-btn');
+        var $BTN_RESET = $('#reset-btn');
+        var $EXPORT = $('#export');
+
+        if (exp_div.length == 0) {
+
+            console.log('init_config_lists is not initialized. Initializing ...');
+
+            $("#configlist_container").append('<div id="export_div">'
+                + '<button id="run-btn" class="btn btn-primary">Run</button>'
+                + '<button id="save-btn" class="btn btn-primary">Save as</button>'
+                + '<button id="update-btn" class="btn btn-primary" disabled="true">Update</button>'
+                + '<button id="delete-btn" class="btn btn-primary">Delete</button>'
+                + '<button id="reset-btn" class="btn btn-primary">Reset</button><p id="export"></p></div>');
 
 
+            $BTN.click(function () {
 
-        $BTN.click(function () {
+                console.log('Configuration list is to be sent to backend for evaluation')
 
-            console.log('Configuration list is to be sent to backend for evaluation')
+                var data = get_table_data();
 
-            var data = get_table_data();
+                var cl = {
+                    cfglist_name: $("#configlist_name").text(),
+                    _id: $("#configlist_docid").text(),
+                    _rev: $("#configlist_revid").text(),
+                    time: $("#configlist_time").text()
+                }
 
-            var cl = {
-                cfglist_name: $("#configlist_name").text(),
-                _id: $("#configlist_docid").text(),
-                _rev: $("#configlist_revid").text(),
-                time: $("#configlist_time").text()
-            }
-
-            if (cl._id.length > 0) {
-                components.file = cl;
-            }
+                if (cl._id.length > 0) {
+                    components.file = cl;
+                }
 
 
-            // Output the result
-            console.log(data);
-            components.components = data;
-            $(this).addClass("active_submitter");
-            $('.nav_tab a#result_tab').tab('show');
-            submit_csv();
+                // Output the result
+                console.log(data);
+                components.components = data;
+                $(this).addClass("active_submitter");
+                $('.nav_tab a#result_tab').tab('show');
+                submit_csv();
 
-        });
+            });
 
-        $BTN_SAVE.click(function () {
+            $BTN_SAVE.click(function () {
 
-            console.log('Saving config list');
-            var data = get_table_data();
-            $('#configlist_modal').data("components", data)
-            $('#configlist_modal').modal('show');
+                console.log('Saving config list');
+                var data = get_table_data();
+                $('#configlist_modal').data("components", data)
+                $('#configlist_modal').modal('show');
 
-        })
+            })
 
-        $BTN_UPDATE.click(function () {
+            $BTN_UPDATE.click(function () {
 
-            var cl = {
-                cfglist_name: $("#configlist_name").text(),
-                _id: $("#configlist_docid").text(),
-                _rev: $("#configlist_revid").text(),
-                time: $("#configlist_time").text()
-            }
+                var cl = {
+                    cfglist_name: $("#configlist_name").text(),
+                    _id: $("#configlist_docid").text(),
+                    _rev: $("#configlist_revid").text(),
+                    time: $("#configlist_time").text()
+                }
 
-            console.log('Updating config list: ' + cl.cfglist_name + ' _id:' + cl._id + ' _rev: ' + cl._rev);
-            console.log('Updating config list');
-            cl.components = get_table_data();
+                console.log('Updating config list: ' + cl.cfglist_name + ' _id:' + cl._id + ' _rev: ' + cl._rev);
+                console.log('Updating config list');
+                cl.components = get_table_data();
 
-            $('#configlist_update_modal').data("document", cl)
+                $('#configlist_update_modal').data("document", cl)
 
-            $('#configlist_update_modal').modal('show');
+                $('#configlist_update_modal').modal('show');
 
-        })
+            })
 
-        $BTN_DELETE.click(function () {
+            $BTN_DELETE.click(function () {
 
-            var cl = {
-                name: $("#configlist_name"),
-                id: $("#configlist_docid")
-            }
+                var cl = {
+                    name: $("#configlist_name"),
+                    id: $("#configlist_docid")
+                }
 
-            cl.name;
+                cl.name;
 
-            console.log('Deleting config list: ' + cl.name.text() + ' _id:' + cl.id.text());
+                console.log('Deleting config list: ' + cl.name.text() + ' _id:' + cl.id.text());
 
-            $('#configlist_delete_modal').data("id", cl.id.text())
-            $('#configlist_delete_modal').modal('show');
+                $('#configlist_delete_modal').data("id", cl.id.text())
+                $('#configlist_delete_modal').modal('show');
 
-        })
+            })
 
-        $BTN_RESET.click(function () {
-            if (!$("#update-btn").prop("disabled")) {
-                $('#configlist_forced_update_modal').modal('show');
+            $BTN_RESET.click(function () {
+                if (!$("#update-btn").prop("disabled")) {
+                    $('#configlist_forced_update_modal').modal('show');
 
-            } else {
-                $("#reset-event").click()
-            }
-        })
+                } else {
+                    $("#reset-event").click()
+                }
+            })
+
+           
+
+        }
+         set_cl_table_button_listeners(); // set button listeners regardless to handle the case of added rows to existing configlist
     }
 
     // Handling of config list modal  buttons
