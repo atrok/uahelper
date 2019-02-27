@@ -186,22 +186,30 @@
 
 
         arr.forEach(function (item, i) {
-            var header = []
+            var header = ["SOLUTION","APPLICATION_TYPE","OS","OS_TYPE","RELEASE"];
 
             var head = $("#config_list_t").find('th:not(:empty)')
             if (head.length == 0) {
+                /*
                 Object.keys(item).forEach((key) => {
                     header.push(key);
                 });
-
-                add_header_to_configlist(header);
+*/
+                add_header_to_configlist(header); // add predefined header
                 console.log("config list header is created");
                 //init_config_lists();
 
             }
             var row = []
+            /*
             Object.values(item).forEach((value) => {
                 row.push(value);
+            })
+            */
+            header.forEach(function(ind,i){
+                let val=item[ind] || item[ind.toLowerCase()] || "";
+                row[i]=val;
+
             })
             add_row_to_configlist(row);
             console.log("config list rows are added");
@@ -444,6 +452,7 @@
         result.args.release = (checkField($("#release").val(), 10)) ? $("#release").val() : result.errors.push('Release can\'t be longer than 10');
         result.args.genfile = $('#genfile').is(':checked') ? true : false;
         result.args.save = $('#save_task').is(':checked') ? true : false;
+
         return result;
     }
 
@@ -953,41 +962,47 @@
     }
 
     function set_cl_table_button_listeners() {
-        var $TABLE = $('#config_list_t');
-        var $BTN = $('#run-btn');
-        var $BTN_SAVE = $('#save-btn');
-        var $BTN_UPDATE = $('#update-btn');
-        var $BTN_DELETE = $('#delete-btn');
-        var $BTN_RESET = $('#reset-btn');
-        var $EXPORT = $('#export');
 
-        $('.table-add').click(function () {
-            var $clone = $TABLE.find('tr.hide').clone(true).removeClass('hide table-line');
-            $TABLE.find('table').append($clone);
-            button_enable($BTN_UPDATE);
-        });
+        var exp_div = $("#configlist_container").find("#export_div");
 
-        $('.table-remove').click(function () {
-            $(this).parents('tr').detach();
-            button_enable($BTN_UPDATE);
-        });
 
-        $('.table-up').click(function () {
-            var $row = $(this).parents('tr');
-            if ($row.index() === 1) return; // Don't go above the header
-            $row.prev().before($row.get(0));
-            button_enable($BTN_UPDATE);
-        });
+        if (exp_div.length != 0) {
+            var $TABLE = $('#config_list_t');
+            var $BTN = $('#run-btn');
+            var $BTN_SAVE = $('#save-btn');
+            var $BTN_UPDATE = $('#update-btn');
+            var $BTN_DELETE = $('#delete-btn');
+            var $BTN_RESET = $('#reset-btn');
+            var $EXPORT = $('#export');
 
-        $('.table-down').click(function () {
-            var $row = $(this).parents('tr');
-            $row.next().after($row.get(0));
-            button_enable($BTN_UPDATE);
-        });
+            $('.table-add').click(function () {
+                var $clone = $TABLE.find('tr.hide').clone(true).removeClass('hide table-line');
+                $TABLE.find('table').append($clone);
+                button_enable($BTN_UPDATE);
+            });
 
-        // A few jQuery helpers for exporting only
-        jQuery.fn.pop = [].pop;
-        jQuery.fn.shift = [].shift;
+            $('.table-remove').click(function () {
+                $(this).parents('tr').detach();
+                button_enable($BTN_UPDATE);
+            });
+
+            $('.table-up').click(function () {
+                var $row = $(this).parents('tr');
+                if ($row.index() === 1) return; // Don't go above the header
+                $row.prev().before($row.get(0));
+                button_enable($BTN_UPDATE);
+            });
+
+            $('.table-down').click(function () {
+                var $row = $(this).parents('tr');
+                $row.next().after($row.get(0));
+                button_enable($BTN_UPDATE);
+            });
+
+            // A few jQuery helpers for exporting only
+            jQuery.fn.pop = [].pop;
+            jQuery.fn.shift = [].shift;
+        }
     }
 
     function init_config_lists() {
@@ -995,13 +1010,7 @@
         console.log('init_config_lists is entered. Checking initialization preconditions')
 
         var exp_div = $("#configlist_container").find("#export_div");
-                var $TABLE = $('#config_list_t');
-        var $BTN = $('#run-btn');
-        var $BTN_SAVE = $('#save-btn');
-        var $BTN_UPDATE = $('#update-btn');
-        var $BTN_DELETE = $('#delete-btn');
-        var $BTN_RESET = $('#reset-btn');
-        var $EXPORT = $('#export');
+
 
         if (exp_div.length == 0) {
 
@@ -1014,6 +1023,14 @@
                 + '<button id="delete-btn" class="btn btn-primary">Delete</button>'
                 + '<button id="reset-btn" class="btn btn-primary">Reset</button><p id="export"></p></div>');
 
+
+            var $TABLE = $('#config_list_t');
+            var $BTN = $('#run-btn');
+            var $BTN_SAVE = $('#save-btn');
+            var $BTN_UPDATE = $('#update-btn');
+            var $BTN_DELETE = $('#delete-btn');
+            var $BTN_RESET = $('#reset-btn');
+            var $EXPORT = $('#export');
 
             $BTN.click(function () {
 
@@ -1095,10 +1112,10 @@
                 }
             })
 
-           
+
 
         }
-         set_cl_table_button_listeners(); // set button listeners regardless to handle the case of added rows to existing configlist
+        set_cl_table_button_listeners(); // set button listeners regardless to handle the case of added rows to existing configlist
     }
 
     // Handling of config list modal  buttons

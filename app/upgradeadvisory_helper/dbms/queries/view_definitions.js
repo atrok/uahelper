@@ -84,7 +84,7 @@ const view_definitions = [
               if (doc.release && doc.component) {
                 var family = doc.release.slice(0, 3);
                 if (doc.family){family = doc.family;}
-                
+
                 var solution_name=(doc.solution_name)?doc.solution_name : 'Unknown';
                 /*
                 emit([solution_name, doc.component, os[i], doc.release, doc.restricted], {
@@ -289,11 +289,7 @@ const view_definitions = [
                 }
               }
             },
-<<<<<<< HEAD
-              reduce: "_count"
-=======
               reduce: "_count" 
->>>>>>> dev
         }
     }, view: views_names.components_by_solutions_detailed.view
 }
