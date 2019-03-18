@@ -524,8 +524,8 @@ function isValidated(args, socket) {
 
 }
 
-async function postProcessing(content, channel, args, socket) {
-	content.input = new mylog().stringify(args.args);
+async function postProcessing(content, channel, arguments, socket) {
+	content.input = new mylog().stringify(arguments.args);
 	content.time = new Date().toString();
 	var ps = new postprocessor();
 	var s = await ps.init(content);

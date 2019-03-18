@@ -450,8 +450,8 @@
         result.args.application_type = $("#application_type option:selected").attr("value");
         result.args.os_type = $("#os_type option:selected").attr("value");
         result.args.release = (checkField($("#release").val(), 10)) ? $("#release").val() : result.errors.push('Release can\'t be longer than 10');
-        result.args.genfile = $('#genfile').is(':checked') ? true : false;
-        result.args.save = $('#save_task').is(':checked') ? true : false;
+        result.genfile = $('#genfile').is(':checked') ? true : false;
+        result.save = $('#save_task').is(':checked') ? true : false;
 
         return result;
     }
@@ -462,8 +462,9 @@
             var component = get_selected_components();
 
             var res = {}
+            res = component;
             res.form = 'form_comp';
-            res.args = component.args;
+            
             if (!lotsoferrors(component.errors)) {
                 submitData('search', res);
 
