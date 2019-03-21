@@ -1,9 +1,10 @@
 var docx = require('../docx');
 var {SimpleObjectResult, ArrayResult, Result} = require('../result');
+var result=require('../result');
 const dbwrap = require('../dbms/couchdb');
 var postprocessor = function () { }
 var html=require('../html/html');
-var json=require('./json_serialize');
+var json=require('./json_serialize').createSerializer(result);
 
 postprocessor.prototype.init = function (obj) {
     this.result = obj;

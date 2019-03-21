@@ -524,14 +524,14 @@ function isValidated(args, socket) {
 
 }
 
-async function postProcessing(content, channel, arguments, socket) {
-	content.input = new mylog().stringify(arguments.args);
+async function postProcessing(content, channel, arg, socket) {
+	content.input = new mylog().stringify(arg.args);
 	content.time = new Date().toString();
 	var ps = new postprocessor();
 	var s = await ps.init(content);
 
 	// if result needs to be saved to db
-	if (args.save) {
+	if (arg.save) {
 		var res = await ps.save();
 
 		content._id = res._id;
