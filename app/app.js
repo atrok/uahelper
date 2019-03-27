@@ -176,7 +176,7 @@ local_app.prototype.init = function (app) {
 			});
 
 			// prepare UA document based on customer database
-			socket.on('my other event', function (args) {
+			socket.on('search_db', function (args) {
 				mylogger.log(args);
 
 				if (isValidated(args, socket)) {
