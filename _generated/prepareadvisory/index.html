@@ -1,13 +1,16 @@
-<html>
+<!doctype html>
+<html lang="en">
 
 <head>
 	<title>Support Architect Tools</title>
+	<!-- meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" -->
 	<link rel="stylesheet" href="/assets/css/main.css">
 	<link href="https://fonts.googleapis.com/css?family=Lato:100,200" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="/assets/css/loading-bar.css" />
 	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-	<style type="text/css"></style>
-
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+	 crossorigin="anonymous">
 
 </head>
 
@@ -41,6 +44,7 @@
 			<button class="w3-bar-item w3-button  tablink" onclick="openTab(event, 'app')">Application</button>
 			<button class="w3-bar-item w3-button  tablink" onclick="openTab(event, 'csv')">File</button>
 			<button class="w3-bar-item w3-button  tablink" onclick="openTab(event, 'lists')">Saved configurations</button>
+			<button class="w3-bar-item w3-button  tablink" onclick="openTab(event, 'options')">Settings</button>
 			<button class="w3-bar-item w3-button  tablink" onclick="openTab(event, 'admin')">Views management</button>
 
 		</div>
@@ -87,10 +91,7 @@
 								<input id="pass" name="pass" class="element text medium" type="password" size="25" maxlength="255" value="" />
 							</div>
 						</li>
-						<li id="li_genfile">
-							<label class="description" for="element_5" class="form_element_height">Generate report on server</label>
-								<input type="checkbox"  id="genfile_d" name="genfile" class="form_element_height width40" />
-						</li>
+
 						<li id="li_3">
 
 							<li class="buttons">
@@ -111,14 +112,14 @@
 							<label class="description" for="element_0">Solution</label>
 							<div class="dropdown">
 								<select id="solution" class="dropdown_select">
-									
+
 								</select>
 							</div>
 						</li>
 						<li>
 							<label class="description" for="element_1">Component</label>
 							<div class="dropdown">
-								<select id="apptype" class="dropdown_select">
+								<select id="application_type" class="dropdown_select">
 									<option size="25" value='.NET Web API Server and Samples'>.NET Web API Server and Samples</option>
 									<option size="25" value='Aastra MXONE CSTA I'>Aastra MXONE CSTA I</option>
 									<option size="25" value='Administration Console'>Administration Console</option>
@@ -322,14 +323,14 @@
 
 						<li>
 							<label class="description" for="element_1">Version</label>
-							<div >
+							<div>
 								<input id="release" name="release" class="element text medium" type="text" size="25" maxlength="255" value="" />
 							</div>
 						</li>
 						<li>
 							<label class="description" for="element_1">OS type</label>
 							<div class="dropdown">
-								<select id="ostype" class="dropdown_select">
+								<select id="os_type" class="dropdown_select">
 									<option value='solaris'>Solaris</option>
 									<option value='solaris'>Solaris x86</option>
 									<option value='trux'>Tru64 Unix</option>
@@ -353,15 +354,11 @@
 							</div>
 						</li>
 
-						<li id="li_genfile">
-							<label class="description" for="element_5" class="form_element_height">Generate report on server</label>
-								<input type="checkbox"  id="genfile_a" name="genfile" class="form_element_height width40" />
-						</li>
-
 						<li>
 
 							<div>
-								<button>Search</button>
+								<button class="btn btn-primary">Search</button>
+								<button type="button" class="btn btn-primary" id="addto-cs-event">Add item to configuration list</button>
 							</div>
 						</li>
 				</form>
@@ -373,24 +370,9 @@
 					<ul>
 
 						<li>
-	
-							<div >
-								<input id="uploadInput" type="file" name="myFiles" onchange="handleFiles(event);">
-							</div>
-						</li>
-						<li >
-							<label class="description" for="element_5" class="form_element_height">File has a header</label>
-								<input type="checkbox"  id="hasHeader" name="hasHeader" class="form_element_height width40" />
-						</li>
-
-						<li id="li_genfile">
-							<label class="description" for="element_5" class="form_element_height">Generate report on server</label>
-								<input type="checkbox"  id="genfile_c" name="genfile" class="form_element_height width40" />
-						</li>
-						<li>
 
 							<div>
-								<button>Run</button>
+								<input id="uploadInput" type="file" name="myFiles" onchange="handleFiles(event);">
 							</div>
 						</li>
 				</form>
@@ -404,24 +386,28 @@
 						<li>
 							<label class="description" for="element_0">Saved configurations</label>
 							<div class="dropdown">
-								<select id="solution" class="dropdown_select">
-									
+								<select id="configlist" class="dropdown_select">
+									<option value="">Select One …</option>
 								</select>
 							</div>
 						</li>
 
-						<li id="li_genfile">
-							<label class="description" for="element_5" class="form_element_height">Generate report on server</label>
-								<input type="checkbox"  id="genfile_d" name="genfile" class="form_element_height width40" />
-						</li>
-
-						<li>
-
-							<div>
-								<button>Run</button>
-							</div>
-						</li>
 				</form>
+			</div>
+
+			<div id="options" class="tab height300" style="display:none">
+
+				<h1></h1>
+				
+				<div class="form-check">
+					<input type="checkbox" class="form-check-input" id="genfile">
+					<label class="form-check-label" for="exampleCheck1">Generate file on server</label>
+				</div>
+
+				<div class="form-check">
+					<input type="checkbox" class="form-check-input" id="save_task">
+					<label class="form-check-label" for="exampleCheck1">Save tasks to task list</label>
+				</div>
 			</div>
 
 			<div id="admin" class="tab height300" style="display:none">
@@ -454,36 +440,242 @@
 			<div id='div_result'>
 				
 <!--div class="ldBar" data-value=""></div -->
-<div id="myItem1"></div>
-<form id="form_generate">
-    <div id="result">
 
-    </div>
-    <div id="generate" style="visibility: hidden">
-<label>Generate report:</label>
-        <button id='docx'>Docx</button>
-        <button id='xlsx'>Xlsx</button>
 
-    </div>
-</form>
-<div id="tasksContainer">
-    <h3>Executed tasks</h3>
-    <form id="form_tasks">
-        <table id="tasks">
-            <tr>
-                <th>Delete</th>
-                <th>Time</th>
-                <th>Arguments</th>
-                <th>ID</th>
-            </tr>
-        </table>
-        <div>
-            <button>Delete</button>
+<div>
+    
+    <div id='loadBar'>
+    <div id="loadBar-background"></div>
+        <div id="loadBar-inner">
+            <div id="myItem1" ></div>
         </div>
-    </form>
-</div>
+        </div>
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs">
+        <li class="active">
+            <a href="#conflist_tab" aria-expanded="false">Configuration Lists</a>
+        </li>
+        <li class>
+            <a href="#result_tab" aria-expanded="false">Results</a>
+        </li>
+        <li class>
+            <a href="#tasks_tab" aria-expanded="false">Tasks</a>
+        </li>
+        <li class>
+            <a href="#console_tab" aria-expanded="false">Console</a>
+        </li>
+                <li class>
+            <a href="#stat_tab" aria-expanded="false">Statistics</a>
+        </li>
+    </ul>
 
-<div id="console"></div> <script src="/assets/js/socket.io.js "></script>
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="conflist_tab">
+            <div id="configlist_container">
+                <h1>Configuration list </h1>
+                <p>
+                    Add components into the configuration list to save it and use for later.
+                </p>
+                <ul>
+                    <li>Name:
+                        <span id="configlist_name"></span>
+                    </li>
+                    <li>_id:
+                        <span id="configlist_docid"></span>
+                    </li>
+                    <li>_rev:
+                        <span id="configlist_revid"></span>
+                    </li>
+                    <li>Creation time:
+                        <span id="configlist_time"></span>
+                    </li>
+                    <li>Updated time:
+                        <span id="configlist_updated"></span>
+                    </li>
+                </ul>
+
+
+
+                <div id="config_list" class="table-editable" style="visibility: hidden">
+                    <span class="table-add glyphicon glyphicon-plus"></span>
+                    <table id="config_list_t" class="table">
+                        <tr id="config_list_t_header">
+                        </tr>
+                        <!-- This is our clonable table line -->
+                        <!-- This is our clonable table line -->
+                        <tr class="hide">
+                            <td contenteditable="true">Untitled</td>
+                            <td contenteditable="true">undefined</td>
+                            <td>
+                                <span class="table-remove glyphicon glyphicon-remove"></span>
+                            </td>
+                            <td>
+                                <span class="table-up glyphicon glyphicon-arrow-up"></span>
+                                <span class="table-down glyphicon glyphicon-arrow-down"></span>
+                            </td>
+                        </tr>
+
+                    </table>
+                </div>
+
+                <div class="modal fade" id="configlist_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Save configuration list</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form>
+                                    <div class="form-group">
+                                        <label for="configlist-name" class="col-form-label">Enter configuration list name:</label>
+                                        <input type="text" class="form-control" id="configlist-name">
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" id="save-event">Save configuration list</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="modal fade" tabindex="-1" role="dialog" id="configlist_update_modal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Updating configuration list</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Configuration list has been changed, do you want to save it?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="update-event">Update</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" tabindex="-1" role="dialog" id="configlist_delete_modal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Deleting configuration list</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Please confirm deletion of configuration list</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="delete-event">Delete</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" tabindex="-1" role="dialog" id="configlist_forced_update_modal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Warning! Configuration list is not saved</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>There are unsaved changes in configuration list. Do you want to save them before resetting to a new
+                            configuration list?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="forced-update-event">Save</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="reset-event">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div role="tabpanel" class="tab-pane" id="result_tab">
+            <form id="form_generate">
+                <div id="result">
+
+                </div>
+                <div id="generate" style="visibility: hidden">
+                    <label>Generate report:</label>
+                    <!--button id='docx'>Docx</button -->
+                    <!-- button id='xlsx'>Xlsx</button -->
+
+                </div>
+            </form>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="tasks_tab">
+            <div id="tasksContainer">
+                <h3>Executed tasks</h3>
+                <form id="form_tasks">
+                    <table id="tasks" class="table">
+                        <tr>
+                            <th>Delete</th>
+                            <th>Time</th>
+                            <th>Arguments</th>
+                            <th>ID</th>
+                        </tr>
+                    </table>
+                    <div>
+                        <button>Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="stat_tab">
+            <div id="statContainer">
+                <h3>Summary overview of release notes per solution, component, os type and family</h3>
+
+                <p>
+                    <button type="button" class="btn btn-primary" id="get-statdata-event">Pull statistics</button>
+                </p>
+                <div id="dbinfo" class="table-editable" style="visibility: hidden"></div>
+                <div id="stat_data" class="table-editable" style="visibility: hidden">
+                    
+                    <table id="stat_data_t" class="table">
+                        <tr id="stat_data_t_header">
+                        </tr>
+                        <!-- This is our clonable table line -->
+                        <!-- This is our clonable table line -->
+                        <tr class="hide">
+                            <td contenteditable="true">Untitled</td>
+                            <td contenteditable="true">undefined</td>
+                            <td>
+                                <span class="table-remove glyphicon glyphicon-remove"></span>
+                            </td>
+                            <td>
+                                <span class="table-up glyphicon glyphicon-arrow-up"></span>
+                                <span class="table-down glyphicon glyphicon-arrow-down"></span>
+                            </td>
+                        </tr>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="console_tab">
+            <div id="console"></div>
+        </div>
+    </div>
+
+</div> <script src="/assets/js/socket.io.js "></script>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script type="text/javascript" src="/assets/js/loading-bar.min.js"></script>
 <script src="/assets/js/docxtemplater-latest.min.js"></script>
@@ -491,6 +683,11 @@
 <script src="/assets/js/file-saver.min.js"></script>
 <script src="/assets/js/jszip-utils.js"></script>
 <script src="/assets/js/LineReader.js"></script>
+<script src="/assets/js/bootstrap.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+    crossorigin="anonymous"></script>
+<!-- script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
 <!--
     Mandatory in IE 6, 7, 8 and 9.
     -->
@@ -515,32 +712,39 @@
 
 
     var obj = [];
-    var components={
-        file:{
-            name:'',
-            size:0, 
-            mimeType:''
+    var components = {
+        file: {
+            name: '',
+            size: 0,
+            mimeType: ''
         },
-        components:[]
+        components: []
     };
 
     var socket = io.connect('/prepareadvisory');
 
-    var bar1 = new ldBar("#myItem1");
+    var bar1 = new ldBar("#myItem1", {
+        "preset": "stripe"
+    });
     //var bar2 = document.getElementById('myItem1').ldBar;
 
     var id;
+
+
     socket.on('connected', function (data) {
         console.log(data);
         id = data.id;
         socket.emit('tasks', {});
         socket.emit('get_solutions', {});
+        socket.emit('get_all_configlists', {});
+        socket.emit('get_dbinfo', {});
     });
 
     socket.on('solutions', function (data) { //populate solutions dropdown list
 
         if (data) {
             console.log(data);
+            $("#solution").append("<option value=''>Select One …</option>");
             Object.keys(data).forEach((key) => {
                 $("#solution").append("<option size=25 value='" + data[key].key + "'>" + data[key].key + "</option>");
             });
@@ -563,21 +767,151 @@
     socket.on('components', function (data) {
         console.log(data);
         if (data) {
-            removeOptions(document.getElementById("apptype"))
+            removeOptions(document.getElementById("application_type"))
             Object.keys(data).forEach((key) => {
-                $("#apptype").append("<option size=25 value='" + data[key].key[1] + "'>" + data[key].key[1] + "</option>");
+                $("#application_type").append("<option size=25 value='" + data[key].key[1] + "'>" + data[key].key[1] + "</option>");
             });
 
             // since we add options dynamically we need to set selected flag on change event
             $(document).ready(function () {
-                applications = document.getElementById("apptype");
-                document.getElementById("apptype").addEventListener("change", function () {
+                applications = document.getElementById("application_type");
+                document.getElementById("application_type").addEventListener("change", function () {
 
                     applications.options[applications.options.selectedIndex].selected = true;
                     return false;
 
                 });
             });
+        }
+    })
+
+    socket.on('all_configlists', function (data) {
+        console.log(data);
+        if (data) {
+            removeOptions(document.getElementById("configlist"));
+            $("#configlist").append("<option value=''>Select One …</option>");
+            Object.keys(data).forEach((key) => {
+                $("#configlist").append("<option size=25 id='#" + data[key].id + "' value='" + data[key].id + "'>" + data[key].doc.cfglist_name + "</option>");
+                //$('#'+data[key].id).data("components",data[key].doc.components);
+            });
+
+            // since we add options dynamically we need to set selected flag on change event
+            $(document).ready(function () {
+                configlist = document.getElementById("configlist");
+                document.getElementById("configlist").addEventListener("change", function () {
+
+                    configlist.options[configlist.options.selectedIndex].selected = true;
+
+                    var doc_id = configlist.options[configlist.options.selectedIndex].value;
+                    submitData('get_configlist', doc_id);
+                    $('.nav-tabs a#conflist_tab').tab('show');
+                })
+                return false;
+
+            });
+        }
+    })
+
+    socket.on('configlist', function (data) {
+        console.log('configlist received:' + JSON.stringify(data));
+        if (data) {
+            //removeOptions(document.getElementById("configlist"))
+
+            // since we add options dynamically we need to set selected flag on change event
+            var components = data.components;
+
+            configlist_detach();
+
+            add_config_list_item(components);
+
+            $('.nav-tabs a[href="#conflist_tab"]').tab('show');
+            // initialize config list buttons
+            $(document).ready(function () {
+                init_config_lists_caption(data);
+                init_config_lists();
+
+                // TODO:
+                // add listeners for editable cells change events
+                editable_setlisteners()
+            });
+
+            $("#config_list").visible();
+
+        }
+    })
+
+    function editable_setlisteners() {
+        $('body').on('focus', '[contenteditable]', function () {
+            var $this = $(this);
+            $this.data('before', $this.html());
+            return $this;
+        }).on('blur keyup paste input', '[contenteditable]', function () {
+            var $this = $(this);
+            if ($this.data('before') !== $this.html()) {
+                $this.data('before', $this.html());
+                $this.trigger('cl_editable_change');
+            }
+            return $this;
+        }).on('cl_editable_change', function () {
+            var $this = $(this)
+            console.log($this + " triggered cl_editable_change")
+            button_enable($("#update-btn"))
+        });
+    }
+
+    function add_config_list_item(arr) {
+
+
+        arr.forEach(function (item, i) {
+            var header = ["SOLUTION","APPLICATION_TYPE","OS","OS_TYPE","RELEASE"];
+
+            var head = $("#config_list_t").find('th:not(:empty)')
+            if (head.length == 0) {
+                /*
+                Object.keys(item).forEach((key) => {
+                    header.push(key);
+                });
+*/
+                add_header_to_configlist(header); // add predefined header
+                console.log("config list header is created");
+                //init_config_lists();
+
+            }
+            var row = []
+            /*
+            Object.values(item).forEach((value) => {
+                row.push(value);
+            })
+            */
+            header.forEach(function(ind,i){
+                let val=item[ind] || item[ind.toLowerCase()] || "";
+                row[i]=val;
+
+            })
+            add_row_to_configlist(row);
+            console.log("config list rows are added");
+        })
+    }
+
+
+    socket.on('statdata', function (data) {
+        console.log(data);
+        if (data) {
+
+            $("#stat_data").empty();
+
+            Object.keys(data).forEach((key) => {
+                if (key === 'file' || key === 'error' || key == 'table') // 
+                    $("#stat_data").append(data[key]);
+            })
+
+            // placeholder
+            $(document).ready(function () {
+
+            });
+
+            $("#stat_data").visible();
+
         }
     })
 
@@ -624,9 +958,12 @@
         });
 
         // attaching event listeners to process generate document requests;
+        $("#generate #docx").detach();
+        $("#generate").append('<button id="docx" class="btn btn-primary">Generate Docx</button>');
 
         $(document).ready(function () {
-            document.getElementById("docx").addEventListener("click", function () {
+
+            var init_form_fields = function () {
 
                 var values = {};
                 var fields = $("#form_generate :input").serializeArray();
@@ -640,8 +977,17 @@
 
                 return false;
 
-            });
+            };
+
+
+            //document.getElementById("docx").removeEventListener("click", init_form_fields,true);
+            document.getElementById("docx").addEventListener("click", init_form_fields, true);
+
+
+
         });
+
+        $('.nav-tabs a[href="#result_tab"]').tab('show');
 
 
     })
@@ -662,13 +1008,24 @@
 
     })
 
+    socket.on('dbinfo', function (data) {
+        console.log(data);
+        $("#dbinfo").empty();
+        $("#dbinfo").append(data.table);
+        $("#dbinfo").visible();
+
+
+
+
+    })
+
     socket.on('done', function (data) {
         done();
     })
 
     socket.on('validation', function (data) {
         console.log(data);
-        $(':submit').attr('disabled', 'disabled');
+        // $(':submit').attr('disabled', 'disabled');
         if (data.submitted) {
             $("#div_result #console").append(data.reason);
         } else {
@@ -682,8 +1039,8 @@
         if (data instanceof Array) {
             data.forEach((item) => {
                 $('#tasks').append(
-                    '<tr id="' + item.id + '">'
-                    + '<td><input type="checkbox" id="' + item.id + '" /></td>'
+                    '<tr id="' + item._id + '">'
+                    + '<td><input type="checkbox" id="' + item._id + '" /></td>'
                     + '<td>' + item.time.toString() + '</td>'
                     + '<td>' + item.input.toString() + '</td>'
                     + '<td>' + item.link.toString() + '</td>'
@@ -704,6 +1061,33 @@
         $('tr#' + data.id).remove();
     })
 
+    socket.on('saved_configlist', function (data) {
+        console.log('Configlist saved: ', data);
+        $("#configlist").append("<option size=25 value='" + data._id + "'>" + data.cfglist_name + "</option>");
+        $(document).ready(function () {
+            init_config_lists_caption(data);
+            button_enable($("#delete-btn"));
+        })
+    })
+
+    socket.on('updated_configlist', function (data) {
+        console.log('Configlist updated: ', data);
+
+        $(document).ready(function () {
+            $("#configlist_updated").text("");
+            $("#configlist_updated").append(data.updated);
+        })
+    })
+
+    socket.on('deleted_configlist', function (data) {
+        console.log('Configlist deleted: ', data);
+        $("#configlist option[value='" + data.id + "']").remove();
+        $(document).ready(function () {
+            configlist_detach();
+            init_config_lists_clear_text();
+        })
+    })
+
     $("#form_dbs").submit(function () {
         try {
             var args = {};
@@ -714,13 +1098,14 @@
             args.dbname = (checkField($("#dbname").val(), 100)) ? $("#dbname").val() : errors.push('DB name can\t be longer than 100');
             args.user = (checkField($("#user").val(), 100)) ? $("#user").val() : errors.push('User can\'t be longer than 100');
             args.pass = (checkField($("#pass").val(), 25)) ? $("#pass").val() : errors.push('Password can\'t be longer than 25');
-            args.genfile = $('#genfile_d').is(':checked') ? true : false;
+            args.genfile = $('#genfile').is(':checked') ? true : false;
+            args.save = $('#save_task').is(':checked') ? true : false;
 
             var res = {};
             res.form = 'form_dbs';
             res.args = args;
             if (!lotsoferrors(errors))
-                submitData('my other event', res);
+                submitData('search_db', res);
 
 
             //alert(args);;
@@ -732,20 +1117,32 @@
         } // to avoid page reload
 
     })
+
+    function get_selected_components() {
+        var result = {
+            args: {}, errors: []
+        };
+
+        result.args.solution = $("#solution option:selected").attr("value");
+        result.args.application_type = $("#application_type option:selected").attr("value");
+        result.args.os_type = $("#os_type option:selected").attr("value");
+        result.args.release = (checkField($("#release").val(), 10)) ? $("#release").val() : result.errors.push('Release can\'t be longer than 10');
+        result.genfile = $('#genfile').is(':checked') ? true : false;
+        result.save = $('#save_task').is(':checked') ? true : false;
+
+        return result;
+    }
+
     $("#form_comp").submit(function () {
         try {
-            var args = {};
-            var errors = []
-            args.solution=$("#solution option:selected").attr("value");
-            args.apptype = $("#apptype option:selected").attr("value");
-            args.ostype = $("#ostype option:selected").attr("value");
-            args.genfile = $('#genfile_a').is(':checked') ? true : false;
 
-            args.release = (checkField($("#release").val(), 10)) ? $("#release").val() : errors.push('Release can\'t be longer than 10');
+            var component = get_selected_components();
+
             var res = {}
+            res = component;
             res.form = 'form_comp';
-            res.args = args;
-            if (!lotsoferrors(errors)) {
+            
+            if (!lotsoferrors(component.errors)) {
                 submitData('search', res);
 
             }
@@ -777,30 +1174,38 @@
 
     })
 
-    $("#form_csv").submit(function(){
-        try{
-            var errors = [];
-            var res={};
-            var genfile = $('#genfile_c').is(':checked') ? true : false;
+    $("#form_csv").submit(submit_csv())
 
-            if(components.length==0){
+    function submit_csv() {
+        try {
+            var errors = [];
+            var res = {};
+            var genfile = $('#genfile').is(':checked') ? true : false;
+            var save = $('#save_task').is(':checked') ? true : false;
+            var create_config_list = $('#hasHeader').is(':checked') ? true : false;
+
+            if (components.length == 0) {
                 errors.push('components list is empty');
             }
 
-            if(!lotsoferrors(errors)){
-                res.form="form_csv";
-                res.args=components.file;
-                res.components=components.components;
-                res.genfile=genfile;
+
+            if (!lotsoferrors(errors)) {
+                res.form = "form_csv";
+                res.args = components.file;
+                res.components = components.components;
+                res.genfile = genfile;
+                res.save = save;
 
                 submitData('components', res);
+
             }
-        }catch(e){
+        } catch (e) {
             console.log(e.stack);
-        }finally{
+        } finally {
             return false;
         }
-    })
+    }
+
 
     $("#form_admin").submit(function () {
         try {
@@ -828,18 +1233,65 @@
         } // to avoid page reload
     })
 
+    $("#addto-cs-event").click(function () {
+
+        var result = get_selected_components();
+
+        var data = [];//get_table_data();
+
+        if (!lotsoferrors(result.errors)) {
+            data.push(result.args);
+
+            add_config_list_item(data)
+
+            $(document).ready(function () {
+                init_config_lists();
+                button_disable($("#delete-btn"), {
+                    eval: function () {
+                        return ($("#configlist_docid").text().length > 0) ? false : true;
+                    }
+                });
+
+                button_enable($("#update-btn"), {
+                    eval: function () {
+                        return ($("#configlist_docid").text().length > 0) ? true : false;
+                    }
+
+                });
+                editable_setlisteners()
+
+
+            });
+
+            $("#config_list").visible();
+            $('.nav-tabs a[href="#conflist_tab"]').tab('show');
+
+        }
+    })
+
     function done() {
-        $(':submit').removeAttr('disabled');
-        $('div #myItem1').invisible();
+        $('.active_submitter').removeAttr('disabled');
+        $(':submit').removeClass('active_submitter');
+        $('div #loadBar').invisible();
     }
 
     function submitData(channel, data) {
+        console.log("Sending data to /" + channel + ", " + JSON.stringify(data));
         socket.emit(channel, data);
-        $('div #myItem1').visible();
+        $('div #loadBar').visible();
     }
 
-    var checkField = function (text, condition) {
-        return (text.length > condition) ? false : true;
+
+    // function to check length of field content. It compares to desired max length of string and min length of string.
+    // in case min length is not defind it compares against 0;
+
+    var checkField = function (text, maxcondition, mincondition) {
+        if (!mincondition) {
+            var mincondition = 1;
+        }
+
+        return (text.length > maxcondition || text.length < mincondition) ? false : true;
+
     }
 
     var lotsoferrors = function (errors) {
@@ -974,42 +1426,478 @@
 
     function handleFiles(event) {
         var file = event.target.files[0];
-        components.file.name=file.name;
-        components.file.size=file.size;
-        components.file.mimeType=file.mimeType;
+        components.file.name = file.name;
+        components.file.size = file.size;
+        components.file.mimeType = file.mimeType;
+        components.components = [];
 
         var reader = new LineReader();
 
-        var hasHeader= $('#hasHeader').is(':checked') ? true : false;
-        var header=[];
+        var hasHeader = $('#hasHeader').is(':checked') ? true : false;
+        var header = [];
 
 
         reader.on('line', function (line, next) {
             // Do something with line....
 
-            if(hasHeader&&header.length==0){
-                header=line.split(',');
-            }else{
+            if (header.length == 0) {
+                header = line.split(',');
+                add_header_to_configlist(header);
+            } else {
 
-            var array = line.split(',');
-            var obj={};
-            for(var i=0;i<array.length;i++){
-                obj[header[i]]=""+array[i]+"";
+                var array = line.split(',');
+
+                add_row_to_configlist(array);
+
+                var obj = {};
+                for (var i = 0; i < array.length; i++) {
+                    obj[header[i]] = "" + array[i] + "";
+                }
+                //components.components.push(obj);
+
             }
-            components.components.push(obj);
 
-            }
 
-       
             next(); // Call next to resume...
         });
 
-        reader.on('end',function(evt){
+        reader.on('end', function (evt) {
             console.log(components);
+
+            // initialize config list buttons
+            $("#configlist_name").text('');
+            $("#configlist_docid").text('');
+            $("#configlist_revid").text('');
+            $("#configlist_time").text('');
+            $("#configlist_updated").text('');
+
+            $(document).ready(function () {
+                init_config_lists();
+                button_disable($("#delete-btn"));
+                editable_setlisteners()
+
+
+            });
+
+            $("#config_list").visible();
+            $('.nav-tabs a[href="#conflist_tab"]').tab('show');
+
         })
 
         reader.read(file);
     }
+
+    function add_row_to_configlist(data) {
+        console.log('Got item for config list');
+        if (data instanceof Array) {
+            var row = '';
+            data.forEach((item) => {
+
+                row = row + '<td contenteditable="true">' + normalizeConfigListItem(item) + '</td>';
+
+            })
+            $('#config_list_t').append('<tr>' + row
+                + '<td><span class="table-remove glyphicon glyphicon-remove"></span></td>'
+                + '<td><span class="table-up glyphicon glyphicon-arrow-up"></span>'
+                + '<span class="table-down glyphicon glyphicon-arrow-down"></span>'
+                + '</td></tr>');
+
+
+        }
+    }
+
+    function normalizeConfigListItem(item) {//remove " if the string is wrapped into double qoutes
+        if (item instanceof String) {
+            if (item.startsWith('"') && item.endsWith('"')) {
+                return item.substring(1, item.length - 1);
+            }
+        }
+        return item;
+    }
+    function configlist_detach() {
+        $('#config_list').detach();
+        $('#export_div').detach();
+        console.log("export_div detached");
+    }
+    function add_header_to_configlist(data) {
+        console.log('Got header item for config list');
+
+        configlist_detach();
+
+        $('#configlist_container').append(
+            '<div id="config_list" class="table-editable" style="visibility: hidden">'
+            + '<span class="table-add glyphicon glyphicon-plus"></span>'
+            + '<table id="config_list_t" class="table">'
+            + '<tr id="config_list_t_header">'
+            + '</tr>'
+            + '<!-- This is our clonable table line -->'
+            + '</table>'
+            + '</div>'
+        );
+        if (data instanceof Array) {
+            var row = '';
+            data.forEach((item) => {
+
+                row = row + '<th>' + normalizeConfigListItem(item) + '</th>';
+
+            })
+            $('#config_list_t_header').append(row + '<th></th><th></th>');
+
+            /*
+                        $("#configlist_container").append('<div id="export_div">'
+                            + '<button id="run-btn" class="btn btn-primary">Run</button>'
+                            + '<button id="save-btn" class="btn btn-primary">Save as</button>'
+                            + '<button id="update-btn" class="btn btn-primary" disabled="true">Update</button>'
+                            + '<button id="delete-btn" class="btn btn-primary">Delete</button>'
+                            + '<button id="reset-btn" class="btn btn-primary">Reset</button><p id="export"></p></div>');
+            */
+            /*
+            $(document).ready(function () {
+               init_config_lists();
+            });
+            */
+        }
+    }
+
+    // Configuration lists table management script 
+
+    function init_config_lists_clear_text() {
+
+        $("#configlist_name").text('');
+        $("#configlist_docid").text('');
+        $("#configlist_revid").text('');
+        $("#configlist_time").text('');
+        $("#configlist_updated").text('');
+    }
+
+
+    function init_config_lists_caption(data) {
+
+        init_config_lists_clear_text();
+
+        $("#configlist_name").append(data.cfglist_name);
+        $("#configlist_docid").append(data._id);
+        $("#configlist_revid").append(data._rev);
+        $("#configlist_time").append(data.time);
+        $("#configlist_updated").append(data.updated);
+    }
+
+    function button_enable(elem, condition) {
+        console.log(elem + " is enabled")
+        if (condition) {
+            if (condition.eval()) {
+                elem.prop("disabled", false)
+            }
+            return
+        }
+        elem.prop("disabled", false);
+    }
+
+    // condition is an object where eval is a user defined function to evaluate true/false condition to disable an object
+
+    function button_disable(elem, condition) {
+        console.log(elem + " is disabled")
+        if (condition) {
+            if (condition.eval()) {
+                elem.prop("disabled", true)
+            }
+            return
+        }
+
+        elem.prop("disabled", true)
+    }
+
+    function get_table_data() {
+        var $TABLE = $('#config_list_t');
+
+        var $rows = $TABLE.find('tr:not(:hidden)');
+        var headers = [];
+        var data = [];
+
+        // Get the headers (add special header logic here)
+
+        if ($rows.length > 1) {
+            $($rows.shift()).find('th:not(:empty)').each(function () {
+                headers.push($(this).text().toUpperCase());
+            });
+
+            // Turn all existing rows into a loopable array
+            $rows.each(function () {
+                var $td = $(this).find('td');
+                var h = {};
+
+                // Use the headers from earlier to name our hash keys
+                headers.forEach(function (header, i) {
+                    h[header] = $td.eq(i).text();
+                });
+
+                data.push(h);
+            });
+        }
+
+        return data;
+
+    }
+
+    function set_cl_table_button_listeners() {
+
+        var exp_div = $("#configlist_container").find("#export_div");
+
+
+        if (exp_div.length != 0) {
+            var $TABLE = $('#config_list_t');
+            var $BTN = $('#run-btn');
+            var $BTN_SAVE = $('#save-btn');
+            var $BTN_UPDATE = $('#update-btn');
+            var $BTN_DELETE = $('#delete-btn');
+            var $BTN_RESET = $('#reset-btn');
+            var $EXPORT = $('#export');
+
+            $('.table-add').click(function () {
+                var $clone = $TABLE.find('tr.hide').clone(true).removeClass('hide table-line');
+                $TABLE.find('table').append($clone);
+                button_enable($BTN_UPDATE);
+            });
+
+            $('.table-remove').click(function () {
+                $(this).parents('tr').detach();
+                button_enable($BTN_UPDATE);
+            });
+
+            $('.table-up').click(function () {
+                var $row = $(this).parents('tr');
+                if ($row.index() === 1) return; // Don't go above the header
+                $row.prev().before($row.get(0));
+                button_enable($BTN_UPDATE);
+            });
+
+            $('.table-down').click(function () {
+                var $row = $(this).parents('tr');
+                $row.next().after($row.get(0));
+                button_enable($BTN_UPDATE);
+            });
+
+            // A few jQuery helpers for exporting only
+            jQuery.fn.pop = [].pop;
+            jQuery.fn.shift = [].shift;
+        }
+    }
+
+    function init_config_lists() {
+
+        console.log('init_config_lists is entered. Checking initialization preconditions')
+
+        var exp_div = $("#configlist_container").find("#export_div");
+
+
+        if (exp_div.length == 0) {
+
+            console.log('init_config_lists is not initialized. Initializing ...');
+
+            $("#configlist_container").append('<div id="export_div">'
+                + '<button id="run-btn" class="btn btn-primary">Run</button>'
+                + '<button id="save-btn" class="btn btn-primary">Save as</button>'
+                + '<button id="update-btn" class="btn btn-primary" disabled="true">Update</button>'
+                + '<button id="delete-btn" class="btn btn-primary">Delete</button>'
+                + '<button id="reset-btn" class="btn btn-primary">Reset</button><p id="export"></p></div>');
+
+
+            var $TABLE = $('#config_list_t');
+            var $BTN = $('#run-btn');
+            var $BTN_SAVE = $('#save-btn');
+            var $BTN_UPDATE = $('#update-btn');
+            var $BTN_DELETE = $('#delete-btn');
+            var $BTN_RESET = $('#reset-btn');
+            var $EXPORT = $('#export');
+
+            $BTN.click(function () {
+
+                console.log('Configuration list is to be sent to backend for evaluation')
+
+                var data = get_table_data();
+
+                var cl = {
+                    cfglist_name: $("#configlist_name").text(),
+                    _id: $("#configlist_docid").text(),
+                    _rev: $("#configlist_revid").text(),
+                    time: $("#configlist_time").text()
+                }
+
+                if (cl._id.length > 0) {
+                    components.file = cl;
+                }
+
+
+                // Output the result
+                console.log(data);
+                components.components = data;
+                $(this).addClass("active_submitter");
+                $('.nav_tab a#result_tab').tab('show');
+                submit_csv();
+
+            });
+
+            $BTN_SAVE.click(function () {
+
+                console.log('Saving config list');
+                var data = get_table_data();
+                $('#configlist_modal').data("components", data)
+                $('#configlist_modal').modal('show');
+
+            })
+
+            $BTN_UPDATE.click(function () {
+
+                var cl = {
+                    cfglist_name: $("#configlist_name").text(),
+                    _id: $("#configlist_docid").text(),
+                    _rev: $("#configlist_revid").text(),
+                    time: $("#configlist_time").text()
+                }
+
+                console.log('Updating config list: ' + cl.cfglist_name + ' _id:' + cl._id + ' _rev: ' + cl._rev);
+                console.log('Updating config list');
+                cl.components = get_table_data();
+
+                $('#configlist_update_modal').data("document", cl)
+
+                $('#configlist_update_modal').modal('show');
+
+            })
+
+            $BTN_DELETE.click(function () {
+
+                var cl = {
+                    name: $("#configlist_name"),
+                    id: $("#configlist_docid")
+                }
+
+                cl.name;
+
+                console.log('Deleting config list: ' + cl.name.text() + ' _id:' + cl.id.text());
+
+                $('#configlist_delete_modal').data("id", cl.id.text())
+                $('#configlist_delete_modal').modal('show');
+
+            })
+
+            $BTN_RESET.click(function () {
+                if (!$("#update-btn").prop("disabled")) {
+                    $('#configlist_forced_update_modal').modal('show');
+
+                } else {
+                    $("#reset-event").click()
+                }
+            })
+
+
+
+        }
+        set_cl_table_button_listeners(); // set button listeners regardless to handle the case of added rows to existing configlist
+    }
+
+    // Handling of config list modal  buttons
+    $('#save-event').on(
+        'click',
+        function (evt) {
+            console.log('Saving of config list has been triggered');
+            var errors = [];
+            var args = {};
+
+            var modal_data = $('#configlist_modal').data();
+            var cfglist_name = $("#configlist-name").val();
+
+            args.cfglist_name = (checkField($("#configlist-name").val(), 20)) ? $("#configlist-name").val() : errors.push('Configuration list name is too long, can\'t be longer than 20');
+            args.components = modal_data.components;
+
+            if (!lotsoferrors(errors)) {
+
+                submitData('save_configlist', args);
+                $('#save-btn').addClass("active_submitter");
+            }
+
+            $('#configlist_modal').modal('hide');
+
+
+        }
+    );
+
+    $("#update-event").on(
+        'click',
+        function (evt) {
+            console.log('Update of config list has been triggered');
+
+            var data = $('#configlist_update_modal').data();
+
+            submitData('update_configlist', data.document);
+            $('#configlist_update_modal').modal('hide');
+            $('#update-btn').addClass("active_submitter");
+        }
+    )
+
+    $("#delete-event").on(
+        'click',
+        function (evt) {
+            console.log('Deleting of config list has been triggered');
+
+            var id = $('#configlist_delete_modal').data('id');
+            submitData('delete_configlist', id);
+            $('#configlist_delete_modal').modal('hide');
+            $('#delete-btn').addClass("active_submitter");
+        }
+    )
+
+    $("#forced-update-event").on('click',
+        function (evt) {
+            var queue = new function_pipeline();
+            console.log('Forced update of config list has been triggered');
+            $('#configlist_forced_update_modal').modal('hide');
+            if ($("#configlist_docid").text.length > 0) {
+                queue.push(function () { $('#save-btn').click() });
+            } else {
+                queue.push(function () { $('#update-btn').click() });
+            }
+            queue.push(function () { $('#reset-event').click() });
+
+            queue.execute();
+
+
+
+        })
+    $("#reset-event").on('click',
+        function (evt) {
+            init_config_lists_clear_text();
+            configlist_detach();
+        })
+
+    $("#get-statdata-event").on('click',
+        function (evt) {
+            submitData('get_rn_statdata', {});
+        })
+
+
+
+    // Scripts to handle TABs
+
+    var function_pipeline = function () {
+        this.queue = []
+    }
+
+    function_pipeline.prototype.push = function (arg) {
+        this.queue.push(arg)
+    }
+
+    function_pipeline.prototype.execute = function () {
+        while (this.queue.length) {
+            this.queue.shift().call();
+        }
+    }
+
+
+    $('.nav-tabs a').click(function (e) {
+        e.preventDefault();
+        $(this).tab('show');
+    });
 
 </script>
 

@@ -8,7 +8,7 @@
 		{
 			header: 'Upgrade Advisory',
 			tagline: 'Run upgrade advisory helper against your database to prepare Upgrade Advisory SE document',
-			link: '/prepareAdvisory'
+			link: '/prepareadvisory'
 		},
 		{
 			header: 'Topology builder',
