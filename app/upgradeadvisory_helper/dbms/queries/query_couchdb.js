@@ -1,6 +1,7 @@
 var CouchDB = require('../couchdb').CouchDB;
 var Logger = require('../../logger');
-var db = require('../couchdb');
+//var db = require('../couchdb');
+var db=require('../../customconfig').customconfig.database;
 
 var couchdb = new CouchDB({ host: db.couchdb_host, port: db.couchdb_port, username: db.couchdb_username, password: db.couchdb_pass });
 

@@ -3,16 +3,17 @@
 var cradle = require('cradle');
 var StringBuilder = require('../stringbuilder');
 var Logger = require('../logger');
-
+var dbconf= require("../customconfig").customconfig.database;
 const views_def = require('./queries/view_definitions');
 
 
+
 cradle.setup({
-  host: '192.168.14.91',
-  port: 5984,
-  cache: true,
-  raw: false,
-  forceSave: true
+  host: dbconf.couchdb_host,
+  port: dbconf.couchdb_port,
+  cache: dbconf.cache,
+  raw: dbconf.raw,
+  forceSave: dbconf.forceSave
 });
 
 
@@ -343,10 +344,5 @@ async save (dbname,result,response) {
 
 
 module.exports = {
-  CouchDB,
-  couchdb_host: '192.168.14.91',
-  couchdb_port: 5984,
-  couchdb_username: 'admin',
-  couchdb_pass: 'Genesys#1',
-  couchdb_name: 'genesys_releases'
+  CouchDB
 };

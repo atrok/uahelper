@@ -10,5 +10,6 @@ module.exports={
         
 
     },
-    root_dir: __dirname
+    root_dir: __dirname,
+
 }
