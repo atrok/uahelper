@@ -1,6 +1,7 @@
 const util = require('util');
 const setTimeoutPromise = util.promisify(setTimeout);
 
+const { db_init } = require('./upgradeadvisory_helper/dbms/queries/db_config_init');
 
 const flat = require(enduro.enduro_path + '/libs/flat_db/flat')
 const logger = require(enduro.enduro_path + '/libs/logger')
@@ -28,7 +29,7 @@ const requesthandlers = require('./upgradeadvisory_helper/requestHandlers');
 
 const views = require('./upgradeadvisory_helper/dbms/queries/view_definitions')
 
-const { CouchDBResult,CouchDBResult_DOC,SimpleObjectResult,SimpleKeyValueResult, ArrayResult } = require('./upgradeadvisory_helper/result');
+const { CouchDBResult, CouchDBResult_DOC, SimpleObjectResult, SimpleKeyValueResult, ArrayResult } = require('./upgradeadvisory_helper/result');
 
 // * ———————————————————————————————————————————————————————— * //
 // * 	init
@@ -46,6 +47,13 @@ local_app.prototype.init = function (app) {
 
 	var mylogger = new mylog();
 	console.log('Start app init');
+	// TODO add databases configuration verification 
+	// uahelper - tasks
+	// uahelper_history
+	// uahelper_configlists
+	// genesys_releases
+
+	db_init();
 
 	enduro.io.of('/prepareadvisory')
 		.on('connection', function (socket) {
@@ -135,7 +143,7 @@ local_app.prototype.init = function (app) {
 				try {
 					var res = await couchdb.query(socket, views.views_names.components_by_solutions_detailed.path(), { group: true, reduce: true, inclusive_end: true }, views.views_names.components_by_solutions_detailed.db);
 
-					var content = { components: new CouchDBResult(res), errors: null , names: {resulttableName: 'Release Notes Summary'} };
+					var content = { components: new CouchDBResult(res), errors: null, names: { resulttableName: 'Release Notes Summary' } };
 
 					(args.save) ? args.save = false : args;
 
@@ -154,14 +162,14 @@ local_app.prototype.init = function (app) {
 			socket.on('get_dbinfo', async function (args) {
 
 				try {
-					
+
 					//var res = await couchdb.info(views.views_names.maindDBall.db, socket);
 
 					var res = await couchdb.query(socket, 'documents/_all', { include_docs: true }, 'uahelper_history');
 
-					var content = { components: new CouchDBResult_DOC(res), errors: null, names: {resulttableName: 'DB Info'} };
+					var content = { components: new CouchDBResult_DOC(res), errors: null, names: { resulttableName: 'DB Info' } };
 
-					
+
 
 
 					postProcessing(content, 'dbinfo', args, socket);
