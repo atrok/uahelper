@@ -17,7 +17,8 @@ var b = function () {
 
         f(v, {})
             .then(res => {
-                logger.log("Success : " + res);
+                logger.log("Continue, checking views : " + res);
+                g(res);
             })
             .catch(err => {
                 logger.log("Failed : " + v + ", " + err.message);
@@ -50,6 +51,21 @@ var f = function (dbname) {
 
 
     });
+}
+
+var g = function (dbname) {
+    var db = couchdb.getDBConnection(dbname);;
+    return new Promise(async (resolve, reject) => {
+
+        try {
+            await db.initialize();
+
+            resolve('Views checked');
+
+        } catch (err) {
+            reject(err);
+        }
+    })
 }
 
 module.exports = {

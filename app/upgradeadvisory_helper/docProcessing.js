@@ -2,7 +2,10 @@
 
 var cradle = require('./cradle_setup');
 var docx = require('./docx');
-var db = require('./dbms/couchdb');
+//var db = require('./dbms/couchdb');
+var db = require('./customconfig').customconfig.database;
+const couchdb = require('./dbms/queries/query_couchdb');
+
 var parser = require('./preparing');
 var html = require('./html/html');
 const { ArrayResult, SimpleObjectResult } = require('./result');
@@ -13,7 +16,7 @@ var Logger = require('./logger');
 var LinkHTML = require('./html/linkhtml');
 var CombinedHTML = require('./html/combinedhtml');
 
-const view_names=require('./dbms/queries/view_definitions');
+const view_names = require('./dbms/queries/view_definitions');
 
 
 var start = (response, components, isGenerateReport, recreateViews) => {
@@ -40,14 +43,17 @@ var start = (response, components, isGenerateReport, recreateViews) => {
           //init component variables
           components[i].DELTA_SAME = 'undefined';
           components[i].DELTA_LATEST = 'undefined';
-          components[i].latest="";
-          components[i].date="";
-          components[i].type="";
+          components[i].latest = "";
+          components[i].date = "";
+          components[i].type = "";
           components[i].releases = '';
 
-          var couchdb = new db.CouchDB({ host: db.couchdb_host, port: db.couchdb_port, username: db.couchdb_username, password: db.couchdb_pass });
+          // 2/16/20
+          //var couchdb = new db.CouchDB({ host: db.couchdb_host, port: db.couchdb_port, username: db.couchdb_username, password: db.couchdb_pass });
 
-          couchdb.getDBConnection(db.couchdb_name);
+          // 2/16/20
+          //couchdb.getDBConnection(db.couchdb_name);
+
           // check if solution was passed among with input arguments
           // could 2 use case
           // 1. application types are from cfg_locale (ie input results are from CFG DB query or from csv file)
@@ -64,7 +70,7 @@ var start = (response, components, isGenerateReport, recreateViews) => {
             var p = apptypes.findByLCValue(components[i].APPLICATION_TYPE);
             var application = '';
             if (null === p) {
-              p=apptypes.findByName(components[i].APPLICATION_TYPE);
+              p = apptypes.findByName(components[i].APPLICATION_TYPE);
             }
             if (null === p) {
               application = components[i].APPLICATION_TYPE;
@@ -73,7 +79,7 @@ var start = (response, components, isGenerateReport, recreateViews) => {
               application = p.name;
               solution = p.solution;
             }
-          }else{
+          } else {
             application = components[i].APPLICATION_TYPE;
           }
 
@@ -103,13 +109,13 @@ var start = (response, components, isGenerateReport, recreateViews) => {
           components[i].SOLUTION = solution;
 
 
-          var new_releases = await couchdb.select('test/features-by-release', opts, response);
+          var new_releases = await couchdb.query(response, 'test/features-by-release', opts);
           components[i].RECORDS_FOUND = new_releases.rows.length;
 
 
           if (new_releases.rows.length === 0) {
             console.log('Can\'t find ' + application + ' among available release notes');
-            
+
           } else {
 
             var cur_release_index = component.current_release.push({
@@ -120,12 +126,11 @@ var start = (response, components, isGenerateReport, recreateViews) => {
             }) - 1;
 
             // Populate latest release of the same family info
-            var delta_same_family_res = await couchdb.select('test/group-releases-by-family', {
+            var delta_same_family_res = await couchdb.query(null, 'test/group-releases-by-family', {
               startkey: [solution, application, os, component.current_release[cur_release_index].family, components[i].RELEASE],
               endkey: [solution, application, os, component.current_release[cur_release_index].family, {}],
               group: true
-            },
-              null);
+            });
 
             component.current_release[cur_release_index].delta_same_family = delta_same_family_res.rows.length;
             components[i].DELTA_SAME = delta_same_family_res.rows.length - 1;
@@ -141,12 +146,11 @@ var start = (response, components, isGenerateReport, recreateViews) => {
             }
 
             // Populate delta of latest release of the latest family 
-            var delta_latest_release_res = await couchdb.select('test/group-releases-by-family', {
+            var delta_latest_release_res = await couchdb.query(null, 'test/group-releases-by-family', {
               startkey: [solution, application, os, component.current_release[cur_release_index].family, components[i].RELEASE],
               endkey: [solution, application, os, {}, {}],
               group: true
-            },
-              null);
+            });
 
             component.current_release[cur_release_index].delta_latest_release = delta_latest_release_res.rows.length;
             components[i].DELTA_LATEST = delta_latest_release_res.rows.length - 1;
@@ -166,10 +170,10 @@ var start = (response, components, isGenerateReport, recreateViews) => {
             assemble.addElement(reduced_releases);
             assemble.addElement('</div>');
 
-            var latest=new_releases[new_releases.length-1];
-            components[i].latest= latest.value.release;
-            components[i].date=latest.value.release_date;
-            components[i].type=latest.value.release_type;
+            var latest = new_releases[new_releases.length - 1];
+            components[i].latest = latest.value.release;
+            components[i].date = latest.value.release_date;
+            components[i].type = latest.value.release_type;
             components[i].releases = assemble.toString();
 
 
@@ -195,7 +199,7 @@ var start = (response, components, isGenerateReport, recreateViews) => {
       //result.table=html.displayTableResults(new ArrayResult(components),'Results');
       result.components = new ArrayResult(components);
       result.obj = obj;
-      result.errors =new ArrayResult(errors);
+      result.errors = new ArrayResult(errors);
 
 
       //console.log(JSON.stringify(obj));
@@ -224,12 +228,12 @@ async function findSolution(couchdb, component, response) {
   //empty
   return new Promise(async (resolve, reject) => {
     try {
-      var solutions_fromDB = await couchdb.select(view_names.views_names.solutions_by_components.path(),
+      var solutions_fromDB = await couchdb.query(response, view_names.views_names.solutions_by_components.path(),
         {
           startkey: [component, ""],
           endkey: [component, {}],
           group: true, reduce: true, inclusive_end: true
-        }, response
+        }
       )
 
       resolve(solutions_fromDB[0].key[1]);
@@ -240,8 +244,8 @@ async function findSolution(couchdb, component, response) {
   })
 }
 
-function getLatest(obj){
-  var arr=Object.getOwnPropertyNames(obj).sort();
-  return obj[arr[arr.length-1]]
+function getLatest(obj) {
+  var arr = Object.getOwnPropertyNames(obj).sort();
+  return obj[arr[arr.length - 1]]
 }
 module.exports = { start };

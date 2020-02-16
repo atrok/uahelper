@@ -1,21 +1,25 @@
 var docx = require('../docx');
-var {SimpleObjectResult, ArrayResult, Result} = require('../result');
-var result=require('../result');
-const dbwrap = require('../dbms/couchdb');
-var postprocessor = function () { }
-var html=require('../html/html');
-var json=require('./json_serialize').createSerializer(result);
+var { SimpleObjectResult, ArrayResult, Result } = require('../result');
+var result = require('../result');
+//const dbwrap = require('../dbms/couchdb');
 
+var couchdb = require('../dbms/queries/query_couchdb');
+
+var html = require('../html/html');
+var json = require('./json_serialize').createSerializer(result);
+
+
+var postprocessor = function () { }
 postprocessor.prototype.init = function (obj) {
     this.result = obj;
-    var names=(obj.names)?obj.names:{};
+    var names = (obj.names) ? obj.names : {};
 
-    this.resulttableName=(names.resulttableName)? names.resulttableName : 'Results';
-    this.filetableName=(names.filetableName)? names.filetableName : 'Resulting file';
-    this.errortableName=(names.errortableName)? names.errortableName: 'Errors';
-    
+    this.resulttableName = (names.resulttableName) ? names.resulttableName : 'Results';
+    this.filetableName = (names.filetableName) ? names.filetableName : 'Resulting file';
+    this.errortableName = (names.errortableName) ? names.errortableName : 'Errors';
+
     //this.couchdb = new db.CouchDB({ host: db.couchdb_host, port: db.couchdb_port, username: db.couchdb_username, password: db.couchdb_pass });
-    
+
     return this;
 }
 postprocessor.prototype.setlogger = function (logger) {
@@ -39,32 +43,33 @@ postprocessor.prototype.log = function () {
     return new clientlogger();
 }
 
-postprocessor.prototype.setResultTableName=function(name){
-    this.tableName=name;
+postprocessor.prototype.setResultTableName = function (name) {
+    this.tableName = name;
 }
 postprocessor.prototype.format = function (id) {
     var output = {}
 
-   // var components = (this.result.components instanceof ArrayResult)?this.result.components : Object.assign(new ArrayResult(null),this.result.components);
-    var components = (this.result.components instanceof Result)?this.result.components : json.assignType(this.result.components);
-    var file=(this.result.file instanceof SimpleObjectResult)?this.result.file: Object.assign(new SimpleObjectResult(null),this.result.file);
-    var errors = (this.result.errors instanceof ArrayResult)? this.result.errors: Object.assign(new ArrayResult(null), this.result.errors);
-    
+    // var components = (this.result.components instanceof ArrayResult)?this.result.components : Object.assign(new ArrayResult(null),this.result.components);
+    var components = (this.result.components instanceof Result) ? this.result.components : json.assignType(this.result.components);
+    var file = (this.result.file instanceof SimpleObjectResult) ? this.result.file : Object.assign(new SimpleObjectResult(null), this.result.file);
+    var errors = (this.result.errors instanceof ArrayResult) ? this.result.errors : Object.assign(new ArrayResult(null), this.result.errors);
+
     this.result.components
     output.table = html.displayTableResults(components, this.resulttableName);
     if (this.result.file)
         output.file = html.displayTableResults(file, this.filetableName);
 
-    output.parsed_obj=this.result.obj;
-    output._id=this.result._id;
-    output._rev=this.result._rev;
+    output.parsed_obj = this.result.obj;
+    output._id = this.result._id;
+    output._rev = this.result._rev;
 
-    if (this.result.errors){
+    if (this.result.errors) {
         if (this.result.errors.length > 0) {
-        output.errors = html.displayTableResults(errors, this.errortableName);
-    }}
+            output.errors = html.displayTableResults(errors, this.errortableName);
+        }
+    }
 
-    
+
     return output;
 
 }
@@ -72,12 +77,15 @@ postprocessor.prototype.format = function (id) {
 
 postprocessor.prototype.save = async function () {
     //check if database uahelper exists
-    var couchdb = new dbwrap.CouchDB({ host: dbwrap.couchdb_host, port: dbwrap.couchdb_port, username: dbwrap.couchdb_username, password: dbwrap.couchdb_pass });
+    //var couchdb = new dbwrap.CouchDB({ host: dbwrap.couchdb_host, port: dbwrap.couchdb_port, username: dbwrap.couchdb_username, password: dbwrap.couchdb_pass });
 
-    var db = couchdb.getDBConnection('uahelper');
+    //var db = couchdb.getDBConnection('uahelper');
 
-    var result =this.result;
+    var result = this.result;
 
+    return await couchdb.save(null, result, 'uahelper');
+
+    /*
     await new Promise((resolve,reject)=>{
         db.exists(function (err, exists) {
         if (err) {
@@ -104,7 +112,8 @@ postprocessor.prototype.save = async function () {
         }
         })
     })
-   
+    */
+
 }
 
 var include = function (arr, obj) {
