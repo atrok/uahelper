@@ -7,6 +7,18 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "Launch enduro",
+            "program": "c:\\Users\\Administrator\\AppData\\Roaming\\npm\\node_modules\\enduro\\cli.js",
+            "args": [
+                "start"
+            ],
+            "outFiles": [
+                "c:\\Users\\Administrator\\AppData\\Roaming\\npm\\node_modules\\enduro/*.js"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "Launch db_init",
             "program": "${workspaceFolder}\\app\\upgradeadvisory_helper\\dbms\\queries\\db_config_init.js"
         },

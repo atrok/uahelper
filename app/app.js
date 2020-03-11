@@ -9,7 +9,7 @@ const logger = require(enduro.enduro_path + '/libs/logger')
 const upgradeAdvisory = require('./upgradeadvisory_helper/upgradeAdvisory');
 
 const docProcessing = require('./upgradeadvisory_helper/docProcessing');
-const socketio = require('./upgradeadvisory_helper/socketio');
+const socketio = require('./upgradeadvisory_helper/node_modules/socket.io');
 const mylog = require('./upgradeadvisory_helper/logger');
 const html = require('./upgradeadvisory_helper/html/html');
 var url = require('url');
@@ -41,7 +41,7 @@ const { CouchDBResult, CouchDBResult_DOC, SimpleObjectResult, SimpleKeyValueResu
 
 var temper = enduro.api.temper
 
-
+enduro.io = socketio(enduro.server);
 
 local_app.prototype.init = function (app) {
 
@@ -55,6 +55,8 @@ local_app.prototype.init = function (app) {
 
 	db_init();
 
+
+
 	enduro.io.of('/prepareadvisory')
 		.on('connection', function (socket) {
 			var clientlogger = new mylog(socket);
@@ -65,7 +67,8 @@ local_app.prototype.init = function (app) {
 			socket.on('tasks', async function (args) {
 
 				try {
-					var res = await couchdb.query(socket, 'documents/_all', { include_docs: true }, 'uahelper');
+					// disable log output to socket as a security precaution
+					var res = await couchdb.query(null /*socket*/, 'documents/_all', { include_docs: true }, 'uahelper');
 
 					socket.emit('tasks', prepareTasksList(res));
 
@@ -80,7 +83,8 @@ local_app.prototype.init = function (app) {
 			socket.on('get_solutions', async function (args) {
 
 				try {
-					var res = await couchdb.query(socket, views.views_names.solutions.path(), { group: true, reduce: true, inclusive_end: true }, views.views_names.solutions.db);
+					// disable log output to socket as a security precaution
+					var res = await couchdb.query(null /*socket*/, views.views_names.solutions.path(), { group: true, reduce: true, inclusive_end: true }, views.views_names.solutions.db);
 
 					socket.emit('solutions', res);
 
@@ -95,7 +99,8 @@ local_app.prototype.init = function (app) {
 			socket.on('get_components', async function (args) {
 
 				try {
-					var res = await couchdb.query(socket, views.views_names.components_by_solutions.path(), { startkey: [args, ""], endkey: [args, {}], group: true, reduce: true, inclusive_end: true }, views.views_names.components_by_solutions.db);
+					// disable log output to socket as a security precaution
+					var res = await couchdb.query(null /*socket*/, views.views_names.components_by_solutions.path(), { startkey: [args, ""], endkey: [args, {}], group: true, reduce: true, inclusive_end: true }, views.views_names.components_by_solutions.db);
 
 					socket.emit('components', res);
 
@@ -110,7 +115,8 @@ local_app.prototype.init = function (app) {
 			socket.on('get_all_configlists', async function (args) {
 
 				try {
-					var res = await couchdb.query(socket, 'documents/_all', { include_docs: true }, 'uahelper_configlists');
+					// disable log output to socket as a security precaution
+					var res = await couchdb.query(null /*socket*/, 'documents/_all', { include_docs: true }, 'uahelper_configlists');
 
 					socket.emit('all_configlists', res);
 
@@ -141,7 +147,8 @@ local_app.prototype.init = function (app) {
 			socket.on('get_rn_statdata', async function (args) {
 
 				try {
-					var res = await couchdb.query(socket, views.views_names.components_by_solutions_detailed.path(), { group: true, reduce: true, inclusive_end: true }, views.views_names.components_by_solutions_detailed.db);
+					// disable log output to socket as a security precaution
+					var res = await couchdb.query(null /*socket*/, views.views_names.components_by_solutions_detailed.path(), { group: true, reduce: true, inclusive_end: true }, views.views_names.components_by_solutions_detailed.db);
 
 					var content = { components: new CouchDBResult(res), errors: null, names: { resulttableName: 'Release Notes Summary' } };
 
@@ -165,7 +172,8 @@ local_app.prototype.init = function (app) {
 
 					//var res = await couchdb.info(views.views_names.maindDBall.db, socket);
 
-					var res = await couchdb.query(socket, 'documents/_all', { include_docs: true }, 'uahelper_history');
+					// disable log output to socket as a security precaution
+					var res = await couchdb.query(null, 'documents/_all', { include_docs: true }, 'uahelper_history');
 
 					var content = { components: new CouchDBResult_DOC(res), errors: null, names: { resulttableName: 'DB Info' } };
 
@@ -196,7 +204,8 @@ local_app.prototype.init = function (app) {
 					try {
 						logger.timestamp('custom parsing starts', 'nice_dev_init');
 						//var db=new dbwrapper();
-						var p = dbwrapper.getInstance(args.args).logger(clientlogger).init(socket);
+						// disable log output to socket as a security precaution
+						var p = dbwrapper.getInstance(args.args).logger(clientlogger).init(null /*socket*/);
 						/*
 						.catch((e) => {
 							console.log('Emit 1:', e.message);
@@ -212,7 +221,8 @@ local_app.prototype.init = function (app) {
 
 							try {
 								socket.emit('console', 'Retrieved data succesfully');
-								var content = await docProcessing.start(socket, result, genfile, 'false');
+								// disable log output to socket as a security precaution
+								var content = await docProcessing.start(null /*socket*/, result, genfile, 'false');
 
 								postProcessing(content, 'result', args.args, socket);
 
@@ -252,7 +262,8 @@ local_app.prototype.init = function (app) {
 						RELEASE: (null !== a.release) ? a.release : "8.1.102.95"
 					}]
 					try {
-						var content = await docProcessing.start(socket, component, genfile);
+						// disable log output to socket as a security precaution
+						var content = await docProcessing.start(null /*socket*/, component, genfile);
 						//content.input=;
 
 						postProcessing(content, 'result', args, socket);
@@ -276,7 +287,8 @@ local_app.prototype.init = function (app) {
 
 
 					try {
-						var content = await docProcessing.start(socket, components, genfile);
+						// disable log output to socket as a security precaution
+						var content = await docProcessing.start(null /*socket*/, components, genfile);
 						//content.input=;
 
 						postProcessing(content, 'result', args, socket);
@@ -297,7 +309,8 @@ local_app.prototype.init = function (app) {
 					for (var i = 0; i < arr.length; i++) {
 						var index = arr[i];
 
-						var res = await couchdb.remove(socket, args[index], null, 'uahelper');
+						// disable log output to socket as a security precaution
+						var res = await couchdb.remove(null /*socket*/, args[index], null, 'uahelper');
 						console.log('deleted', args[index]);
 						socket.emit('deleted', { id: args[index] });
 
@@ -315,8 +328,8 @@ local_app.prototype.init = function (app) {
 			socket.on('getresults', async function (args) {
 				try {
 
-
-					var res = await couchdb.query(socket, 'documents/_all', { key: args.id, include_docs: true }, 'uahelper');
+					// disable log output to socket as a security precaution
+					var res = await couchdb.query(null /*socket*/, 'documents/_all', { key: args.id, include_docs: true }, 'uahelper');
 					console.log('console', 'Retrieved data succesfully');
 					socket.emit('result', prepareResults(res[0].doc));
 
@@ -335,7 +348,8 @@ local_app.prototype.init = function (app) {
 
 
 					if (args.databases) {
-						await couchdb.init(args.databases, socket);
+						// disable log output to socket as a security precaution
+						await couchdb.init(args.databases, null /*socket*/);
 
 						socket.emit('errors', { error: "Views succesfully recreated" })
 					} else {
@@ -358,7 +372,8 @@ local_app.prototype.init = function (app) {
 			socket.on('save_configlist', async function (args) {
 				try {
 
-					var res = await couchdb.save(socket, args, 'uahelper_configlists');
+					// disable log output to socket as a security precaution
+					var res = await couchdb.save(null /*socket*/, args, 'uahelper_configlists');
 					console.log('saved', args.cfglist_name);
 					socket.emit('saved_configlist', { _id: res._id, _rev: res.rev, cfglist_name: args.cfglist_name, time: res.time });
 
@@ -377,7 +392,8 @@ local_app.prototype.init = function (app) {
 			socket.on('update_configlist', async function (args) {
 				try {
 
-					var res = await couchdb.update(socket, args._id, args, 'uahelper_configlists', args._rev);
+					// disable log output to socket as a security precaution
+					var res = await couchdb.update(null /*socket*/, args._id, args, 'uahelper_configlists', args._rev);
 					console.log('updated', args.cfglist_name);
 					socket.emit('updated_configlist', { _id: args._id, _rev: args._rev, updated: res.updated });
 
@@ -395,7 +411,8 @@ local_app.prototype.init = function (app) {
 			socket.on('get_configlist', async function (args) {
 				try {
 					console.log(new Date().toString() + " [Socket " + socket.id + "][get_configlist] got new message, data: " + args);
-					var res = await couchdb.get('uahelper_configlists', args, socket);
+					// disable log output to socket as a security precaution
+					var res = await couchdb.get('uahelper_configlists', args, null /*socket*/);
 					console.log(new Date().toString() + ' Found', res._id);
 					socket.emit('configlist', res);
 					console.log(new Date().toString() + ' [Socket ' + socket.id + '][get_configlist] Sent result back ', res._id);
@@ -414,7 +431,8 @@ local_app.prototype.init = function (app) {
 				try {
 					var id = args
 
-					var res = await couchdb.remove(socket, id, null, 'uahelper_configlists');
+					// disable log output to socket as a security precaution
+					var res = await couchdb.remove(null /*socket*/, id, null, 'uahelper_configlists');
 					console.log('deleted', id);
 					socket.emit('deleted_configlist', { id: id });
 
