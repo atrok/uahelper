@@ -55,8 +55,6 @@ local_app.prototype.init = function (app) {
 
 	db_init();
 
-
-
 	enduro.io.of('/prepareadvisory')
 		.on('connection', function (socket) {
 			var clientlogger = new mylog(socket);
@@ -447,7 +445,15 @@ local_app.prototype.init = function (app) {
 
 		})
 
+	/* log any client request */
+	app.use(function (req, res, next) {
+		var logger = require(enduro.enduro_path + '/libs/logger')
+		if (req)
+			logger.timestamp('HTTP client: ' + req.host + ', browser: ' + req.headers['user-agent'], 'nice_dev_init')
+		next()
+	})
 
+	////
 	app.get('/prepareadvisory', function (request, response) {
 
 

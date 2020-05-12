@@ -1,7 +1,7 @@
 var CouchDB = require('../couchdb').CouchDB;
 var Logger = require('../../logger');
 //var db = require('../couchdb');
-var db=require('../../customconfig').customconfig.database;
+var db = require('../../customconfig').customconfig.database;
 
 var couchdb = new CouchDB({ host: db.couchdb_host, port: db.couchdb_port, username: db.couchdb_username, password: db.couchdb_pass });
 
@@ -112,8 +112,11 @@ var query = (response, view, opts, dbname) => {
 
     var logger = new Logger(response);
 
-    if (typeof dbname === 'undefined')
+    if (typeof dbname === 'undefined') {
         logger.log('DB name is not provided, using default set name');
+
+        throw new Error("DB name is not provided, can't work with database");
+    }
 
     var localOpts;
     (!opts) ? localOpts = { group: true } : localOpts = opts;

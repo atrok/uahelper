@@ -101,7 +101,7 @@ var start = (response, components, isGenerateReport, recreateViews) => {
 
 
 
-          logger.log('Processing: ' + solution + application + ' ' + os + ' ' + components[i].RELEASE);
+          logger.log('Processing: ' + solution + ' ' + application + ' ' + os + ' ' + components[i].RELEASE);
           var component = parser.findComponent(obj, application);
 
 
@@ -109,7 +109,7 @@ var start = (response, components, isGenerateReport, recreateViews) => {
           components[i].SOLUTION = solution;
 
 
-          var new_releases = await couchdb.query(response, 'test/features-by-release', opts);
+          var new_releases = await couchdb.query(response, 'test/features-by-release', opts, 'genesys_releases');
           components[i].RECORDS_FOUND = new_releases.rows.length;
 
 
@@ -130,7 +130,8 @@ var start = (response, components, isGenerateReport, recreateViews) => {
               startkey: [solution, application, os, component.current_release[cur_release_index].family, components[i].RELEASE],
               endkey: [solution, application, os, component.current_release[cur_release_index].family, {}],
               group: true
-            });
+            },
+              'genesys_releases');
 
             component.current_release[cur_release_index].delta_same_family = delta_same_family_res.rows.length;
             components[i].DELTA_SAME = delta_same_family_res.rows.length - 1;
@@ -150,7 +151,8 @@ var start = (response, components, isGenerateReport, recreateViews) => {
               startkey: [solution, application, os, component.current_release[cur_release_index].family, components[i].RELEASE],
               endkey: [solution, application, os, {}, {}],
               group: true
-            });
+            },
+              'genesys_releases');
 
             component.current_release[cur_release_index].delta_latest_release = delta_latest_release_res.rows.length;
             components[i].DELTA_LATEST = delta_latest_release_res.rows.length - 1;
@@ -233,7 +235,8 @@ async function findSolution(couchdb, component, response) {
           startkey: [component, ""],
           endkey: [component, {}],
           group: true, reduce: true, inclusive_end: true
-        }
+        },
+        view_names.views_names.solutions_by_components.db
       )
 
       resolve(solutions_fromDB[0].key[1]);
